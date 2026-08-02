@@ -1,0 +1,300 @@
+"use client";
+import { useState } from "react";
+import { calculateEstimate, money } from "@/lib/pricing";
+import { getIndustry } from "@/lib/industries";
+
+const SWATCHES = [
+  "linear-gradient(135deg,#4b4b4d,#6e6e70 45%,#3a3a3c)",
+  "linear-gradient(135deg,#ece7db,#d8d2c2 50%,#c7bfa9)",
+  "linear-gradient(135deg,#f2efe9,#e3ded2 45%,#cfc7b5)",
+  "linear-gradient(135deg,#a97b4f,#8a5d34 50%,#6f4a29)",
+  "linear-gradient(135deg,#6b7b76,#8a9a92 50%,#586862)",
+  "linear-gradient(135deg,#8a8f9b,#a9adb8 50%,#6f7480)",
+];
+
+export default function EmbedWidget({ business, items, options, addons }) {
+  const industry = getIndustry(business.industry);
+  const terms = industry.terms;
+  const qtype = business.quantity_type || industry.quantity_type;
+  const showQuantity = qtype !== "none";
+  const qRange = industry.quantity;
+
+  const [itemId, setItemId] = useState(items[0]?.id);
+  const [quantity, setQuantity] = useState(qRange?.default ?? 1);
+  const [optionId, setOptionId] = useState(options[0]?.id);
+  const [checkedAddons, setCheckedAddons] = useState({});
+  const [addonQty, setAddonQty] = useState({});
+  const [stage, setStage] = useState("form"); // form -> quote -> submitted
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const item = items.find((m) => m.id === itemId) || items[0];
+  const itemIndex = items.findIndex((m) => m.id === item?.id);
+  const option = options.find((e) => e.id === optionId) || options[0];
+
+  const effectiveQty = showQuantity ? quantity : 1;
+
+  const selectedAddons = addons
+    .filter((a) => checkedAddons[a.id])
+    .map((a) => ({ ...a, qty: addonQty[a.id] ?? 1 }));
+
+  const { low, high, minApplied } = calculateEstimate({
+    item,
+    laborRate: business.labor_rate,
+    option,
+    quantity: effectiveQty,
+    selectedAddons,
+    minPrice: business.min_price,
+    spreadPct: business.spread_pct,
+  });
+
+  function toggleAddon(id) {
+    setCheckedAddons((c) => ({ ...c, [id]: !c[id] }));
+  }
+
+  async function submitLead(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch(`/api/public/${business.slug}/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          item_name: item?.name,
+          item_price_snapshot: item?.base_price,
+          quantity: effectiveQty,
+          option_name: option?.name,
+          option_upcharge_snapshot: option?.upcharge,
+          addons_selected: selectedAddons.map((a) => ({
+            id: a.id, name: a.name, price: a.price, billing_type: a.billing_type, unit_label: a.unit_label, qty: a.qty,
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
+      setStage("submitted");
+    } catch (err) {
+      setErrorMsg(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (!item) {
+    return <p className="text-sm text-[#8A836F] p-6">This business hasn't finished setting up their estimator yet.</p>;
+  }
+
+  if (stage === "submitted") {
+    return (
+      <div className="max-w-sm mx-auto text-center py-16 px-5">
+        <div className="text-2xl mb-2">✓</div>
+        <h3 className="font-display text-xl font-semibold mb-1">Estimate sent</h3>
+        <p className="text-sm text-[#7A7364]">
+          Thanks, {name.split(" ")[0] || "there"} — {business.name} has your estimate and will
+          follow up to confirm the details.
+        </p>
+      </div>
+    );
+  }
+
+  const quantityLabel = showQuantity
+    ? `${terms.quantity} — ${quantity} ${terms.quantityUnit}`
+    : null;
+
+  return (
+    <div className="max-w-3xl mx-auto px-5 py-8">
+      <div className="mb-6">
+        <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
+          {business.name}
+        </span>
+        <h1 className="font-display text-2xl font-semibold tracking-tight mt-1">Get an instant estimate</h1>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-10">
+        <div className="md:col-span-3 space-y-7">
+          <div>
+            <span className="block text-xs font-medium mb-2 text-[#8A836F] capitalize">
+              Choose {terms.item.match(/^[aeiou]/i) ? "an" : "a"} {terms.item}
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {items.map((m, i) => {
+                const selected = m.id === itemId;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setItemId(m.id)}
+                    className="rounded-xl overflow-hidden border-2 text-left transition-all duration-150"
+                    style={{
+                      borderColor: selected ? "#B08A44" : "transparent",
+                      boxShadow: selected ? "0 6px 16px rgba(176,138,68,0.28)" : "0 1px 2px rgba(0,0,0,0.06)",
+                      transform: selected ? "translateY(-2px) scale(1.02)" : "none",
+                    }}
+                  >
+                    {m.photo_url ? (
+                      <img src={m.photo_url} alt={m.name} className="h-16 w-full object-cover" />
+                    ) : (
+                      <div className="h-16" style={{ background: SWATCHES[i % SWATCHES.length] }} />
+                    )}
+                    <div className="px-2.5 py-2 bg-white">
+                      <div className="text-xs font-medium truncate">{m.name}</div>
+                      <div className="text-xs font-mono text-[#A39C8A]">${m.base_price}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {showQuantity && (
+            <label className="block">
+              <span className="block text-xs font-medium mb-1.5 text-[#8A836F]">
+                {quantityLabel}
+              </span>
+              <input
+                type="range"
+                min={qRange.min}
+                max={qRange.max}
+                step={qRange.max <= 15 ? 0.5 : 1}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="w-full"
+                style={{ accentColor: "#B08A44" }}
+              />
+            </label>
+          )}
+
+          {options.length > 0 && (
+            <div>
+              <span className="block text-xs font-medium mb-2 text-[#8A836F] capitalize">{terms.option}</span>
+              <div className="flex flex-wrap gap-2">
+                {options.map((e) => (
+                  <button
+                    key={e.id}
+                    onClick={() => setOptionId(e.id)}
+                    className="text-xs font-medium px-3 py-2 rounded-md border"
+                    style={{
+                      borderColor: e.id === optionId ? "#B08A44" : "#DDD3BF",
+                      background: e.id === optionId ? "#EDE6D6" : "white",
+                    }}
+                  >
+                    {e.name}
+                    {e.upcharge > 0 && <span className="text-[#A39C8A]"> +${e.upcharge}</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {addons.length > 0 && (
+            <div>
+              <span className="block text-xs font-medium mb-2 text-[#8A836F]">Add-ons</span>
+              <div className="space-y-3">
+                {addons.map((a) => (
+                  <div key={a.id}>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" checked={!!checkedAddons[a.id]} onChange={() => toggleAddon(a.id)} />
+                      {a.name}
+                      <span className="text-[#A39C8A]">
+                        {a.billing_type === "unit" ? `(+$${a.price}/${a.unit_label || "unit"})` : `(+${money(a.price)})`}
+                      </span>
+                    </label>
+                    {a.billing_type === "unit" && checkedAddons[a.id] && (
+                      <input
+                        type="number"
+                        min={1}
+                        value={addonQty[a.id] ?? 1}
+                        onChange={(e) => setAddonQty((q) => ({ ...q, [a.id]: Number(e.target.value) || 1 }))}
+                        className="ml-6 mt-1.5 w-24 text-sm px-2 py-1.5 rounded-md border border-line"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="md:col-span-2">
+          <div className="sticky top-4">
+            <div className="relative rounded-2xl" style={{ filter: "drop-shadow(0 8px 24px rgba(176,138,68,0.25))" }}>
+              <div className="ticket-stub rounded-2xl p-6 shadow-xl" style={{ background: "#211F1B", color: "#F7F3EA" }}>
+                <span
+                  className="absolute -top-2.5 -right-2.5 text-xs font-bold px-2.5 py-1 rounded-sm shadow-md"
+                  style={{ background: "#B08A44", color: "#211F1B", transform: "rotate(6deg)" }}
+                >
+                  ESTIMATE
+                </span>
+                <div className="flex items-center gap-2.5 mb-3">
+                  {item.photo_url ? (
+                    <img src={item.photo_url} alt="" className="w-9 h-9 rounded-md object-cover" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-md" style={{ background: SWATCHES[itemIndex % SWATCHES.length] }} />
+                  )}
+                  <div className="text-xs uppercase tracking-wide" style={{ color: "#BDB49F" }}>
+                    {item.name}{showQuantity ? ` · ${quantity} ${terms.quantityUnit}` : ""}
+                  </div>
+                </div>
+                <div className="text-4xl font-semibold mb-4 font-mono tabular-nums tracking-tight">
+                  {money(low)}–{money(high)}
+                </div>
+                <div className="border-t pt-3 space-y-1.5 text-xs font-mono" style={{ borderColor: "rgba(247,243,234,0.18)" }}>
+                  <Line label={terms.item} value={showQuantity ? `$${item.base_price} × ${quantity}` : money(item.base_price)} />
+                  {business.labor_rate > 0 && (
+                    <Line label="Labor" value={showQuantity ? `$${business.labor_rate} × ${quantity}` : money(business.labor_rate)} />
+                  )}
+                  {option?.upcharge > 0 && <Line label={option.name} value={showQuantity ? `$${option.upcharge} × ${quantity}` : money(option.upcharge)} />}
+                  {selectedAddons.map((a) => (
+                    <Line key={a.id} label={a.name} value={a.billing_type === "unit" ? `$${a.price}/${a.unit_label || "unit"} × ${a.qty}` : money(a.price)} />
+                  ))}
+                  {minApplied && <Line label="Shop minimum applied" value={money(business.min_price)} />}
+                </div>
+              </div>
+            </div>
+
+            {stage === "form" ? (
+              <button
+                onClick={() => setStage("quote")}
+                className="w-full mt-4 flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2.5 rounded-md shadow-sm text-white"
+                style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+              >
+                Get this estimate →
+              </button>
+            ) : (
+              <form onSubmit={submitLead} className="mt-4 space-y-2.5 p-4 rounded-xl border border-line bg-white shadow-sm">
+                <p className="text-xs mb-1 text-[#8A836F]">
+                  Send this estimate to {business.name} to confirm the details:
+                </p>
+                <input required placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
+                <input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
+                <input placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
+                {errorMsg && <p className="text-xs text-clay">{errorMsg}</p>}
+                <button type="submit" disabled={submitting} className="w-full text-sm font-medium px-4 py-2.5 rounded-md text-white disabled:opacity-60" style={{ background: "#211F1B" }}>
+                  {submitting ? "Sending…" : "Send my estimate"}
+                </button>
+                <p className="text-xs text-[#A39C8A] text-center pt-1">
+                  Estimate only — subject to final confirmation.
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Line({ label, value }) {
+  return (
+    <div className="flex justify-between">
+      <span style={{ color: "#BDB49F" }} className="capitalize">{label}</span>
+      <span>{value}</span>
+    </div>
+  );
+}
