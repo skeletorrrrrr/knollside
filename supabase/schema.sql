@@ -66,6 +66,7 @@ create table leads (
   customer_name text not null,
   customer_email text not null,
   customer_phone text,
+  comments text,
   item_name text,
   item_price_snapshot numeric,
   quantity numeric,

@@ -39,6 +39,7 @@ export async function POST(request, { params }) {
     customer_name: body.customer_name,
     customer_email: body.customer_email,
     customer_phone: body.customer_phone || null,
+    comments: body.comments || null,
     item_name: body.item_name,
     item_price_snapshot: body.item_price_snapshot,
     quantity,

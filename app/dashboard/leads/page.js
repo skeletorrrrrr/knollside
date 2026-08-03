@@ -53,6 +53,11 @@ export default function LeadsPage() {
                   <div className="text-xs text-[#8A836F] mt-1">
                     {l.item_name}{l.quantity ? `, ${l.quantity}` : ""}{l.option_name ? ` · ${l.option_name}` : ""}
                   </div>
+                  {l.comments && (
+                    <div className="text-xs text-[#211F1B] mt-1.5 italic border-l-2 border-line pl-2">
+                      "{l.comments}"
+                    </div>
+                  )}
                 </div>
                 <div className="text-sm font-mono font-semibold text-slab shrink-0">
                   ${Math.round(l.estimate_low).toLocaleString()}–${Math.round(l.estimate_high).toLocaleString()}

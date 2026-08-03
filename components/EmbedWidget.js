@@ -28,6 +28,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [comments, setComments] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -67,6 +68,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
           customer_name: name,
           customer_email: email,
           customer_phone: phone,
+          comments: comments,
           item_name: item?.name,
           item_price_snapshot: item?.base_price,
           quantity: effectiveQty,
@@ -274,6 +276,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 <input required placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
                 <input required type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
                 <input placeholder="Phone (optional)" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full text-sm px-3 py-2 rounded-md border border-line" />
+                <textarea placeholder="Anything else we should know? (optional)" value={comments} onChange={(e) => setComments(e.target.value)} rows={2} className="w-full text-sm px-3 py-2 rounded-md border border-line resize-none" />
                 {errorMsg && <p className="text-xs text-clay">{errorMsg}</p>}
                 <button type="submit" disabled={submitting} className="w-full text-sm font-medium px-4 py-2.5 rounded-md text-white disabled:opacity-60" style={{ background: "#211F1B" }}>
                   {submitting ? "Sending…" : "Send my estimate"}
