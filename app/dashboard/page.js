@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import NumberInput from "@/components/NumberInput";
+import PhotoUpload from "@/components/PhotoUpload";
 import { getIndustry } from "@/lib/industries";
 
 async function api(path, options) {
@@ -203,12 +204,11 @@ export default function SetupPage() {
                 prefix="$"
                 className="w-28"
               />
-              <input
-                defaultValue={m.photo_url || ""}
-                placeholder="Photo URL (optional)"
-                onBlur={(e) => patchItem(m.id, { photo_url: e.target.value.trim() || null })}
-                className="flex-1 text-xs px-2.5 py-2 rounded-md border border-line text-[#8A836F]"
-                style={{ minWidth: "9rem" }}
+              <PhotoUpload
+                itemId={m.id}
+                photoUrl={m.photo_url}
+                onUploaded={(url) => patchItem(m.id, { photo_url: url })}
+                onRemoved={() => patchItem(m.id, { photo_url: null })}
               />
               <DeleteButton
                 id={`item:${m.id}`}

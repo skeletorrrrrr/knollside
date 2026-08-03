@@ -76,6 +76,7 @@ create table leads (
   estimate_low numeric,
   estimate_high numeric,
   status text not null default 'new' check (status in ('new','contacted','won','lost')),
+  seen boolean not null default false,
   created_at timestamptz not null default now()
 );
 

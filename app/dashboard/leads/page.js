@@ -21,21 +21,43 @@ export default function LeadsPage() {
   }, []);
 
   async function updateStatus(id, status) {
-    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status } : l)));
+    // Acting on a lead also marks it seen (server does this too).
+    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status, seen: true } : l)));
     await fetch(`/api/leads/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
-    // Nudge the layout so the nav's "new leads" badge recounts.
+    router.refresh(); // recount the nav badge
+  }
+
+  async function markAllSeen() {
+    setLeads((ls) => ls.map((l) => ({ ...l, seen: true })));
+    await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "mark_all_seen" }),
+    });
     router.refresh();
   }
 
   if (leads === null) return <p className="text-sm text-[#8A836F]">Loading…</p>;
 
+  const unseenCount = leads.filter((l) => !l.seen).length;
+
   return (
     <div>
-      <h1 className="font-display text-xl font-semibold mb-4">Leads</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="font-display text-xl font-semibold">Leads</h1>
+        {unseenCount > 0 && (
+          <button
+            onClick={markAllSeen}
+            className="text-xs font-medium px-3 py-1.5 rounded-md bg-stone-dim text-[#211F1B]"
+          >
+            Mark all as seen ({unseenCount})
+          </button>
+        )}
+      </div>
       {leads.length === 0 ? (
         <p className="text-sm p-4 rounded-xl border border-dashed border-line text-[#A39C8A]">
           No estimates requested yet. Once your embed is live on your site, submissions land here.
@@ -43,10 +65,27 @@ export default function LeadsPage() {
       ) : (
         <div className="space-y-2">
           {leads.map((l) => (
-            <div key={l.id} className="p-3 rounded-xl border border-line bg-white">
+            <div
+              key={l.id}
+              className="p-3 rounded-xl border bg-white"
+              style={{
+                borderColor: l.seen ? "#DDD3BF" : "#C0483B",
+                borderLeftWidth: l.seen ? "1px" : "3px",
+              }}
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="font-medium">{l.customer_name}</div>
+                  <div className="font-medium flex items-center gap-2">
+                    {l.customer_name}
+                    {!l.seen && (
+                      <span
+                        className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white"
+                        style={{ background: "#C0483B" }}
+                      >
+                        NEW
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-[#A39C8A]">
                     {l.customer_email}{l.customer_phone ? ` · ${l.customer_phone}` : ""}
                   </div>

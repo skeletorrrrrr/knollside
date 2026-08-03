@@ -7,13 +7,29 @@ export async function PATCH(request, { params }) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  if (!["new", "contacted", "won", "lost"].includes(body.status)) {
-    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+  const update = {};
+
+  if (body.status !== undefined) {
+    if (!["new", "contacted", "won", "lost"].includes(body.status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+    update.status = body.status;
+    // Acting on a lead's status also counts as having seen it, so it drops
+    // out of the unseen badge count.
+    update.seen = true;
+  }
+
+  if (body.seen !== undefined) {
+    update.seen = !!body.seen;
+  }
+
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
 
   const { data, error } = await supabase
     .from("leads")
-    .update({ status: body.status })
+    .update(update)
     .eq("id", params.id)
     .select("*")
     .single();

@@ -25,7 +25,7 @@ export default function DashboardNav({ businessName, slug }) {
         .then((r) => r.json())
         .then((d) => {
           if (!active) return;
-          const count = (d.leads || []).filter((l) => l.status === "new").length;
+          const count = (d.leads || []).filter((l) => !l.seen).length;
           setNewLeads(count);
         })
         .catch(() => {});
