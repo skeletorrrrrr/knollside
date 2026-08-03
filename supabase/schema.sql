@@ -21,7 +21,7 @@ create table businesses (
   labor_rate numeric not null default 12,
   min_price numeric not null default 0,
   spread_pct numeric not null default 10,
-  subscription_tier text not null default 'starter' check (subscription_tier in ('starter','growth','pro')),
+  subscription_tier text check (subscription_tier in ('starter','growth','pro')),
   subscription_status text not null default 'trialing',
   stripe_customer_id text,
   stripe_subscription_id text,

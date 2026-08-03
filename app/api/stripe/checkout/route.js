@@ -37,7 +37,10 @@ export async function POST(request) {
     success_url: `${siteUrl}/dashboard/billing?success=1`,
     cancel_url: `${siteUrl}/dashboard/billing?canceled=1`,
     metadata: { business_id: business.id },
-    subscription_data: { metadata: { business_id: business.id } },
+    subscription_data: {
+      metadata: { business_id: business.id },
+      trial_period_days: 14,
+    },
   });
 
   return NextResponse.json({ url: session.url });
