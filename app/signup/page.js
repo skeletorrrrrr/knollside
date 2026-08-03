@@ -10,6 +10,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [industry, setIndustry] = useState(INDUSTRY_LIST[0].id);
+  const [starterMode, setStarterMode] = useState("template");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
@@ -19,10 +20,13 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
     const supabase = supabaseBrowser();
+    // For "other", starter_mode chooses blank vs a generic sample set; other
+    // industries always use their template.
+    const starter_mode = industry === "other" ? starterMode : "template";
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { industry } },
+      options: { data: { industry, starter_mode } },
     });
     setLoading(false);
     if (error) {
@@ -89,6 +93,42 @@ export default function SignupPage() {
             Sets up your estimator with sensible starter pricing — you can edit everything later.
           </p>
         </div>
+        {industry === "other" && (
+          <div>
+            <label className="block text-xs font-medium mb-1.5 text-[#8A836F]">
+              How do you want to start?
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setStarterMode("template")}
+                className="flex-1 text-xs font-medium px-3 py-2 rounded-md border"
+                style={{
+                  borderColor: starterMode === "template" ? "#B08A44" : "#DDD3BF",
+                  background: starterMode === "template" ? "#EDE6D6" : "white",
+                }}
+              >
+                Generic sample
+              </button>
+              <button
+                type="button"
+                onClick={() => setStarterMode("blank")}
+                className="flex-1 text-xs font-medium px-3 py-2 rounded-md border"
+                style={{
+                  borderColor: starterMode === "blank" ? "#B08A44" : "#DDD3BF",
+                  background: starterMode === "blank" ? "#EDE6D6" : "white",
+                }}
+              >
+                Start blank
+              </button>
+            </div>
+            <p className="text-xs text-[#A39C8A] mt-1">
+              {starterMode === "template"
+                ? "Fills in sample items, options, and add-ons you can rename and reprice."
+                : "Starts empty — you'll add your own items, options, and add-ons."}
+            </p>
+          </div>
+        )}
         {error && <p className="text-sm text-clay">{error}</p>}
         <button
           type="submit"

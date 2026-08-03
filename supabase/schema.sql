@@ -17,6 +17,7 @@ create table businesses (
   logo_url text,
   owner_email text,
   industry text not null default 'countertops',
+  starter_mode text default 'template',
   quantity_type text not null default 'area' check (quantity_type in ('area','hours','count','none')),
   labor_rate numeric not null default 12,
   min_price numeric not null default 0,
