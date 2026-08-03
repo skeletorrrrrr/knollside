@@ -158,12 +158,14 @@ export default function EmbedWidget({ business, items, options, addons }) {
                     }}
                   >
                     {m.photo_url ? (
-                      <img src={m.photo_url} alt={m.name} className="h-16 w-full object-cover" />
+                      <div className="w-full flex items-center justify-center" style={{ height: "112px", background: "#F2ECDE" }}>
+                        <img src={m.photo_url} alt={m.name} className="max-h-full max-w-full object-contain" />
+                      </div>
                     ) : (
-                      <div className="h-16" style={{ background: SWATCHES[i % SWATCHES.length] }} />
+                      <div style={{ height: "112px", background: SWATCHES[i % SWATCHES.length] }} />
                     )}
                     <div className="px-2.5 py-2 bg-white">
-                      <div className="text-xs font-medium truncate">{m.name}</div>
+                      <div className="text-xs font-medium leading-snug">{m.name}</div>
                       <div className="text-xs font-mono text-[#A39C8A]">${m.base_price}</div>
                     </div>
                   </button>
