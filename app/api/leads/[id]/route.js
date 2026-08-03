@@ -14,9 +14,9 @@ export async function PATCH(request, { params }) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
     update.status = body.status;
-    // Acting on a lead's status also counts as having seen it, so it drops
-    // out of the unseen badge count.
-    update.seen = true;
+    // Setting a lead back to "New" re-flags it as unseen (the pill/badge come
+    // back); acting on it with any other status marks it seen.
+    update.seen = body.status !== "new";
   }
 
   if (body.seen !== undefined) {

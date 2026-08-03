@@ -21,8 +21,9 @@ export default function LeadsPage() {
   }, []);
 
   async function updateStatus(id, status) {
-    // Acting on a lead also marks it seen (server does this too).
-    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status, seen: true } : l)));
+    // "New" re-flags as unseen; any other status marks seen. Mirrors the API.
+    const seen = status !== "new";
+    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status, seen } : l)));
     await fetch(`/api/leads/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
