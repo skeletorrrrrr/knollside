@@ -179,6 +179,17 @@ export default function SetupPage() {
             />
           </Field>
         </div>
+        <div className="mt-3">
+          <Field label="Logo (shown on your estimator)">
+            <PhotoUpload
+              pathPrefix="logos"
+              photoUrl={business.logo_url}
+              label="Drag logo or click to upload"
+              onUploaded={(url) => patchBusiness({ logo_url: url })}
+              onRemoved={() => patchBusiness({ logo_url: null })}
+            />
+          </Field>
+        </div>
       </section>
 
       {/* Items */}

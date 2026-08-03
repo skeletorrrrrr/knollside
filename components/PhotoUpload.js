@@ -4,10 +4,9 @@ import { supabaseBrowser } from "@/lib/supabaseClient";
 
 // Drag-and-drop (or click-to-browse) image uploader. Uploads the file to the
 // public "item-photos" Supabase Storage bucket and hands the resulting public
-// URL back via onUploaded, which the dashboard saves into the item's
-// photo_url. The widget already renders photo_url, so nothing downstream
-// changes — businesses just stop having to paste URLs.
-export default function PhotoUpload({ itemId, photoUrl, onUploaded, onRemoved }) {
+// URL back via onUploaded. Used for both material photos and business logos
+// (logos go under a "logos/" path prefix in the same bucket).
+export default function PhotoUpload({ itemId, pathPrefix, photoUrl, onUploaded, onRemoved, label }) {
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState("");
@@ -30,7 +29,8 @@ export default function PhotoUpload({ itemId, photoUrl, onUploaded, onRemoved })
     try {
       const supabase = supabaseBrowser();
       const ext = file.name.split(".").pop() || "jpg";
-      const path = `${itemId}/${Date.now()}.${ext}`;
+      const folder = pathPrefix || itemId || "misc";
+      const path = `${folder}/${Date.now()}.${ext}`;
 
       const { error: upErr } = await supabase.storage
         .from("item-photos")
@@ -82,7 +82,7 @@ export default function PhotoUpload({ itemId, photoUrl, onUploaded, onRemoved })
             fontSize: "11px",
           }}
         >
-          {uploading ? "Uploading…" : dragging ? "Drop photo" : "Drag photo or click to upload"}
+          {uploading ? "Uploading…" : dragging ? "Drop image" : (label || "Drag photo or click to upload")}
         </div>
       )}
       <input

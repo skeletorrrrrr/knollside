@@ -113,10 +113,28 @@ export default function EmbedWidget({ business, items, options, addons }) {
   return (
     <div className="max-w-3xl mx-auto px-5 py-8">
       <div className="mb-6">
-        <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
-          {business.name}
-        </span>
-        <h1 className="font-display text-2xl font-semibold tracking-tight mt-1">Get an instant estimate</h1>
+        {business.logo_url ? (
+          <div className="flex items-center gap-3">
+            <img
+              src={business.logo_url}
+              alt={business.name}
+              className="h-12 w-auto max-w-[180px] object-contain"
+            />
+            <div>
+              <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
+                {business.name}
+              </span>
+              <h1 className="font-display text-2xl font-semibold tracking-tight">Get an instant estimate</h1>
+            </div>
+          </div>
+        ) : (
+          <>
+            <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
+              {business.name}
+            </span>
+            <h1 className="font-display text-2xl font-semibold tracking-tight mt-1">Get an instant estimate</h1>
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-10">
