@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const STATUSES = ["new", "contacted", "won", "lost"];
 const STATUS_COLOR = {
@@ -11,6 +12,7 @@ const STATUS_COLOR = {
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/leads")
@@ -25,6 +27,8 @@ export default function LeadsPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
+    // Nudge the layout so the nav's "new leads" badge recounts.
+    router.refresh();
   }
 
   if (leads === null) return <p className="text-sm text-[#8A836F]">Loading…</p>;
