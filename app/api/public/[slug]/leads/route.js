@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabasePublic } from "@/lib/supabasePublic";
 import { calculateEstimate } from "@/lib/pricing";
+import { sendEmail, businessLeadEmail, customerConfirmationEmail } from "@/lib/email";
 
 export async function POST(request, { params }) {
   const supabase = supabasePublic();
@@ -12,7 +13,7 @@ export async function POST(request, { params }) {
 
   const { data: business, error: bErr } = await supabase
     .from("businesses")
-    .select("id, quantity_type, labor_rate, min_price, spread_pct")
+    .select("id, name, owner_email, quantity_type, labor_rate, min_price, spread_pct")
     .eq("slug", params.slug)
     .maybeSingle();
 
@@ -34,7 +35,7 @@ export async function POST(request, { params }) {
     spreadPct: business.spread_pct,
   });
 
-  const { error } = await supabase.from("leads").insert({
+  const leadData = {
     business_id: business.id,
     customer_name: body.customer_name,
     customer_email: body.customer_email,
@@ -48,8 +49,19 @@ export async function POST(request, { params }) {
     addons_selected: body.addons_selected || [],
     estimate_low: low,
     estimate_high: high,
-  });
+  };
 
+  const { error } = await supabase.from("leads").insert(leadData);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Fire both emails. Failures here must NOT fail the request — the lead is
+  // already safely saved, so email is best-effort.
+  const businessMsg = businessLeadEmail({ businessName: business.name, lead: leadData, low, high });
+  const customerMsg = customerConfirmationEmail({ businessName: business.name, lead: leadData, low, high });
+  await Promise.allSettled([
+    sendEmail({ to: business.owner_email, ...businessMsg }),
+    sendEmail({ to: body.customer_email, ...customerMsg }),
+  ]);
+
   return NextResponse.json({ ok: true, low, high });
 }
