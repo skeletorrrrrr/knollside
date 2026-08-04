@@ -13,7 +13,10 @@ export default function SignupPage() {
   const [starterMode, setStarterMode] = useState("template");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkEmail, setCheckEmail] = useState(false);
+  const [codeStep, setCodeStep] = useState(false);
+  const [code, setCode] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resendMsg, setResendMsg] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,7 +33,7 @@ export default function SignupPage() {
     });
     setLoading(false);
     if (error) {
-      setError(error.message);
+      setError(error.message || "Something went wrong. Please try again.");
       return;
     }
     if (data.session) {
@@ -38,18 +41,97 @@ export default function SignupPage() {
       router.push("/dashboard");
       router.refresh();
     } else {
-      // email confirmation is on — the business row gets created on first
-      // login instead (see lib/business.js), using the industry saved above
-      setCheckEmail(true);
+      // email confirmation is on — show the code-entry step below. We use a
+      // typed-in numeric code rather than a magic link: link-scanning bots
+      // (Gmail and some corporate mail security gateways) auto-visit links
+      // in incoming email to check them for safety, which silently burns a
+      // single-use confirmation link before the real user ever clicks it.
+      // A code the user types in isn't clickable, so it can't get
+      // pre-consumed that way. The business row gets created on first
+      // login after this, using the industry saved above (see lib/business.js).
+      setCodeStep(true);
     }
   }
 
-  if (checkEmail) {
+  async function handleVerifyCode(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const supabase = supabaseBrowser();
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token: code.trim(),
+      type: "signup",
+    });
+    setLoading(false);
+    if (error) {
+      setError(error.message || "That code didn't work. Check it and try again.");
+      return;
+    }
+    if (data.session) {
+      router.push("/dashboard");
+      router.refresh();
+    } else {
+      router.push("/login");
+    }
+  }
+
+  async function handleResend() {
+    setResending(true);
+    setError("");
+    setResendMsg("");
+    const supabase = supabaseBrowser();
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    setResending(false);
+    if (error) setError(error.message || "Couldn't resend the code. Try again in a moment.");
+    else setResendMsg("New code sent.");
+  }
+
+  if (codeStep) {
     return (
-      <main className="max-w-sm mx-auto px-5 py-20 text-center">
+      <main className="max-w-sm mx-auto px-5 py-20">
         <h1 className="font-display text-2xl font-semibold mb-3">Check your email</h1>
-        <p className="text-sm text-[#8A836F]">
-          We sent a confirmation link to {email}. Click it, then log in.
+        <p className="text-sm text-[#8A836F] mb-6">
+          We sent a code to {email}. Enter it below to finish creating your account.
+        </p>
+        <form onSubmit={handleVerifyCode} className="space-y-3">
+          <input
+            type="text"
+            inputMode="numeric"
+            required
+            autoFocus
+            placeholder="Confirmation code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="w-full text-sm px-3 py-2.5 rounded-md border border-line tracking-widest"
+          />
+          {error && <p className="text-sm text-clay">{error}</p>}
+          {resendMsg && <p className="text-sm text-[#8A836F]">{resendMsg}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full text-sm font-medium px-4 py-2.5 rounded-md text-white"
+            style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+          >
+            {loading ? "Confirming…" : "Confirm"}
+          </button>
+        </form>
+        <p className="text-sm text-[#8A836F] mt-4">
+          Didn't get it?{" "}
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={resending}
+            className="underline"
+          >
+            {resending ? "Sending…" : "Resend code"}
+          </button>
+        </p>
+        <p className="text-sm text-[#8A836F] mt-1">
+          Wrong email?{" "}
+          <button type="button" onClick={() => setCodeStep(false)} className="underline">
+            Start over
+          </button>
         </p>
       </main>
     );
