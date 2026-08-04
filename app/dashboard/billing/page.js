@@ -71,9 +71,9 @@ export default function BillingPage() {
     <div>
       <h1 className="font-display text-xl font-semibold mb-1">Billing</h1>
       {hasPlan ? (
-        <p className="text-sm text-[#8A836F] mb-2">
-          Current plan: <span className="font-medium capitalize">{business.subscription_tier}</span>{" "}
-          <span className="text-xs">({business.subscription_status})</span>
+        <p className="text-lg mb-2">
+          Current plan: <span className="font-bold text-xl capitalize" style={{ color: "#8F6E32" }}>{business.subscription_tier}</span>{" "}
+          <span className="text-sm text-[#8A836F]">({business.subscription_status})</span>
         </p>
       ) : (
         <p className="text-sm text-[#8A836F] mb-2">
