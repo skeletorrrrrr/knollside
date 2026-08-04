@@ -17,8 +17,10 @@ function fmtDate(s) {
 export default function AdminPage() {
   const [data, setData] = useState(null);
   const [err, setErr] = useState("");
+  const [confirmId, setConfirmId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  useEffect(() => {
+  function load() {
     fetch("/api/admin")
       .then(async (r) => {
         if (!r.ok) {
@@ -29,7 +31,30 @@ export default function AdminPage() {
       })
       .then(setData)
       .catch((e) => setErr(e.message));
-  }, []);
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function deleteBusiness(id) {
+    setDeletingId(id);
+    const res = await fetch("/api/admin", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ businessId: id }),
+    });
+    setDeletingId(null);
+    setConfirmId(null);
+    if (res.ok) {
+      setData((d) => ({
+        ...d,
+        rows: d.rows.filter((r) => r.id !== id),
+        summary: { ...d.summary, totalBusinesses: d.summary.totalBusinesses - 1 },
+      }));
+    } else {
+      const e = await res.json().catch(() => ({}));
+      alert(e.error || "Could not delete.");
+    }
+  }
 
   if (err) {
     return (
@@ -67,6 +92,7 @@ export default function AdminPage() {
               <th className="px-3 py-2">Last lead</th>
               <th className="px-3 py-2">Joined</th>
               <th className="px-3 py-2">Health</th>
+              <th className="px-3 py-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -94,11 +120,39 @@ export default function AdminPage() {
                       {h.label}
                     </span>
                   </td>
+                  <td className="px-3 py-2 text-right">
+                    {confirmId === r.id ? (
+                      <span className="inline-flex items-center gap-1">
+                        <button
+                          onClick={() => deleteBusiness(r.id)}
+                          disabled={deletingId === r.id}
+                          className="text-xs font-medium px-2 py-1 rounded-md text-white disabled:opacity-50"
+                          style={{ background: "#C0483B" }}
+                        >
+                          {deletingId === r.id ? "Deleting…" : "Confirm"}
+                        </button>
+                        <button
+                          onClick={() => setConfirmId(null)}
+                          className="text-xs px-2 py-1 rounded-md text-[#8A836F]"
+                        >
+                          Cancel
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmId(r.id)}
+                        className="text-xs font-medium px-2 py-1 rounded-md text-clay hover:underline"
+                        title="Delete this business"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </td>
                 </tr>
               );
             })}
             {rows.length === 0 && (
-              <tr><td colSpan={7} className="px-3 py-6 text-center text-[#A39C8A]">No businesses yet.</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-[#A39C8A]">No businesses yet.</td></tr>
             )}
           </tbody>
         </table>
