@@ -8,6 +8,7 @@ export default function BillingPage() {
   const [business, setBusiness] = useState(null);
   const [loadingTier, setLoadingTier] = useState(null);
   const [canceling, setCanceling] = useState(false);
+  const [reactivating, setReactivating] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [confirmName, setConfirmName] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -38,10 +39,21 @@ export default function BillingPage() {
     const data = await res.json();
     setCanceling(false);
     if (res.ok) {
-      setMsg("Your subscription will cancel at the end of the current period.");
       setBusiness((b) => ({ ...b, subscription_status: "canceling" }));
     } else {
       alert(data.error || "Could not cancel.");
+    }
+  }
+
+  async function reactivate() {
+    setReactivating(true);
+    const res = await fetch("/api/stripe/reactivate", { method: "POST" });
+    const data = await res.json();
+    setReactivating(false);
+    if (res.ok) {
+      setBusiness((b) => ({ ...b, subscription_status: "active" }));
+    } else {
+      alert(data.error || "Could not reactivate.");
     }
   }
 
@@ -82,8 +94,29 @@ export default function BillingPage() {
       )}
       <p className="text-xs text-[#A39C8A] mb-6">Every plan starts with a 14-day free trial. Cancel anytime.</p>
 
-      {msg && (
-        <div className="text-sm mb-4 p-3 rounded-md" style={{ background: "#EDE6D6", color: "#211F1B" }}>{msg}</div>
+      {business.subscription_status === "canceling" && (
+        <div
+          className="mb-5 p-4 rounded-lg flex items-start justify-between gap-4"
+          style={{ background: "#FBEAE7", border: "1.5px solid #C0483B" }}
+        >
+          <div>
+            <div className="font-semibold text-sm" style={{ color: "#C0483B" }}>
+              ⚠ Your subscription is set to cancel
+            </div>
+            <div className="text-sm mt-0.5" style={{ color: "#8A4B41" }}>
+              You'll keep access until the end of your current billing period, then your estimator
+              widget will stop working. Changed your mind?
+            </div>
+          </div>
+          <button
+            onClick={reactivate}
+            disabled={reactivating}
+            className="shrink-0 text-sm font-medium px-4 py-2 rounded-md text-white disabled:opacity-50"
+            style={{ background: "#C0483B" }}
+          >
+            {reactivating ? "Reactivating…" : "Reactivate"}
+          </button>
+        </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -111,7 +144,7 @@ export default function BillingPage() {
       </div>
 
       {/* Cancel subscription — low friction, keeps account */}
-      {hasActiveSub && (
+      {hasActiveSub && business.subscription_status !== "canceling" && (
         <div className="mt-10">
           <h2 className="font-display text-lg font-semibold mb-1">Cancel subscription</h2>
           <p className="text-sm text-[#8A836F] mb-3">
