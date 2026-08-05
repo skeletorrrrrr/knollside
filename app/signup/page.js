@@ -39,7 +39,6 @@ export default function SignupPage() {
     if (data.session) {
       // email confirmation is off in the Supabase project — go straight in
       router.push("/dashboard");
-      router.refresh();
     } else {
       // email confirmation is on — show the code-entry step below. We use a
       // typed-in numeric code rather than a magic link: link-scanning bots
@@ -70,7 +69,6 @@ export default function SignupPage() {
     }
     if (data.session) {
       router.push("/dashboard");
-      router.refresh();
     } else {
       router.push("/login");
     }
