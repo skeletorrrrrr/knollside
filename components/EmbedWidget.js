@@ -31,6 +31,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const [comments, setComments] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [zoomedPhoto, setZoomedPhoto] = useState(null); // {url, name} or null
 
   const item = items.find((m) => m.id === itemId) || items[0];
   const itemIndex = items.findIndex((m) => m.id === item?.id);
@@ -111,6 +112,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
     : null;
 
   return (
+    <>
     <div className="max-w-3xl mx-auto px-5 py-8">
       <div className="mb-6">
         {business.logo_url ? (
@@ -147,28 +149,67 @@ export default function EmbedWidget({ business, items, options, addons }) {
               {items.map((m, i) => {
                 const selected = m.id === itemId;
                 return (
-                  <button
+                  <div
                     key={m.id}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setItemId(m.id)}
-                    className="rounded-xl overflow-hidden border-2 text-left transition-all duration-150"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setItemId(m.id);
+                      }
+                    }}
+                    className="rounded-xl overflow-hidden border-2 text-left transition-all duration-150 cursor-pointer"
                     style={{
-                      borderColor: selected ? "#B08A44" : "transparent",
+                      borderColor: selected ? "#B08A44" : "#DCD5C4",
                       boxShadow: selected ? "0 6px 16px rgba(176,138,68,0.28)" : "0 1px 2px rgba(0,0,0,0.06)",
                       transform: selected ? "translateY(-2px) scale(1.02)" : "none",
                     }}
                   >
-                    {m.photo_url ? (
-                      <div className="w-full flex items-center justify-center" style={{ height: "112px", background: "#F2ECDE" }}>
-                        <img src={m.photo_url} alt={m.name} className="max-h-full max-w-full object-contain" />
-                      </div>
-                    ) : (
-                      <div style={{ height: "112px", background: SWATCHES[i % SWATCHES.length] }} />
-                    )}
+                    <div className="relative">
+                      {m.photo_url ? (
+                        <div className="w-full flex items-center justify-center" style={{ height: "112px", background: "#F2ECDE" }}>
+                          <img src={m.photo_url} alt={m.name} className="max-h-full max-w-full object-contain" />
+                        </div>
+                      ) : (
+                        <div style={{ height: "112px", background: SWATCHES[i % SWATCHES.length] }} />
+                      )}
+                      {m.photo_url && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setZoomedPhoto({ url: m.photo_url, name: m.name });
+                          }}
+                          aria-label={`Enlarge photo of ${m.name}`}
+                          className="absolute flex items-center justify-center"
+                          style={{
+                            top: 6,
+                            right: 6,
+                            width: 30,
+                            height: 30,
+                            borderRadius: "50%",
+                            background: "rgba(255,255,255,0.92)",
+                            border: "1px solid rgba(0,0,0,0.12)",
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#211F1B" strokeWidth="2.5">
+                            <circle cx="11" cy="11" r="7" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                     <div className="px-2.5 py-2 bg-white">
                       <div className="text-xs font-medium leading-snug">{m.name}</div>
                       <div className="text-xs font-mono text-[#A39C8A]">${m.base_price}</div>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>
@@ -310,6 +351,47 @@ export default function EmbedWidget({ business, items, options, addons }) {
         </div>
       </div>
     </div>
+
+    {zoomedPhoto && (
+      <div
+        onClick={() => setZoomedPhoto(null)}
+        className="fixed inset-0 flex items-center justify-center"
+        style={{ background: "rgba(20,17,13,0.85)", zIndex: 1000, padding: "24px", cursor: "zoom-out" }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="text-center"
+          style={{ maxWidth: "90%", maxHeight: "90%" }}
+        >
+          <img
+            src={zoomedPhoto.url}
+            alt={zoomedPhoto.name}
+            style={{ maxWidth: "100%", maxHeight: "65vh", borderRadius: 10, boxShadow: "0 20px 60px rgba(0,0,0,0.45)" }}
+          />
+          <div className="text-white font-medium" style={{ marginTop: 16, fontSize: 18 }}>
+            {zoomedPhoto.name}
+          </div>
+          <button
+            type="button"
+            onClick={() => setZoomedPhoto(null)}
+            className="font-medium"
+            style={{
+              marginTop: 16,
+              background: "white",
+              color: "#211F1B",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 28px",
+              fontSize: 15,
+              cursor: "pointer",
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 
