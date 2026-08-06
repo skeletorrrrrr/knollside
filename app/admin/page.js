@@ -19,6 +19,33 @@ export default function AdminPage() {
   const [err, setErr] = useState("");
   const [confirmId, setConfirmId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [sortCol, setSortCol] = useState(null);
+  const [sortDir, setSortDir] = useState(null); // "asc" | "desc" | null (null = default order)
+
+  function handleSort(col) {
+    if (sortCol !== col) {
+      setSortCol(col);
+      setSortDir("asc");
+    } else if (sortDir === "asc") {
+      setSortDir("desc");
+    } else {
+      setSortCol(null);
+      setSortDir(null);
+    }
+  }
+
+  function sortValue(r, col) {
+    switch (col) {
+      case "name": return (r.name || "").toLowerCase();
+      case "industry": return (r.industry || "").toLowerCase();
+      case "tier": return r.tier ? r.tier.toLowerCase() : "no plan";
+      case "leadCount": return r.leadCount;
+      case "lastLead": return r.lastLead ? new Date(r.lastLead).getTime() : -1;
+      case "created_at": return new Date(r.created_at).getTime();
+      case "health": return (HEALTH[r.health]?.label || r.health || "").toLowerCase();
+      default: return 0;
+    }
+  }
 
   function load() {
     fetch("/api/admin")
@@ -67,7 +94,16 @@ export default function AdminPage() {
   }
   if (!data) return <p className="text-sm text-[#8A836F] p-8">Loading…</p>;
 
-  const { rows, summary } = data;
+  const { rows: rawRows, summary } = data;
+  const rows = sortCol && sortDir
+    ? [...rawRows].sort((a, b) => {
+        const av = sortValue(a, sortCol);
+        const bv = sortValue(b, sortCol);
+        if (av < bv) return sortDir === "asc" ? -1 : 1;
+        if (av > bv) return sortDir === "asc" ? 1 : -1;
+        return 0;
+      })
+    : rawRows;
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-8">
@@ -85,13 +121,13 @@ export default function AdminPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-[#8A836F] border-b border-line">
-              <th className="px-3 py-2">Business</th>
-              <th className="px-3 py-2">Industry</th>
-              <th className="px-3 py-2">Plan</th>
-              <th className="px-3 py-2">Leads</th>
-              <th className="px-3 py-2">Last lead</th>
-              <th className="px-3 py-2">Joined</th>
-              <th className="px-3 py-2">Health</th>
+              <SortHeader label="Business" col="name" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Industry" col="industry" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Plan" col="tier" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Leads" col="leadCount" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Last lead" col="lastLead" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Joined" col="created_at" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Health" col="health" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <th className="px-3 py-2"></th>
             </tr>
           </thead>
@@ -181,6 +217,24 @@ export default function AdminPage() {
         <strong> Canceled</strong> = subscription ended.
       </p>
     </div>
+  );
+}
+
+function SortHeader({ label, col, sortCol, sortDir, onSort }) {
+  const active = sortCol === col;
+  return (
+    <th className="px-3 py-2">
+      <button
+        onClick={() => onSort(col)}
+        className="flex items-center gap-1 text-xs font-semibold transition-colors"
+        style={{ color: active ? "#211F1B" : "#8A836F" }}
+      >
+        {label}
+        <span style={{ opacity: active ? 1 : 0.35, fontSize: "10px" }}>
+          {active && sortDir === "asc" ? "▲" : active && sortDir === "desc" ? "▼" : "↕"}
+        </span>
+      </button>
+    </th>
   );
 }
 
