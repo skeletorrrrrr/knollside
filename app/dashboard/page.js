@@ -21,6 +21,14 @@ const QTY_TYPES = [
   { id: "none", label: "Flat rate (no quantity)" },
 ];
 
+function slugify(str) {
+  return (str || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export default function SetupPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
@@ -31,6 +39,9 @@ export default function SetupPage() {
   const [savedFlash, setSavedFlash] = useState("");
   const [wizardStep, setWizardStep] = useState(0);
   const [copiedEmbed, setCopiedEmbed] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [slugDraft, setSlugDraft] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -44,6 +55,8 @@ export default function SetupPage() {
       setOptions(op.options);
       setAddons(a.addons);
       setBusiness(s.business);
+      setNameDraft(s.business.name);
+      setSlugDraft(s.business.slug);
       setLoading(false);
     })();
   }, []);
@@ -206,17 +219,44 @@ export default function SetupPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
             <Field label="Business name">
               <input
-                defaultValue={business.name}
-                onBlur={(e) => e.target.value.trim() && patchBusiness({ name: e.target.value.trim() })}
+                value={nameDraft}
+                onChange={(e) => {
+                  setNameDraft(e.target.value);
+                  if (!slugTouched) setSlugDraft(slugify(e.target.value));
+                }}
+                onBlur={(e) => {
+                  const v = e.target.value.trim();
+                  if (v) patchBusiness({ name: v });
+                  if (!slugTouched) {
+                    const suggested = slugify(nameDraft);
+                    if (suggested) {
+                      setSlugDraft(suggested);
+                      patchBusiness({ slug: suggested });
+                    }
+                  }
+                }}
                 className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
               />
             </Field>
             <Field label="Embed URL slug">
               <input
-                defaultValue={business.slug}
-                onBlur={(e) => e.target.value.trim() && patchBusiness({ slug: e.target.value.trim() })}
+                value={slugDraft}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  setSlugDraft(e.target.value);
+                }}
+                onBlur={(e) => {
+                  const v = slugify(e.target.value);
+                  if (v) {
+                    setSlugDraft(v);
+                    patchBusiness({ slug: v });
+                  }
+                }}
                 className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm font-mono outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
               />
+              <span className="block text-xs mt-1" style={{ color: "#A39C8A" }}>
+                {slugTouched ? "Your custom link — this is what customers see in the URL." : "Suggested from your business name — edit anytime."}
+              </span>
             </Field>
           </div>
           <div className="mt-4 max-w-md">

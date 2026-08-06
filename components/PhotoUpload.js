@@ -74,12 +74,13 @@ export default function PhotoUpload({ itemId, pathPrefix, photoUrl, onUploaded, 
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
-          className="w-full h-16 flex items-center justify-center text-center rounded-md border border-dashed cursor-pointer px-2 transition-colors"
+          className="w-full h-16 flex items-center justify-center text-center rounded-md border-2 border-dashed cursor-pointer px-2 transition-colors"
           style={{
-            borderColor: dragging ? "#B08A44" : "#DDD3BF",
-            background: dragging ? "#F3ECDD" : "transparent",
-            color: "#A39C8A",
+            borderColor: dragging ? "#B08A44" : "#C2B695",
+            background: dragging ? "#F3ECDD" : "#FBF8F1",
+            color: dragging ? "#8F6E32" : "#8A7F5E",
             fontSize: "11px",
+            fontWeight: 500,
           }}
         >
           {uploading ? "Uploading…" : dragging ? "Drop image" : (label || "Drag photo or click to upload")}
