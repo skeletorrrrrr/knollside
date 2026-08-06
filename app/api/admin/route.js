@@ -62,6 +62,7 @@ export async function GET() {
       lastLead,
       itemCount,
       health,
+      isAdmin: (b.owner_email || "").toLowerCase() === adminEmail,
     };
   });
 
@@ -96,11 +97,15 @@ export async function DELETE(request) {
 
   const { data: business } = await admin
     .from("businesses")
-    .select("id, owner_id, stripe_subscription_id")
+    .select("id, owner_id, owner_email, stripe_subscription_id")
     .eq("id", businessId)
     .maybeSingle();
 
   if (!business) return NextResponse.json({ error: "Business not found" }, { status: 404 });
+
+  if ((business.owner_email || "").toLowerCase() === adminEmail) {
+    return NextResponse.json({ error: "Can't delete the admin's own account from here." }, { status: 400 });
+  }
 
   // Cancel Stripe subscription if any.
   if (business.stripe_subscription_id) {

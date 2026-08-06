@@ -99,9 +99,23 @@ export default function AdminPage() {
             {rows.map((r) => {
               const h = HEALTH[r.health] || HEALTH.active;
               return (
-                <tr key={r.id} className="border-b border-line last:border-0">
+                <tr
+                  key={r.id}
+                  className="border-b border-line last:border-0"
+                  style={r.isAdmin ? { background: "#FBF3E1" } : undefined}
+                >
                   <td className="px-3 py-2">
-                    <div className="font-medium">{r.name}</div>
+                    <div className="font-medium flex items-center gap-2">
+                      {r.name}
+                      {r.isAdmin && (
+                        <span
+                          className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white"
+                          style={{ background: "#B08A44" }}
+                        >
+                          YOU
+                        </span>
+                      )}
+                    </div>
                     <div className="text-xs text-[#A39C8A]">{r.owner_email}</div>
                   </td>
                   <td className="px-3 py-2 capitalize text-[#8A836F]">{(r.industry || "").replace("_", " ")}</td>
@@ -121,7 +135,9 @@ export default function AdminPage() {
                     </span>
                   </td>
                   <td className="px-3 py-2 text-right">
-                    {confirmId === r.id ? (
+                    {r.isAdmin ? (
+                      <span className="text-xs text-[#A39C8A]">—</span>
+                    ) : confirmId === r.id ? (
                       <span className="inline-flex items-center gap-1">
                         <button
                           onClick={() => deleteBusiness(r.id)}
