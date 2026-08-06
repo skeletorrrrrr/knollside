@@ -42,6 +42,7 @@ export default function SetupPage() {
   const [nameDraft, setNameDraft] = useState("");
   const [slugDraft, setSlugDraft] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
+  const [reorderMode, setReorderMode] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -83,6 +84,17 @@ export default function SetupPage() {
     await api(`/api/items/${id}`, { method: "DELETE" });
     setItems((xs) => xs.filter((m) => m.id !== id));
     setConfirmDelete(null);
+  }
+  async function moveItem(index, direction) {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= items.length) return;
+    const reordered = [...items];
+    [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+    setItems(reordered);
+    await Promise.all([
+      api(`/api/items/${reordered[index].id}`, { method: "PATCH", body: JSON.stringify({ sort_order: index }) }),
+      api(`/api/items/${reordered[newIndex].id}`, { method: "PATCH", body: JSON.stringify({ sort_order: newIndex }) }),
+    ]);
   }
 
   // ---- options ----
@@ -278,22 +290,62 @@ export default function SetupPage() {
         <StepCard>
           <div className="flex items-center justify-between mb-1">
             <h2 className="font-display text-xl font-semibold capitalize">{terms.items} &amp; {terms.itemPrice}</h2>
-            <button
-              onClick={addItem}
-              className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
-              style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
-            >
-              + Add {terms.item}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setReorderMode((v) => !v)}
+                disabled={items.length < 2}
+                className="text-xs font-semibold px-3 py-2 rounded-lg border transition-shadow hover:shadow-sm disabled:opacity-40"
+                style={
+                  reorderMode
+                    ? { borderColor: "#4B6A52", background: "#4B6A52", color: "#fff" }
+                    : { borderColor: "#DCD5C4", background: "white", color: "#6B6558" }
+                }
+              >
+                {reorderMode ? "✓ Done" : "↕ Organize"}
+              </button>
+              <button
+                onClick={addItem}
+                className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
+                style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
+              >
+                + Add {terms.item}
+              </button>
+            </div>
           </div>
-          <p className="text-sm text-[#8A836F] mb-5">What you offer, and what each one starts at.</p>
+          <p className="text-sm text-[#8A836F] mb-5">
+            {reorderMode
+              ? "This is the order customers see them in. Use the arrows to rearrange."
+              : "What you offer, and what each one starts at."}
+          </p>
           <div className="space-y-2.5">
-            {items.map((m) => (
+            {items.map((m, i) => (
               <div
                 key={m.id}
                 className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl border transition-shadow hover:shadow-sm"
                 style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}
               >
+                {reorderMode && (
+                  <div className="flex flex-col gap-0.5 flex-shrink-0">
+                    <button
+                      onClick={() => moveItem(i, -1)}
+                      disabled={i === 0}
+                      aria-label={`Move ${m.name} up`}
+                      className="w-6 h-5 flex items-center justify-center rounded border text-xs disabled:opacity-25"
+                      style={{ borderColor: "#DCD5C4", background: "white" }}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      onClick={() => moveItem(i, 1)}
+                      disabled={i === items.length - 1}
+                      aria-label={`Move ${m.name} down`}
+                      className="w-6 h-5 flex items-center justify-center rounded border text-xs disabled:opacity-25"
+                      style={{ borderColor: "#DCD5C4", background: "white" }}
+                    >
+                      ▼
+                    </button>
+                  </div>
+                )}
                 <input
                   defaultValue={m.name}
                   onBlur={(e) => e.target.value.trim() && patchItem(m.id, { name: e.target.value.trim() })}
