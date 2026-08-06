@@ -15,7 +15,7 @@ export default function LandingPage() {
         Whatever you sell — countertops, repairs, cleaning, lawn care — set up
         your pricing once and the widget does the math for every visitor.
       </p>
-      <div className="flex gap-3 mb-16">
+      <div className="flex flex-wrap gap-3 mb-20">
         <Link
           href="/signup"
           className="px-5 py-3 rounded-md text-sm font-medium text-white shadow-sm"
@@ -23,12 +23,46 @@ export default function LandingPage() {
         >
           Start free trial
         </Link>
+        <a
+          href="#live-demo"
+          className="px-5 py-3 rounded-md text-sm font-medium border border-line"
+        >
+          See live demo ↓
+        </a>
         <Link
           href="/login"
-          className="px-5 py-3 rounded-md text-sm font-medium border border-line"
+          className="px-5 py-3 rounded-md text-sm font-medium text-[#6B6558]"
         >
           Log in
         </Link>
+      </div>
+
+      <div id="live-demo" className="mb-20 scroll-mt-8">
+        <div className="flex items-center gap-2 mb-1">
+          <span
+            className="inline-block rounded-full flex-shrink-0"
+            style={{ width: 7, height: 7, background: "#4B6A52" }}
+          />
+          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#8F6E32" }}>
+            Live demo — try it yourself
+          </span>
+        </div>
+        <h2 className="font-display text-2xl font-semibold mb-1">This is a real, working estimator.</h2>
+        <p className="text-sm text-[#8A836F] mb-5 max-w-xl">
+          Not a screenshot — pick a material, drag the slider, check a box. Every
+          business on Knollside gets one of these, customized to what they sell.
+        </p>
+        <div
+          className="rounded-2xl overflow-hidden border"
+          style={{ borderColor: "#EDE6D6", boxShadow: "0 12px 40px rgba(33,31,27,0.08)" }}
+        >
+          <iframe
+            src="/embed/demo"
+            style={{ width: "100%", height: "760px", border: 0, display: "block" }}
+            title="Live Knollside demo estimator"
+            loading="lazy"
+          />
+        </div>
       </div>
 
       <h2 className="font-display text-2xl font-semibold mb-4">Pricing</h2>
