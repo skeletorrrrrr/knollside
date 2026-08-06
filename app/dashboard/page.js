@@ -467,9 +467,31 @@ export default function SetupPage() {
               onClick={(e) => e.target.select()}
             />
           </div>
-          <p className="text-xs text-[#A39C8A] mt-2">
-            Live page: <a className="underline" href={embedUrl} target="_blank" rel="noreferrer">{embedUrl}</a>
-          </p>
+
+          <a
+            href={embedUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-shadow hover:shadow-md"
+            style={{ borderColor: "#DCB97A", background: "#FBF3E1" }}
+          >
+            <span className="flex items-center gap-2.5 min-w-0">
+              <span
+                className="flex items-center justify-center flex-shrink-0 rounded-full"
+                style={{ width: 8, height: 8, background: "#4B6A52" }}
+              />
+              <span className="min-w-0">
+                <span className="block text-xs font-semibold" style={{ color: "#8F6E32" }}>YOUR LIVE PAGE</span>
+                <span className="block text-sm font-mono truncate" style={{ color: "#211F1B" }}>{embedUrl}</span>
+              </span>
+            </span>
+            <span
+              className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
+              style={{ background: "#B08A44" }}
+            >
+              Open →
+            </span>
+          </a>
 
           <div className="mt-8 pt-8 max-w-sm" style={{ borderTop: "1px solid #F0EADC" }}>
             <h3 className="text-sm font-semibold mb-1">What customers send you</h3>
@@ -480,6 +502,7 @@ export default function SetupPage() {
               <input disabled placeholder="Full name" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
               <input disabled placeholder="Email" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
               <input disabled placeholder="Phone (optional)" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
+              <textarea disabled placeholder="Anything else we should know? (optional)" rows={2} className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim resize-none" />
               <div className="w-full text-xs font-medium px-3 py-1.5 rounded-lg text-white text-center" style={{ background: "#211F1B" }}>
                 Send my estimate
               </div>
