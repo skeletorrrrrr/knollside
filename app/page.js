@@ -3,7 +3,13 @@ import { TIERS } from "@/lib/pricing";
 
 export default function LandingPage() {
   return (
-    <main className="max-w-3xl mx-auto px-5 py-16">
+    <main className="max-w-4xl mx-auto px-5 py-16">
+      <style>{`
+        .knollside-demo-frame { width: 100%; border: 0; display: block; height: 700px; }
+        @media (max-width: 767px) {
+          .knollside-demo-frame { height: 1150px; }
+        }
+      `}</style>
       <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
         Knollside
       </span>
@@ -58,7 +64,7 @@ export default function LandingPage() {
         >
           <iframe
             src="/embed/demo"
-            style={{ width: "100%", height: "760px", border: 0, display: "block" }}
+            className="knollside-demo-frame"
             title="Live Knollside demo estimator"
             loading="lazy"
           />
