@@ -85,16 +85,26 @@ export default function SetupPage() {
     setItems((xs) => xs.filter((m) => m.id !== id));
     setConfirmDelete(null);
   }
-  async function moveItem(index, direction) {
-    const newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= items.length) return;
-    const reordered = [...items];
-    [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
-    setItems(reordered);
-    await Promise.all([
-      api(`/api/items/${reordered[index].id}`, { method: "PATCH", body: JSON.stringify({ sort_order: index }) }),
-      api(`/api/items/${reordered[newIndex].id}`, { method: "PATCH", body: JSON.stringify({ sort_order: newIndex }) }),
-    ]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  function handleDragStart(i) {
+    setDraggedIndex(i);
+  }
+  function handleDragOver(e, i) {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === i) return;
+    setItems((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(draggedIndex, 1);
+      next.splice(i, 0, moved);
+      return next;
+    });
+    setDraggedIndex(i);
+  }
+  async function handleDragEnd() {
+    setDraggedIndex(null);
+    await Promise.all(
+      items.map((it, idx) => api(`/api/items/${it.id}`, { method: "PATCH", body: JSON.stringify({ sort_order: idx }) }))
+    );
   }
 
   // ---- options ----
@@ -314,36 +324,32 @@ export default function SetupPage() {
           </div>
           <p className="text-sm text-[#8A836F] mb-5">
             {reorderMode
-              ? "This is the order customers see them in. Use the arrows to rearrange."
+              ? "This is the order customers see them in. Drag a card to move it."
               : "What you offer, and what each one starts at."}
           </p>
           <div className="space-y-2.5">
             {items.map((m, i) => (
               <div
                 key={m.id}
+                onDragOver={reorderMode ? (e) => handleDragOver(e, i) : undefined}
+                onDrop={reorderMode ? (e) => e.preventDefault() : undefined}
                 className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl border transition-shadow hover:shadow-sm"
-                style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}
+                style={{
+                  borderColor: "#EDE6D6",
+                  background: "#FEFDFB",
+                  opacity: reorderMode && draggedIndex === i ? 0.4 : 1,
+                }}
               >
                 {reorderMode && (
-                  <div className="flex flex-col gap-0.5 flex-shrink-0">
-                    <button
-                      onClick={() => moveItem(i, -1)}
-                      disabled={i === 0}
-                      aria-label={`Move ${m.name} up`}
-                      className="w-6 h-5 flex items-center justify-center rounded border text-xs disabled:opacity-25"
-                      style={{ borderColor: "#DCD5C4", background: "white" }}
-                    >
-                      ▲
-                    </button>
-                    <button
-                      onClick={() => moveItem(i, 1)}
-                      disabled={i === items.length - 1}
-                      aria-label={`Move ${m.name} down`}
-                      className="w-6 h-5 flex items-center justify-center rounded border text-xs disabled:opacity-25"
-                      style={{ borderColor: "#DCD5C4", background: "white" }}
-                    >
-                      ▼
-                    </button>
+                  <div
+                    draggable
+                    onDragStart={() => handleDragStart(i)}
+                    onDragEnd={handleDragEnd}
+                    aria-label={`Drag to reorder ${m.name}`}
+                    className="flex-shrink-0 flex items-center justify-center select-none"
+                    style={{ width: 24, height: 32, cursor: "grab", color: "#A39C8A", fontSize: 16, letterSpacing: "-2px" }}
+                  >
+                    ⠿
                   </div>
                 )}
                 <input
