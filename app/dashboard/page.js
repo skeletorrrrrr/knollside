@@ -30,6 +30,7 @@ export default function SetupPage() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [savedFlash, setSavedFlash] = useState("");
   const [wizardStep, setWizardStep] = useState(0);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -138,7 +139,7 @@ export default function SetupPage() {
   ];
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="max-w-3xl space-y-6 pb-20">
       {savedFlash && (
         <div className="fixed top-4 right-4 text-xs font-medium px-3 py-1.5 rounded-md text-white bg-[#4B6A52] shadow-md z-50">
           {savedFlash}
@@ -199,26 +200,26 @@ export default function SetupPage() {
 
       {/* Step 1: Business */}
       {wizardStep === 0 && (
-        <section>
-          <h2 className="font-display text-lg font-semibold mb-1">Tell us about your business</h2>
-          <p className="text-sm text-[#8A836F] mb-4">This shows up right at the top of your estimator.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md">
+        <StepCard>
+          <h2 className="font-display text-xl font-semibold mb-1">Tell us about your business</h2>
+          <p className="text-sm text-[#8A836F] mb-5">This shows up right at the top of your estimator.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
             <Field label="Business name">
               <input
                 defaultValue={business.name}
                 onBlur={(e) => e.target.value.trim() && patchBusiness({ name: e.target.value.trim() })}
-                className="w-full px-3 py-2 rounded-md border border-line text-sm"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
               />
             </Field>
             <Field label="Embed URL slug">
               <input
                 defaultValue={business.slug}
                 onBlur={(e) => e.target.value.trim() && patchBusiness({ slug: e.target.value.trim() })}
-                className="w-full px-3 py-2 rounded-md border border-line text-sm font-mono"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm font-mono outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
               />
             </Field>
           </div>
-          <div className="mt-3">
+          <div className="mt-4 max-w-md">
             <Field label="Logo (shown on your estimator)">
               <PhotoUpload
                 pathPrefix="logos"
@@ -229,26 +230,34 @@ export default function SetupPage() {
               />
             </Field>
           </div>
-        </section>
+        </StepCard>
       )}
 
       {/* Step 2: Products */}
       {wizardStep === 1 && (
-        <section>
+        <StepCard>
           <div className="flex items-center justify-between mb-1">
-            <h2 className="font-display text-lg font-semibold capitalize">{terms.items} &amp; {terms.itemPrice}</h2>
-            <button onClick={addItem} className="text-xs font-medium px-2.5 py-1.5 rounded-md bg-stone-dim capitalize">
+            <h2 className="font-display text-xl font-semibold capitalize">{terms.items} &amp; {terms.itemPrice}</h2>
+            <button
+              onClick={addItem}
+              className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
+              style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
+            >
               + Add {terms.item}
             </button>
           </div>
-          <p className="text-sm text-[#8A836F] mb-4">What you offer, and what each one starts at.</p>
-          <div className="space-y-2">
+          <p className="text-sm text-[#8A836F] mb-5">What you offer, and what each one starts at.</p>
+          <div className="space-y-2.5">
             {items.map((m) => (
-              <div key={m.id} className="flex flex-wrap items-center gap-2.5 p-2.5 rounded-xl border border-line bg-white">
+              <div
+                key={m.id}
+                className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl border transition-shadow hover:shadow-sm"
+                style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}
+              >
                 <input
                   defaultValue={m.name}
                   onBlur={(e) => e.target.value.trim() && patchItem(m.id, { name: e.target.value.trim() })}
-                  className="flex-1 text-sm px-2.5 py-2 rounded-md border border-line"
+                  className="flex-1 text-sm px-3 py-2 rounded-lg border border-line outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
                   style={{ minWidth: "7rem" }}
                 />
                 <NumberInput
@@ -273,27 +282,35 @@ export default function SetupPage() {
               </div>
             ))}
           </div>
-        </section>
+        </StepCard>
       )}
 
       {/* Step 3: Pricing (options, add-ons, estimate settings) */}
       {wizardStep === 2 && (
-        <div className="space-y-8">
-          <section>
+        <StepCard>
+          <div>
             <div className="flex items-center justify-between mb-1">
-              <h2 className="font-display text-lg font-semibold capitalize">{terms.options}</h2>
-              <button onClick={addOption} className="text-xs font-medium px-2.5 py-1.5 rounded-md bg-stone-dim capitalize">
+              <h2 className="font-display text-xl font-semibold capitalize">{terms.options}</h2>
+              <button
+                onClick={addOption}
+                className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
+                style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
+              >
                 + Add {terms.option}
               </button>
             </div>
             <p className="text-sm text-[#8A836F] mb-4">Optional upgrades customers can pick between.</p>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {options.map((e) => (
-                <div key={e.id} className="flex flex-wrap items-center gap-2.5 p-2.5 rounded-xl border border-line bg-white">
+                <div
+                  key={e.id}
+                  className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl border transition-shadow hover:shadow-sm"
+                  style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}
+                >
                   <input
                     defaultValue={e.name}
                     onBlur={(ev) => ev.target.value.trim() && patchOption(e.id, { name: ev.target.value.trim() })}
-                    className="flex-1 text-sm px-2.5 py-2 rounded-md border border-line"
+                    className="flex-1 text-sm px-3 py-2 rounded-lg border border-line outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
                     style={{ minWidth: "7rem" }}
                   />
                   <NumberInput
@@ -312,38 +329,46 @@ export default function SetupPage() {
                 </div>
               ))}
             </div>
-          </section>
+          </div>
 
-          <section>
+          <div className="mt-8 pt-8" style={{ borderTop: "1px solid #F0EADC" }}>
             <div className="flex items-center justify-between mb-1">
-              <h2 className="font-display text-lg font-semibold">Add-ons</h2>
-              <button onClick={addAddon} className="text-xs font-medium px-2.5 py-1.5 rounded-md bg-stone-dim">
+              <h2 className="font-display text-xl font-semibold">Add-ons</h2>
+              <button
+                onClick={addAddon}
+                className="text-xs font-semibold px-3 py-2 rounded-lg border transition-shadow hover:shadow-sm"
+                style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
+              >
                 + Add add-on
               </button>
             </div>
             <p className="text-sm text-[#8A836F] mb-4">Extras customers can check off — sink cutouts, demo, that kind of thing.</p>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {addons.map((a) => (
-                <div key={a.id} className="flex flex-wrap items-center gap-2.5 p-2.5 rounded-xl border border-line bg-white">
+                <div
+                  key={a.id}
+                  className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl border transition-shadow hover:shadow-sm"
+                  style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}
+                >
                   <input
                     defaultValue={a.name}
                     onBlur={(e) => e.target.value.trim() && patchAddon(a.id, { name: e.target.value.trim() })}
-                    className="flex-1 text-sm px-2.5 py-2 rounded-md border border-line"
+                    className="flex-1 text-sm px-3 py-2 rounded-lg border border-line outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
                     style={{ minWidth: "7rem" }}
                   />
                   <NumberInput value={a.price} onCommit={(v) => patchAddon(a.id, { price: v })} prefix="$" className="w-24" />
-                  <div className="flex rounded-md border border-line overflow-hidden text-xs shrink-0">
+                  <div className="flex rounded-lg border overflow-hidden text-xs shrink-0" style={{ borderColor: "#DCD5C4" }}>
                     <button
                       onClick={() => patchAddon(a.id, { billing_type: "flat" })}
-                      className="px-2.5 py-2 font-medium"
-                      style={{ background: a.billing_type === "flat" ? "#EDE6D6" : "white" }}
+                      className="px-3 py-2 font-semibold transition-colors"
+                      style={{ background: a.billing_type === "flat" ? "#EDE6D6" : "white", color: a.billing_type === "flat" ? "#211F1B" : "#A39C8A" }}
                     >
                       Flat fee
                     </button>
                     <button
                       onClick={() => patchAddon(a.id, { billing_type: "unit" })}
-                      className="px-2.5 py-2 font-medium border-l border-line"
-                      style={{ background: a.billing_type === "unit" ? "#EDE6D6" : "white" }}
+                      className="px-3 py-2 font-semibold border-l transition-colors"
+                      style={{ borderColor: "#DCD5C4", background: a.billing_type === "unit" ? "#EDE6D6" : "white", color: a.billing_type === "unit" ? "#211F1B" : "#A39C8A" }}
                     >
                       Per unit
                     </button>
@@ -353,7 +378,7 @@ export default function SetupPage() {
                       defaultValue={a.unit_label || ""}
                       placeholder="unit, e.g. each"
                       onBlur={(e) => patchAddon(a.id, { unit_label: e.target.value })}
-                      className="w-28 text-xs px-2.5 py-2 rounded-md border border-line"
+                      className="w-28 text-xs px-2.5 py-2 rounded-lg border border-line outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
                     />
                   )}
                   <DeleteButton
@@ -371,17 +396,17 @@ export default function SetupPage() {
                 </p>
               )}
             </div>
-          </section>
+          </div>
 
-          <section>
-            <h2 className="font-display text-lg font-semibold mb-1">How you price the job</h2>
+          <div className="mt-8 pt-8" style={{ borderTop: "1px solid #F0EADC" }}>
+            <h2 className="font-display text-xl font-semibold mb-1">How you price the job</h2>
             <p className="text-sm text-[#8A836F] mb-4">These numbers, plus your materials and options above, are the whole formula behind every quote.</p>
             <div className="grid grid-cols-2 gap-3 max-w-md mb-3">
               <Field label="What does the customer enter?">
                 <select
                   value={business.quantity_type}
                   onChange={(e) => patchBusiness({ quantity_type: e.target.value })}
-                  className="w-full px-3 py-2 rounded-md border border-line text-sm bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm bg-white outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
                 >
                   {QTY_TYPES.map((q) => (
                     <option key={q.id} value={q.id}>{q.label}</option>
@@ -407,43 +432,60 @@ export default function SetupPage() {
                 Flat-rate mode: the price is just your item + options + add-ons, with no quantity multiplier.
               </p>
             )}
-          </section>
-        </div>
+          </div>
+        </StepCard>
       )}
 
       {/* Step 4: Publish (includes lead form preview) */}
       {wizardStep === 3 && (
-        <section>
-          <h2 className="font-display text-lg font-semibold mb-1">You're all set</h2>
-          <p className="text-sm text-[#8A836F] mb-4">
+        <StepCard>
+          <h2 className="font-display text-xl font-semibold mb-1">You're all set</h2>
+          <p className="text-sm text-[#8A836F] mb-5">
             Your estimator has been live this whole time — every change you made saved instantly. Here's how to put it on your website.
           </p>
-          <textarea
-            readOnly
-            value={embedSnippet}
-            className="w-full text-xs font-mono p-3 rounded-md border border-line bg-white"
-            rows={2}
-            onClick={(e) => e.target.select()}
-          />
-          <p className="text-xs text-[#A39C8A] mt-1">
+          <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#EDE6D6" }}>
+            <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "#211F1B" }}>
+              <span className="text-xs font-medium tracking-wide" style={{ color: "#BDB49F" }}>EMBED CODE</span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(embedSnippet);
+                  setCopiedEmbed(true);
+                  setTimeout(() => setCopiedEmbed(false), 1500);
+                }}
+                className="text-xs font-semibold px-3 py-1 rounded-md transition-colors"
+                style={{ background: copiedEmbed ? "#4B6A52" : "#B08A44", color: "#fff" }}
+              >
+                {copiedEmbed ? "✓ Copied" : "Copy"}
+              </button>
+            </div>
+            <textarea
+              readOnly
+              value={embedSnippet}
+              className="w-full text-xs font-mono p-4 outline-none"
+              style={{ background: "#FEFDFB" }}
+              rows={2}
+              onClick={(e) => e.target.select()}
+            />
+          </div>
+          <p className="text-xs text-[#A39C8A] mt-2">
             Live page: <a className="underline" href={embedUrl} target="_blank" rel="noreferrer">{embedUrl}</a>
           </p>
 
-          <div className="mt-8 pt-6 border-t border-line max-w-sm">
+          <div className="mt-8 pt-8 max-w-sm" style={{ borderTop: "1px solid #F0EADC" }}>
             <h3 className="text-sm font-semibold mb-1">What customers send you</h3>
             <p className="text-xs text-[#8A836F] mb-3">
               After seeing their price, this is the form they fill out to reach you. Fixed for now — custom fields are on the roadmap.
             </p>
-            <div className="p-3 rounded-xl border border-line bg-white space-y-2 opacity-80">
-              <input disabled placeholder="Full name" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
-              <input disabled placeholder="Email" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
-              <input disabled placeholder="Phone (optional)" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
-              <div className="w-full text-xs font-medium px-3 py-1.5 rounded-md text-white text-center" style={{ background: "#211F1B" }}>
+            <div className="p-3.5 rounded-xl border space-y-2 opacity-80" style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}>
+              <input disabled placeholder="Full name" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
+              <input disabled placeholder="Email" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
+              <input disabled placeholder="Phone (optional)" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />
+              <div className="w-full text-xs font-medium px-3 py-1.5 rounded-lg text-white text-center" style={{ background: "#211F1B" }}>
                 Send my estimate
               </div>
             </div>
           </div>
-        </section>
+        </StepCard>
       )}
 
       {/* Wizard navigation */}
@@ -468,6 +510,17 @@ export default function SetupPage() {
           <span className="text-sm font-medium" style={{ color: "#4B6A52" }}>✓ You're live</span>
         )}
       </div>
+    </div>
+  );
+}
+
+function StepCard({ children }) {
+  return (
+    <div
+      className="rounded-2xl border p-6 sm:p-8"
+      style={{ borderColor: "#EDE6D6", background: "#FFFFFF", boxShadow: "0 4px 20px rgba(33,31,27,0.06)" }}
+    >
+      {children}
     </div>
   );
 }
