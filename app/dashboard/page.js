@@ -134,7 +134,6 @@ export default function SetupPage() {
     { label: "Business" },
     { label: "Products" },
     { label: "Pricing" },
-    { label: "Lead Form" },
     { label: "Publish" },
   ];
 
@@ -412,27 +411,8 @@ export default function SetupPage() {
         </div>
       )}
 
-      {/* Step 4: Lead Form (preview only — fields aren't customizable yet) */}
+      {/* Step 4: Publish (includes lead form preview) */}
       {wizardStep === 3 && (
-        <section>
-          <h2 className="font-display text-lg font-semibold mb-1">What customers send you</h2>
-          <p className="text-sm text-[#8A836F] mb-4">
-            After seeing their price, this is the form customers fill out to send you the lead. These fields are fixed for now — custom fields are on the roadmap.
-          </p>
-          <div className="max-w-sm p-4 rounded-xl border border-line bg-white space-y-2.5 opacity-90">
-            <input disabled placeholder="Full name" className="w-full text-sm px-3 py-2 rounded-md border border-line bg-stone-dim" />
-            <input disabled placeholder="Email" className="w-full text-sm px-3 py-2 rounded-md border border-line bg-stone-dim" />
-            <input disabled placeholder="Phone (optional)" className="w-full text-sm px-3 py-2 rounded-md border border-line bg-stone-dim" />
-            <textarea disabled placeholder="Anything else we should know? (optional)" rows={2} className="w-full text-sm px-3 py-2 rounded-md border border-line bg-stone-dim resize-none" />
-            <div className="w-full text-sm font-medium px-4 py-2.5 rounded-md text-white text-center" style={{ background: "#211F1B" }}>
-              Send my estimate
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Step 5: Publish */}
-      {wizardStep === 4 && (
         <section>
           <h2 className="font-display text-lg font-semibold mb-1">You're all set</h2>
           <p className="text-sm text-[#8A836F] mb-4">
@@ -448,6 +428,21 @@ export default function SetupPage() {
           <p className="text-xs text-[#A39C8A] mt-1">
             Live page: <a className="underline" href={embedUrl} target="_blank" rel="noreferrer">{embedUrl}</a>
           </p>
+
+          <div className="mt-8 pt-6 border-t border-line max-w-sm">
+            <h3 className="text-sm font-semibold mb-1">What customers send you</h3>
+            <p className="text-xs text-[#8A836F] mb-3">
+              After seeing their price, this is the form they fill out to reach you. Fixed for now — custom fields are on the roadmap.
+            </p>
+            <div className="p-3 rounded-xl border border-line bg-white space-y-2 opacity-80">
+              <input disabled placeholder="Full name" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
+              <input disabled placeholder="Email" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
+              <input disabled placeholder="Phone (optional)" className="w-full text-xs px-2.5 py-1.5 rounded-md border border-line bg-stone-dim" />
+              <div className="w-full text-xs font-medium px-3 py-1.5 rounded-md text-white text-center" style={{ background: "#211F1B" }}>
+                Send my estimate
+              </div>
+            </div>
+          </div>
         </section>
       )}
 
