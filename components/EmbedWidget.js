@@ -107,12 +107,15 @@ export default function EmbedWidget({ business, items, options, addons }) {
     );
   }
 
-  const quantityLabel = showQuantity
-    ? `${terms.quantity} — ${quantity} ${terms.quantityUnit}`
-    : null;
+  let stepCounter = 0;
+  const stepMaterial = ++stepCounter;
+  const stepQuantity = showQuantity ? ++stepCounter : null;
+  const stepOptions = options.length > 0 ? ++stepCounter : null;
+  const stepAddons = addons.length > 0 ? ++stepCounter : null;
 
   return (
     <>
+    <style>{`@keyframes knollside-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }`}</style>
     <div className="max-w-3xl mx-auto px-5 py-8">
       <div className="mb-6">
         {business.logo_url ? (
@@ -139,13 +142,10 @@ export default function EmbedWidget({ business, items, options, addons }) {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-10">
-        <div className="md:col-span-3 space-y-7">
-          <div>
-            <span className="block text-xs font-medium mb-2 text-[#8A836F] capitalize">
-              Choose {terms.item.match(/^[aeiou]/i) ? "an" : "a"} {terms.item}
-            </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 pb-10">
+        <div className="md:col-span-3 space-y-5">
+          <SectionCard step={stepMaterial} title={`Choose ${terms.item.match(/^[aeiou]/i) ? "an" : "a"} ${terms.item}`} capitalizeTitle>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {items.map((m, i) => {
                 const selected = m.id === itemId;
                 return (
@@ -168,6 +168,20 @@ export default function EmbedWidget({ business, items, options, addons }) {
                     }}
                   >
                     <div className="relative">
+                      {selected && (
+                        <div
+                          className="absolute flex items-center justify-center"
+                          style={{
+                            top: 6, left: 6, width: 22, height: 22, borderRadius: "50%",
+                            background: "#B08A44", color: "#fff", zIndex: 1,
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+                          }}
+                        >
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </div>
+                      )}
                       {m.photo_url ? (
                         <div className="w-full flex items-center justify-center" style={{ height: "112px", background: "#F2ECDE" }}>
                           <img src={m.photo_url} alt={m.name} className="max-h-full max-w-full object-contain" />
@@ -207,19 +221,16 @@ export default function EmbedWidget({ business, items, options, addons }) {
                     </div>
                     <div className="px-2.5 py-2 bg-white">
                       <div className="text-xs font-medium leading-snug">{m.name}</div>
-                      <div className="text-xs font-mono text-[#A39C8A]">${m.base_price}</div>
+                      <div className="text-xs font-mono text-[#A39C8A]">From {money(m.base_price)}</div>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
+          </SectionCard>
 
           {showQuantity && (
-            <label className="block">
-              <span className="block text-xs font-medium mb-1.5 text-[#8A836F]">
-                {quantityLabel}
-              </span>
+            <SectionCard step={stepQuantity} title={terms.quantity} capitalizeTitle right={`${quantity} ${terms.quantityUnit}`}>
               <input
                 type="range"
                 min={qRange.min}
@@ -230,57 +241,96 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 className="w-full"
                 style={{ accentColor: "#B08A44" }}
               />
-            </label>
+              <div className="flex justify-between text-xs mt-1.5" style={{ color: "#BDB49F" }}>
+                <span>{qRange.min} {terms.quantityUnit}</span>
+                <span>{qRange.max} {terms.quantityUnit}</span>
+              </div>
+            </SectionCard>
           )}
 
           {options.length > 0 && (
-            <div>
-              <span className="block text-xs font-medium mb-2 text-[#8A836F] capitalize">{terms.option}</span>
+            <SectionCard step={stepOptions} title={terms.option} capitalizeTitle>
               <div className="flex flex-wrap gap-2">
-                {options.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => setOptionId(e.id)}
-                    className="text-xs font-medium px-3 py-2 rounded-md border"
-                    style={{
-                      borderColor: e.id === optionId ? "#B08A44" : "#DDD3BF",
-                      background: e.id === optionId ? "#EDE6D6" : "white",
-                    }}
-                  >
-                    {e.name}
-                    {e.upcharge > 0 && <span className="text-[#A39C8A]"> +${e.upcharge}</span>}
-                  </button>
-                ))}
+                {options.map((e) => {
+                  const selected = e.id === optionId;
+                  return (
+                    <button
+                      key={e.id}
+                      onClick={() => setOptionId(e.id)}
+                      className="flex items-center gap-1.5 text-xs font-medium px-3.5 py-2.5 rounded-lg border transition-all duration-150"
+                      style={{
+                        borderColor: selected ? "#B08A44" : "#DDD3BF",
+                        background: selected ? "#FBF7EE" : "white",
+                        boxShadow: selected ? "0 2px 8px rgba(176,138,68,0.15)" : "none",
+                      }}
+                    >
+                      {selected && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B08A44" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                      {e.name}
+                      {e.upcharge > 0 && <span className="text-[#A39C8A]">+${e.upcharge}</span>}
+                    </button>
+                  );
+                })}
               </div>
-            </div>
+            </SectionCard>
           )}
 
           {addons.length > 0 && (
-            <div>
-              <span className="block text-xs font-medium mb-2 text-[#8A836F]">Add-ons</span>
-              <div className="space-y-3">
-                {addons.map((a) => (
-                  <div key={a.id}>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input type="checkbox" checked={!!checkedAddons[a.id]} onChange={() => toggleAddon(a.id)} />
-                      {a.name}
-                      <span className="text-[#A39C8A]">
-                        {a.billing_type === "unit" ? `(+$${a.price}/${a.unit_label || "unit"})` : `(+${money(a.price)})`}
-                      </span>
-                    </label>
-                    {a.billing_type === "unit" && checkedAddons[a.id] && (
-                      <input
-                        type="number"
-                        min={1}
-                        value={addonQty[a.id] ?? 1}
-                        onChange={(e) => setAddonQty((q) => ({ ...q, [a.id]: Number(e.target.value) || 1 }))}
-                        className="ml-6 mt-1.5 w-24 text-sm px-2 py-1.5 rounded-md border border-line"
-                      />
-                    )}
-                  </div>
-                ))}
+            <SectionCard step={stepAddons} title="Add-ons">
+              <div className="space-y-2.5">
+                {addons.map((a) => {
+                  const checked = !!checkedAddons[a.id];
+                  return (
+                    <div key={a.id}>
+                      <label
+                        className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all duration-150"
+                        style={{
+                          borderColor: checked ? "#B08A44" : "#DCD5C4",
+                          background: checked ? "#FBF7EE" : "white",
+                          boxShadow: checked ? "0 2px 8px rgba(176,138,68,0.15)" : "0 1px 2px rgba(0,0,0,0.04)",
+                        }}
+                      >
+                        <span className="flex items-center gap-3 min-w-0">
+                          <span
+                            className="flex items-center justify-center flex-shrink-0"
+                            style={{
+                              width: 20,
+                              height: 20,
+                              borderRadius: "50%",
+                              border: checked ? "none" : "2px solid #DCD5C4",
+                              background: checked ? "#B08A44" : "transparent",
+                            }}
+                          >
+                            {checked && (
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            )}
+                          </span>
+                          <input type="checkbox" checked={checked} onChange={() => toggleAddon(a.id)} className="sr-only" />
+                          <span className="text-sm font-medium truncate">{a.name}</span>
+                        </span>
+                        <span className="text-xs font-mono flex-shrink-0" style={{ color: "#A39C8A" }}>
+                          {a.billing_type === "unit" ? `+$${a.price}/${a.unit_label || "unit"}` : `+${money(a.price)}`}
+                        </span>
+                      </label>
+                      {a.billing_type === "unit" && checked && (
+                        <input
+                          type="number"
+                          min={1}
+                          value={addonQty[a.id] ?? 1}
+                          onChange={(e) => setAddonQty((q) => ({ ...q, [a.id]: Number(e.target.value) || 1 }))}
+                          className="ml-6 mt-1.5 w-24 text-sm px-2 py-1.5 rounded-md border border-line"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            </SectionCard>
           )}
         </div>
 
@@ -289,9 +339,13 @@ export default function EmbedWidget({ business, items, options, addons }) {
             <div className="relative rounded-2xl" style={{ filter: "drop-shadow(0 8px 24px rgba(176,138,68,0.25))" }}>
               <div className="ticket-stub rounded-2xl p-6 shadow-xl" style={{ background: "#211F1B", color: "#F7F3EA" }}>
                 <span
-                  className="absolute -top-2.5 -right-2.5 text-xs font-bold px-2.5 py-1 rounded-sm shadow-md"
+                  className="absolute -top-2.5 -right-2.5 flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-sm shadow-md"
                   style={{ background: "#B08A44", color: "#211F1B", transform: "rotate(6deg)" }}
                 >
+                  <span
+                    className="inline-block rounded-full"
+                    style={{ width: 6, height: 6, background: "#211F1B", animation: "knollside-pulse 1.8s ease-in-out infinite" }}
+                  />
                   ESTIMATE
                 </span>
                 <div className="flex items-center gap-2.5 mb-3">
@@ -324,8 +378,8 @@ export default function EmbedWidget({ business, items, options, addons }) {
             {stage === "form" ? (
               <button
                 onClick={() => setStage("quote")}
-                className="w-full mt-4 flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-2.5 rounded-md shadow-sm text-white"
-                style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+                className="w-full mt-4 flex items-center justify-center gap-1.5 text-sm font-medium px-4 py-3 rounded-xl text-white transition-transform duration-150"
+                style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)", boxShadow: "0 6px 18px rgba(143,110,50,0.35)" }}
               >
                 Get this estimate →
               </button>
@@ -392,6 +446,35 @@ export default function EmbedWidget({ business, items, options, addons }) {
       </div>
     )}
     </>
+  );
+}
+
+function SectionCard({ step, title, right, capitalizeTitle, children }) {
+  return (
+    <div
+      className="rounded-2xl border p-5"
+      style={{ borderColor: "#EDE6D6", background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
+    >
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span
+            className="flex items-center justify-center flex-shrink-0 text-xs font-bold"
+            style={{ width: 24, height: 24, borderRadius: "50%", background: "#211F1B", color: "#F7F3EA" }}
+          >
+            {step}
+          </span>
+          <span className={`text-sm font-semibold truncate ${capitalizeTitle ? "capitalize" : ""}`} style={{ color: "#211F1B" }}>
+            {title}
+          </span>
+        </div>
+        {right && (
+          <span className="text-sm font-mono font-semibold flex-shrink-0" style={{ color: "#B08A44" }}>
+            {right}
+          </span>
+        )}
+      </div>
+      {children}
+    </div>
   );
 }
 
