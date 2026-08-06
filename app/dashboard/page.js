@@ -300,33 +300,34 @@ export default function SetupPage() {
         <StepCard>
           <div className="flex items-center justify-between mb-1">
             <h2 className="font-display text-xl font-semibold capitalize">{terms.items} &amp; {terms.itemPrice}</h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setReorderMode((v) => !v)}
-                disabled={items.length < 2}
-                className="text-xs font-semibold px-3 py-2 rounded-lg border transition-shadow hover:shadow-sm disabled:opacity-40"
-                style={
-                  reorderMode
-                    ? { borderColor: "#4B6A52", background: "#4B6A52", color: "#fff" }
-                    : { borderColor: "#DCD5C4", background: "white", color: "#6B6558" }
-                }
-              >
-                {reorderMode ? "✓ Done" : "↕ Organize"}
-              </button>
-              <button
-                onClick={addItem}
-                className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
-                style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
-              >
-                + Add {terms.item}
-              </button>
-            </div>
+            <button
+              onClick={addItem}
+              className="text-xs font-semibold px-3 py-2 rounded-lg capitalize border transition-shadow hover:shadow-sm"
+              style={{ borderColor: "#DCD5C4", background: "#FBF7EE", color: "#8F6E32" }}
+            >
+              + Add {terms.item}
+            </button>
           </div>
-          <p className="text-sm text-[#8A836F] mb-5">
-            {reorderMode
-              ? "This is the order customers see them in. Drag a card to move it."
-              : "What you offer, and what each one starts at."}
-          </p>
+          <p className="text-sm text-[#8A836F] mb-4">What you offer, and what each one starts at.</p>
+
+          <div
+            className="flex items-center justify-between gap-3 flex-wrap p-4 rounded-xl border mb-4 transition-colors"
+            style={{
+              borderColor: reorderMode ? "#4B6A52" : "#EDE6D6",
+              background: reorderMode ? "#EEF3EF" : "#FBF9F4",
+            }}
+          >
+            <ToggleSwitch
+              checked={reorderMode}
+              onChange={() => setReorderMode((v) => !v)}
+              label="Rearrange order"
+              disabled={items.length < 2}
+            />
+            <span className="text-sm" style={{ color: "#6B6558" }}>
+              {reorderMode ? "Drag any card up or down to move it." : "Turn this on to drag your materials into a new order."}
+            </span>
+          </div>
+
           <div className="space-y-2.5">
             {items.map((m, i) => (
               <div
@@ -632,6 +633,42 @@ export default function SetupPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function ToggleSwitch({ checked, onChange, label, disabled }) {
+  return (
+    <button
+      type="button"
+      onClick={onChange}
+      disabled={disabled}
+      className="flex items-center gap-3 disabled:opacity-40"
+    >
+      <span
+        className="relative inline-flex items-center rounded-full transition-colors flex-shrink-0"
+        style={{
+          width: 52,
+          height: 30,
+          background: checked ? "#4B6A52" : "#DCD5C4",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.12)",
+        }}
+      >
+        <span
+          className="absolute rounded-full bg-white transition-transform"
+          style={{
+            width: 24,
+            height: 24,
+            top: 3,
+            left: 3,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+            transform: checked ? "translateX(22px)" : "translateX(0)",
+          }}
+        />
+      </span>
+      <span className="text-base font-semibold" style={{ color: checked ? "#4B6A52" : "#211F1B" }}>
+        {label}
+      </span>
+    </button>
   );
 }
 
