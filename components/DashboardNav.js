@@ -6,6 +6,7 @@ import { supabaseBrowser } from "@/lib/supabaseClient";
 
 const LINKS = [
   { href: "/dashboard", label: "Setup" },
+  { href: "/dashboard/industry", label: "Industry" },
   { href: "/dashboard/leads", label: "Leads" },
   { href: "/dashboard/billing", label: "Billing" },
 ];
