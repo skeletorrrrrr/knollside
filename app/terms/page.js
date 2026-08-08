@@ -13,7 +13,7 @@ export default function TermsPage() {
         <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#B08A44]">
           Legal
         </p>
-        <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
+        <h1 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
           Terms of Service
         </h1>
         <p className="mt-4 text-sm text-[#211F1B]/60">
@@ -260,7 +260,7 @@ export default function TermsPage() {
 function Section({ n, title, children }) {
   return (
     <section className="space-y-3">
-      <h2 className="flex items-baseline gap-3 font-serif text-xl text-[#211F1B]">
+      <h2 className="flex items-baseline gap-3 font-display text-xl text-[#211F1B]">
         <span className="font-mono text-xs text-[#B08A44]">{n}</span>
         {title}
       </h2>

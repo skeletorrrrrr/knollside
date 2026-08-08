@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TIERS } from "@/lib/pricing";
+import Footer from "@/components/Footer";
 
 export default function LandingPage() {
   return (
@@ -81,6 +82,8 @@ export default function LandingPage() {
           </div>
         ))}
       </div>
+
+      <Footer />
     </main>
   );
 }
