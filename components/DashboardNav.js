@@ -15,6 +15,10 @@ export default function DashboardNav({ businessName, slug }) {
   const pathname = usePathname();
   const router = useRouter();
   const [newLeads, setNewLeads] = useState(0);
+  // Log out is a one-click action with a real cost — it used to sit right next
+  // to the nav links in the same neutral grey, so a curious click signed you
+  // straight out. Now it's visually separated and asks first.
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   // Count leads still in "new" status so the badge reflects unactioned ones.
   // Recounts on navigation, when the tab regains focus, and every 60s — so a
@@ -40,6 +44,12 @@ export default function DashboardNav({ businessName, slug }) {
       window.removeEventListener("focus", onFocus);
       clearInterval(interval);
     };
+  }, [pathname]);
+
+  // Navigating away cancels a pending confirmation, so you don't come back to
+  // a different page with a half-armed log out button waiting.
+  useEffect(() => {
+    setConfirmLogout(false);
   }, [pathname]);
 
   async function logout() {
@@ -81,12 +91,38 @@ export default function DashboardNav({ businessName, slug }) {
               </Link>
             );
           })}
-          <button
-            onClick={logout}
-            className="text-sm font-medium px-3 py-1.5 rounded-md text-[#8A836F]"
-          >
-            Log out
-          </button>
+
+          {/* Divider makes it clear this button isn't another nav tab. */}
+          <span className="mx-2 h-5 w-px" style={{ background: "#EDE6D6" }} />
+
+          {!confirmLogout ? (
+            <button
+              onClick={() => setConfirmLogout(true)}
+              className="text-sm font-medium px-3 py-1.5 rounded-md border"
+              style={{ color: "#B5806B", borderColor: "#E6D3CB" }}
+            >
+              Log out
+            </button>
+          ) : (
+            <span className="flex items-center gap-1.5">
+              <span className="text-sm font-medium text-[#6B6558] hidden sm:inline">
+                Log out?
+              </span>
+              <button
+                onClick={logout}
+                className="text-sm font-semibold px-3 py-1.5 rounded-md text-white"
+                style={{ background: "#C0483B" }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setConfirmLogout(false)}
+                className="text-sm font-medium px-3 py-1.5 rounded-md text-[#8A836F]"
+              >
+                Cancel
+              </button>
+            </span>
+          )}
         </nav>
       </div>
     </div>
