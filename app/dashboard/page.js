@@ -43,6 +43,8 @@ export default function SetupPage() {
   const [slugDraft, setSlugDraft] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
   const [reorderMode, setReorderMode] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [justPublished, setJustPublished] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -156,6 +158,23 @@ export default function SetupPage() {
     }
   }
 
+  // Going live. The estimator only becomes reachable once the owner does this
+  // deliberately, so the Publish step is a real action rather than a summary.
+  async function publish() {
+    setPublishing(true);
+    try {
+      const { business: updated } = await api("/api/settings/publish", {
+        method: "POST",
+        body: JSON.stringify({ published: true }),
+      });
+      setBusiness(updated);
+      setJustPublished(true);
+    } catch (err) {
+      alert(err.message);
+    }
+    setPublishing(false);
+  }
+
   if (loading) return <p className="text-sm text-[#8A836F]">Loading…</p>;
 
   const industry = getIndustry(business.industry);
@@ -165,6 +184,15 @@ export default function SetupPage() {
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
   const embedUrl = `${siteUrl}/embed/${business.slug}`;
   const embedSnippet = `<iframe src="${embedUrl}" style="width:100%;height:800px;border:0;" title="Get an instant estimate"></iframe>`;
+
+  const isPublished = Boolean(business.published);
+  const publishedDate = business.published_at
+    ? new Date(business.published_at).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
 
   const STEPS = [
     { label: "Business" },
@@ -538,10 +566,49 @@ export default function SetupPage() {
       {/* Step 4: Publish (includes lead form preview) */}
       {wizardStep === 3 && (
         <StepCard>
-          <h2 className="font-display text-xl font-semibold mb-1">You're all set</h2>
-          <p className="text-sm text-[#8A836F] mb-5">
-            Your estimator has been live this whole time — every change you made saved instantly. Here's how to put it on your website.
-          </p>
+          {!isPublished ? (
+            <>
+              <h2 className="font-display text-xl font-semibold mb-1">Ready to go live?</h2>
+              <p className="text-sm text-[#8A836F] mb-6">
+                Your pricing is saved. Publishing turns on your estimator page
+                and gives you the code to drop it on your website. You can keep
+                editing your prices afterward — changes go out immediately.
+              </p>
+
+              <div
+                className="rounded-xl border p-6 text-center"
+                style={{ borderColor: "#DCB97A", background: "#FBF3E1" }}
+              >
+                <button
+                  onClick={publish}
+                  disabled={publishing}
+                  className="text-base font-semibold px-8 py-3.5 rounded-lg text-white shadow-sm disabled:opacity-60"
+                  style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+                >
+                  {publishing ? "Publishing…" : "Publish my estimator"}
+                </button>
+                <p className="text-xs mt-3" style={{ color: "#8F6E32" }}>
+                  {items.length} {items.length === 1 ? terms.item : terms.items} ·{" "}
+                  {options.length} {options.length === 1 ? terms.option : terms.options} ·{" "}
+                  {addons.length} add-{addons.length === 1 ? "on" : "ons"}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="font-display text-xl font-semibold mb-1">
+                {justPublished ? "You're live 🎉" : "You're all set"}
+              </h2>
+              <p className="text-sm text-[#8A836F] mb-5">
+                {justPublished
+                  ? "Your estimator is published and taking quotes. Here's how to put it on your website."
+                  : `Published${publishedDate ? ` ${publishedDate}` : ""}. Every change you make saves instantly. Here's how to put it on your website.`}
+              </p>
+            </>
+          )}
+
+          {isPublished && (
+          <>
           <div className="rounded-xl overflow-hidden border" style={{ borderColor: "#EDE6D6" }}>
             <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "#211F1B" }}>
               <span className="text-xs font-medium tracking-wide" style={{ color: "#BDB49F" }}>EMBED CODE</span>
@@ -591,6 +658,8 @@ export default function SetupPage() {
               Open →
             </span>
           </a>
+          </>
+          )}
 
           <div className="mt-8 pt-8 max-w-sm" style={{ borderTop: "1px solid #F0EADC" }}>
             <h3 className="text-sm font-semibold mb-1">What customers send you</h3>
@@ -629,7 +698,12 @@ export default function SetupPage() {
             Next →
           </button>
         ) : (
-          <span className="text-sm font-medium" style={{ color: "#4B6A52" }}>✓ You're live</span>
+          <span
+            className="text-sm font-medium"
+            style={{ color: isPublished ? "#4B6A52" : "#A39C8A" }}
+          >
+            {isPublished ? "✓ You're live" : "Not published yet"}
+          </span>
         )}
       </div>
     </div>
