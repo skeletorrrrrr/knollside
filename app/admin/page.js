@@ -212,7 +212,7 @@ export default function AdminPage() {
               <SortHeader label="Last lead" col="lastLead" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <SortHeader label="Joined" col="created_at" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <SortHeader label="Health" col="health" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
-              <th className="px-3 py-2"></th>
+              <th className="px-3 py-2.5"></th>
             </tr>
           </thead>
           <tbody>
@@ -221,15 +221,15 @@ export default function AdminPage() {
               return (
                 <tr
                   key={r.id}
-                  className="border-b border-line last:border-0"
+                  className="border-b border-line last:border-0 transition-colors hover:bg-[#FAF7F0]"
                   style={r.isAdmin ? { background: "#FBF3E1" } : undefined}
                 >
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-3">
                     <div className="flex items-center gap-2.5">
                       <Logo src={logos[r.id]} name={r.name} onOpen={setViewLogo} />
                       <div className="min-w-0">
                         <div className="font-medium flex items-center gap-2">
-                          {r.name}
+                          <span className="truncate" style={{ maxWidth: 190 }} title={r.name}>{r.name}</span>
                           {r.isAdmin && (
                             <span
                               className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white"
@@ -239,27 +239,36 @@ export default function AdminPage() {
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-[#A39C8A]">{r.owner_email}</div>
+                        <div className="text-xs text-[#A39C8A] truncate" style={{ maxWidth: 210 }} title={r.owner_email}>
+                          {r.owner_email}
+                        </div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 capitalize text-[#8A836F]">{(r.industry || "").replace("_", " ")}</td>
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-3 capitalize text-[#8A836F] whitespace-nowrap">{(r.industry || "").replace("_", " ")}</td>
+                  <td className="px-3 py-3 whitespace-nowrap">
                     {r.tier ? (
-                      <span className="capitalize">{r.tier} <span className="text-xs text-[#A39C8A]">({r.status})</span></span>
+                      <span className="block">
+                        <span className="capitalize font-medium">{r.tier}</span>
+                        <span className="block text-xs text-[#A39C8A] capitalize">{r.status}</span>
+                      </span>
                     ) : (
-                      <span className="text-xs text-[#A39C8A]">no plan ({r.status})</span>
+                      <span className="block">
+                        <span className="block text-[#A39C8A]">No plan</span>
+                        <span className="block text-xs text-[#A39C8A] capitalize">{r.status}</span>
+                      </span>
                     )}
                   </td>
-                  <td className="px-3 py-2 font-mono">{r.leadCount}</td>
-                  <td className="px-3 py-2 text-[#8A836F]">{fmtDate(r.lastLead)}</td>
-                  <td className="px-3 py-2 text-[#8A836F]">{fmtDate(r.created_at)}</td>
-                  <td className="px-3 py-2">
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full text-white" style={{ background: h.color }}>
+                  <td className="px-3 py-3 font-mono text-right tabular-nums">{r.leadCount}</td>
+                  <td className="px-3 py-3 text-[#8A836F] whitespace-nowrap">{fmtDate(r.lastLead)}</td>
+                  <td className="px-3 py-3 text-[#8A836F] whitespace-nowrap">{fmtDate(r.created_at)}</td>
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: h.color }}>
+                      <span className="inline-block rounded-full flex-shrink-0" style={{ width: 6, height: 6, background: h.color }} />
                       {h.label}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-3 text-right whitespace-nowrap">
                     {r.isAdmin ? (
                       <span className="text-xs text-[#A39C8A]">—</span>
                     ) : confirmId === r.id ? (
@@ -304,8 +313,9 @@ export default function AdminPage() {
                           style={{ color: "#8F6E32" }}
                           title="Open this customer's account for support"
                         >
-                          Open account
+                          Open
                         </button>
+                        <span style={{ color: "#EDE6D6" }}>|</span>
                         <button
                           onClick={() => { setConfirmId(r.id); setConfirmOpenId(null); }}
                           className="text-xs font-medium px-2 py-1 rounded-md text-clay hover:underline"
@@ -365,11 +375,11 @@ export default function AdminPage() {
 function SortHeader({ label, col, sortCol, sortDir, onSort }) {
   const active = sortCol === col;
   return (
-    <th className="px-3 py-2">
+    <th className="px-3 py-2.5 whitespace-nowrap">
       <button
         onClick={() => onSort(col)}
-        className="flex items-center gap-1 text-xs font-semibold transition-colors"
-        style={{ color: active ? "#211F1B" : "#8A836F" }}
+        className="flex items-center gap-1 font-medium uppercase transition-colors"
+        style={{ color: active ? "#211F1B" : "#8A836F", fontSize: "11px", letterSpacing: "0.06em" }}
       >
         {label}
         <span style={{ opacity: active ? 1 : 0.35, fontSize: "10px" }}>
