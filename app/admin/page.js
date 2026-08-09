@@ -26,6 +26,7 @@ export default function AdminPage() {
   const [openingId, setOpeningId] = useState(null);
   const [supportLink, setSupportLink] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [viewLogo, setViewLogo] = useState(null);
 
   function handleSort(col) {
     if (sortCol !== col) {
@@ -93,6 +94,14 @@ export default function AdminPage() {
     if (res.ok) setSupportLink(d);
     else alert(d.error || "Could not open that account.");
   }
+
+  // Escape closes the logo viewer — expected for anything full-screen.
+  useEffect(() => {
+    if (!viewLogo) return;
+    const onKey = (e) => { if (e.key === "Escape") setViewLogo(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [viewLogo]);
 
   async function deleteBusiness(id) {
     setDeletingId(id);
@@ -217,7 +226,7 @@ export default function AdminPage() {
                 >
                   <td className="px-3 py-2">
                     <div className="flex items-center gap-2.5">
-                      <Logo src={logos[r.id]} name={r.name} />
+                      <Logo src={logos[r.id]} name={r.name} onOpen={setViewLogo} />
                       <div className="min-w-0">
                         <div className="font-medium flex items-center gap-2">
                           {r.name}
@@ -317,6 +326,32 @@ export default function AdminPage() {
         </table>
       </div>
 
+      {viewLogo && (
+        <div
+          onClick={() => setViewLogo(null)}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6"
+          style={{ background: "rgba(33,31,27,0.82)" }}
+        >
+          <img
+            src={viewLogo.src}
+            alt={`${viewLogo.name} logo`}
+            onClick={(e) => e.stopPropagation()}
+            className="rounded-lg bg-white"
+            style={{ maxWidth: "90vw", maxHeight: "78vh", objectFit: "contain", padding: 12 }}
+          />
+          <div className="mt-4 text-center">
+            <div className="text-sm font-medium text-white">{viewLogo.name}</div>
+            <button
+              onClick={() => setViewLogo(null)}
+              className="mt-2 text-xs px-3 py-1.5 rounded-md"
+              style={{ background: "rgba(255,255,255,0.15)", color: "#F7F3EA" }}
+            >
+              Close (Esc)
+            </button>
+          </div>
+        </div>
+      )}
+
       <p className="text-xs text-[#A39C8A] mt-4">
         "Health" is a rough signal: <strong>Not set up</strong> = signed up but no items configured ·
         <strong> No leads yet</strong> = configured but no estimates submitted ·
@@ -345,21 +380,29 @@ function SortHeader({ label, col, sortCol, sortDir, onSort }) {
   );
 }
 
-function Logo({ src, name }) {
+function Logo({ src, name, onOpen }) {
   const [failed, setFailed] = useState(false);
   const initial = (name || "?").trim().charAt(0).toUpperCase();
 
   if (src && !failed) {
     return (
-      <img
-        src={src}
-        alt=""
-        onError={() => setFailed(true)}
-        className="flex-shrink-0 rounded-md object-contain border bg-white"
+      <button
+        type="button"
+        onClick={() => onOpen({ src, name })}
+        className="flex-shrink-0 rounded-md border bg-white overflow-hidden hover:opacity-80"
         style={{ width: 30, height: 30, borderColor: "#EDE6D6" }}
-      />
+        title={`View ${name} logo`}
+      >
+        <img
+          src={src}
+          alt=""
+          onError={() => setFailed(true)}
+          className="w-full h-full object-contain"
+        />
+      </button>
     );
   }
+  // No logo uploaded — initials aren't worth a lightbox, so this stays inert.
   return (
     <span
       className="flex-shrink-0 flex items-center justify-center rounded-md text-xs font-semibold"
