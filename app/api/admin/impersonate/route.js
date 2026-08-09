@@ -61,15 +61,26 @@ export async function POST(request) {
   const { data, error } = await admin.auth.admin.generateLink({
     type: "magiclink",
     email: business.owner_email,
-    options: { redirectTo: `${origin}/dashboard` },
   });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  const url = data?.properties?.action_link;
-  if (!url) {
+  // Deliberately NOT returning data.properties.action_link.
+  //
+  // That link goes to Supabase's verify endpoint, which redirects back with the
+  // session in the URL *hash* (implicit flow). A hash fragment is never sent to
+  // the server, and this app authenticates from cookies — so the tokens arrive
+  // where nothing can read them, middleware sees no session, and the user lands
+  // on /login with a useless #access_token in the address bar.
+  //
+  // Instead we hand back the single-use hashed token pointed at our own consume
+  // route, which verifies it server-side and sets real session cookies.
+  const tokenHash = data?.properties?.hashed_token;
+  if (!tokenHash) {
     return NextResponse.json({ error: "Couldn't generate a login link." }, { status: 500 });
   }
+
+  const url = `${origin}/api/admin/impersonate/consume?token_hash=${encodeURIComponent(tokenHash)}`;
 
   return NextResponse.json({ url, businessName: business.name, ownerEmail: business.owner_email });
 }
