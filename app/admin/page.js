@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [confirmOpenId, setConfirmOpenId] = useState(null);
   const [openingId, setOpeningId] = useState(null);
   const [supportLink, setSupportLink] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   function handleSort(col) {
     if (sortCol !== col) {
@@ -156,28 +157,30 @@ export default function AdminPage() {
           <div className="text-sm font-semibold mb-1">
             Support access for {supportLink.businessName}
           </div>
-          <p className="text-xs text-[#6B6558] mb-3">
-            One-time login link for {supportLink.ownerEmail}. Open it in a private
-            window — following it here signs you out of your own account. Anything
-            you change will look like the customer did it, and this access has
-            been logged.
+          <p className="text-xs text-[#6B6558] mb-1">
+            One-time login link for {supportLink.ownerEmail}. This access has been
+            logged, and anything you change will look like the customer did it.
+          </p>
+          <p className="text-xs font-semibold mb-3" style={{ color: "#8F6E32" }}>
+            Copy it, then paste it into a private/incognito window. The link works
+            exactly once — opening it in this window burns it and signs you out of
+            your own account.
           </p>
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={supportLink.url}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(supportLink.url);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2500);
+                } catch {
+                  alert(supportLink.url);
+                }
+              }}
               className="text-xs font-semibold px-3 py-1.5 rounded-md text-white"
               style={{ background: "#B08A44" }}
             >
-              Open account →
-            </a>
-            <button
-              onClick={() => navigator.clipboard.writeText(supportLink.url)}
-              className="text-xs font-medium px-3 py-1.5 rounded-md border"
-              style={{ borderColor: "#DCB97A", color: "#8F6E32" }}
-            >
-              Copy link
+              {copied ? "Copied ✓" : "Copy login link"}
             </button>
             <button
               onClick={() => setSupportLink(null)}
