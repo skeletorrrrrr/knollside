@@ -361,13 +361,17 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 <div className="text-4xl font-semibold mb-4 font-mono tabular-nums tracking-tight">
                   {money(low)}–{money(high)}
                 </div>
-                <div className="border-t pt-3 space-y-1.5 text-xs font-mono" style={{ borderColor: "rgba(247,243,234,0.18)" }}>
-                  <Line label={terms.item} value={showQuantity ? `$${Number((item.base_price + (business.labor_rate || 0)).toFixed(2))} × ${quantity}` : money(item.base_price + (business.labor_rate || 0))} />
-                  {option?.upcharge > 0 && <Line label={option.name} value={showQuantity ? `$${option.upcharge} × ${quantity}` : money(option.upcharge)} />}
-                  {selectedAddons.map((a) => (
-                    <Line key={a.id} label={a.name} value={a.billing_type === "unit" ? `$${a.price}/${a.unit_label || "unit"} × ${a.qty}` : money(a.price)} />
-                  ))}
-                  {minApplied && <Line label="Shop minimum applied" value={money(business.min_price)} />}
+                <div className="border-t pt-3 text-xs" style={{ borderColor: "rgba(247,243,234,0.18)" }}>
+                  <div className="mb-1.5 uppercase" style={{ color: "#8A836F", fontSize: "10px", letterSpacing: "0.09em" }}>
+                    Included
+                  </div>
+                  <ul className="space-y-1" style={{ color: "#BDB49F" }}>
+                    <li>{item.name}{showQuantity ? ` · ${quantity} ${terms.quantityUnit}` : ""}</li>
+                    {option?.name && <li>{option.name}</li>}
+                    {selectedAddons.map((a) => (
+                      <li key={a.id}>{a.name}{a.billing_type === "unit" ? ` · ${a.qty} ${a.unit_label || "unit"}` : ""}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -475,11 +479,3 @@ function SectionCard({ step, title, right, capitalizeTitle, children }) {
   );
 }
 
-function Line({ label, value }) {
-  return (
-    <div className="flex justify-between">
-      <span style={{ color: "#BDB49F" }} className="capitalize">{label}</span>
-      <span>{value}</span>
-    </div>
-  );
-}
