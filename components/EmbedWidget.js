@@ -18,6 +18,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const qtype = business.quantity_type || industry.quantity_type;
   const showQuantity = qtype !== "none";
   const qRange = industry.quantity;
+  const isArea = qtype === "area";
 
   const [itemId, setItemId] = useState(items[0]?.id);
   const [quantity, setQuantity] = useState(qRange?.default ?? 1);
@@ -32,6 +33,9 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [zoomedPhoto, setZoomedPhoto] = useState(null); // {url, name} or null
+  const [showDims, setShowDims] = useState(false);
+  const [dimL, setDimL] = useState("");
+  const [dimW, setDimW] = useState("");
 
   const item = items.find((m) => m.id === itemId) || items[0];
   const itemIndex = items.findIndex((m) => m.id === item?.id);
@@ -55,6 +59,18 @@ export default function EmbedWidget({ business, items, options, addons }) {
 
   function toggleAddon(id) {
     setCheckedAddons((c) => ({ ...c, [id]: !c[id] }));
+  }
+
+  function updateDim(which, val) {
+    const l = which === "l" ? val : dimL;
+    const w = which === "w" ? val : dimW;
+    if (which === "l") setDimL(val);
+    else setDimW(val);
+    const raw = (Number(l) || 0) * (Number(w) || 0);
+    if (raw > 0) {
+      const clamped = Math.min(Math.max(Math.round(raw), qRange.min), qRange.max);
+      setQuantity(clamped);
+    }
   }
 
   async function submitLead(e) {
@@ -112,6 +128,8 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const stepQuantity = showQuantity ? ++stepCounter : null;
   const stepOptions = options.length > 0 ? ++stepCounter : null;
   const stepAddons = addons.length > 0 ? ++stepCounter : null;
+
+  const zoneLabel = isArea ? sizeZone(industry.id, quantity, qRange) : null;
 
   return (
     <>
@@ -241,10 +259,51 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 className="w-full"
                 style={{ accentColor: "#B08A44" }}
               />
+              {zoneLabel && (
+                <div className="text-center text-xs mt-2" style={{ color: "#B08A44", fontWeight: 500 }}>
+                  {zoneLabel}
+                </div>
+              )}
               <div className="flex justify-between text-xs mt-1.5" style={{ color: "#BDB49F" }}>
                 <span>{qRange.min} {terms.quantityUnit}</span>
                 <span>{qRange.max} {terms.quantityUnit}</span>
               </div>
+              {isArea && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowDims((v) => !v)}
+                    className="text-xs underline"
+                    style={{ color: "#8A836F", textUnderlineOffset: "2px" }}
+                  >
+                    {showDims ? "Hide dimensions" : `Don't know your ${terms.quantityUnit}? Calculate it`}
+                  </button>
+                  {showDims && (
+                    <div className="mt-2 flex items-center gap-2 text-xs" style={{ color: "#8A836F" }}>
+                      <input
+                        type="number"
+                        min={0}
+                        inputMode="decimal"
+                        placeholder="Length"
+                        value={dimL}
+                        onChange={(e) => updateDim("l", e.target.value)}
+                        className="w-20 px-2 py-1.5 rounded-md border border-line"
+                      />
+                      <span>×</span>
+                      <input
+                        type="number"
+                        min={0}
+                        inputMode="decimal"
+                        placeholder="Width"
+                        value={dimW}
+                        onChange={(e) => updateDim("w", e.target.value)}
+                        className="w-20 px-2 py-1.5 rounded-md border border-line"
+                      />
+                      <span className="font-mono">= {quantity} {terms.quantityUnit}</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </SectionCard>
           )}
 
@@ -448,6 +507,22 @@ export default function EmbedWidget({ business, items, options, addons }) {
     )}
     </>
   );
+}
+
+function sizeZone(industryId, q, qRange) {
+  if (industryId === "countertops") {
+    if (q < 20) return "About a small bathroom vanity";
+    if (q < 35) return "About a small kitchen";
+    if (q < 55) return "About an average kitchen";
+    if (q < 100) return "A large kitchen";
+    return "Commercial / multi-room";
+  }
+  const span = Math.max(1, qRange.max - qRange.min);
+  const frac = (q - qRange.min) / span;
+  if (frac < 0.2) return "Compact";
+  if (frac < 0.45) return "Small";
+  if (frac < 0.7) return "Average";
+  return "Large";
 }
 
 function SectionCard({ step, title, right, capitalizeTitle, children }) {
