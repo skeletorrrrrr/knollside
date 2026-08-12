@@ -362,10 +362,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
                   {money(low)}–{money(high)}
                 </div>
                 <div className="border-t pt-3 space-y-1.5 text-xs font-mono" style={{ borderColor: "rgba(247,243,234,0.18)" }}>
-                  <Line label={terms.item} value={showQuantity ? `$${item.base_price} × ${quantity}` : money(item.base_price)} />
-                  {business.labor_rate > 0 && (
-                    <Line label="Labor" value={showQuantity ? `$${business.labor_rate} × ${quantity}` : money(business.labor_rate)} />
-                  )}
+                  <Line label={terms.item} value={showQuantity ? `$${Number((item.base_price + (business.labor_rate || 0)).toFixed(2))} × ${quantity}` : money(item.base_price + (business.labor_rate || 0))} />
                   {option?.upcharge > 0 && <Line label={option.name} value={showQuantity ? `$${option.upcharge} × ${quantity}` : money(option.upcharge)} />}
                   {selectedAddons.map((a) => (
                     <Line key={a.id} label={a.name} value={a.billing_type === "unit" ? `$${a.price}/${a.unit_label || "unit"} × ${a.qty}` : money(a.price)} />
