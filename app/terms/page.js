@@ -27,8 +27,7 @@ export default function TermsPage() {
               &ldquo;us&rdquo;) provides embeddable instant-quote and pricing
               widgets for service businesses, along with a dashboard for
               configuring pricing and viewing captured leads. Knollside is
-              operated as a sole proprietorship based in California, United
-              States.
+              operated by Knollside LLC, a California limited liability company.
             </p>
             <p>
               These Terms are a binding agreement between Knollside and you. If
