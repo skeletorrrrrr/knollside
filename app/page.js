@@ -86,6 +86,78 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ---------- THE WINDOW (pain / stats) ---------- */}
+      <section className="mb-24">
+        <span
+          className="text-xs font-semibold tracking-widest uppercase"
+          style={{ color: "#8F6E32" }}
+        >
+          The window
+        </span>
+        <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-4 max-w-2xl leading-[1.15]">
+          Most jobs are lost before you ever call back.
+        </h2>
+        <p className="text-lg text-[#6B6558] mb-10 max-w-2xl">
+          When someone asks what a job costs, they&rsquo;re usually asking two
+          or three other people the same day. Whoever answers first is the one
+          they talk to. Harvard Business Review audited 2,241 companies to see
+          how fast they actually respond:
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="rounded-xl p-6 bg-white border border-line">
+            <div className="font-display text-4xl font-semibold tracking-tight">
+              42<span className="text-2xl"> hrs</span>
+            </div>
+            <p className="text-sm text-[#6B6558] mt-2">
+              Average time a business took to respond to an online inquiry.
+            </p>
+          </div>
+
+          <div className="rounded-xl p-6 bg-white border border-line">
+            <div className="font-display text-4xl font-semibold tracking-tight">
+              23<span className="text-2xl">%</span>
+            </div>
+            <p className="text-sm text-[#6B6558] mt-2">
+              Never responded at all. The lead just sat there.
+            </p>
+          </div>
+
+          <div className="rounded-xl p-6 bg-white border border-line">
+            <div className="font-display text-4xl font-semibold tracking-tight">
+              7<span className="text-2xl">&times;</span>
+            </div>
+            <p className="text-sm text-[#6B6558] mt-2">
+              More likely to qualify the lead when you answer within the hour
+              instead of an hour later.
+            </p>
+          </div>
+        </div>
+
+        <p className="text-xs text-[#8A836F] font-mono mb-10">
+          Source: Oldroyd, McElheran &amp; Elkington, &ldquo;The Short Life of
+          Online Sales Leads,&rdquo; Harvard Business Review, 2011.
+        </p>
+
+        <div
+          className="rounded-xl p-6 sm:p-7 border"
+          style={{ background: "#211F1B", borderColor: "#211F1B" }}
+        >
+          <p
+            className="font-display text-xl sm:text-2xl leading-snug max-w-3xl"
+            style={{ color: "#F7F3EA" }}
+          >
+            Knollside answers in seconds &mdash; at midnight, on a Sunday, while
+            you&rsquo;re under a sink.
+          </p>
+          <p className="text-sm mt-3 max-w-2xl" style={{ color: "#BDB49F" }}>
+            The customer gets a real number from your pricing while they&rsquo;re
+            still interested, and you get their name, number and job details
+            waiting in your dashboard.
+          </p>
+        </div>
+      </section>
+
       {/* ---------- PRICING ---------- */}
       <PricingToggle />
 
