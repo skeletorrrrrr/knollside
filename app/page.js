@@ -1,26 +1,28 @@
 import Link from "next/link";
-import { TIERS } from "@/lib/pricing";
 import Footer from "@/components/Footer";
+import PricingToggle from "@/components/PricingToggle";
 
 export default function LandingPage() {
   return (
-    <main className="max-w-6xl mx-auto px-5 py-12 sm:py-16">
+    <main className="max-w-6xl mx-auto px-5 py-10 sm:py-14">
       <style>{`
-        .knollside-demo-frame { width: 100%; border: 0; display: block; height: 720px; }
+        .knollside-demo-frame { width: 100%; border: 0; display: block; height: 900px; }
         @media (max-width: 1023px) {
           .knollside-demo-frame { height: 1150px; }
         }
       `}</style>
 
       {/* ---------- HERO ---------- */}
-      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-10 lg:gap-14 items-center mb-24">
+      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-10 lg:gap-14 items-start mb-24">
         {/* Left: the pitch */}
-        <div>
-          <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
-            Knollside
-          </span>
+        <div className="lg:pt-10">
+          <img
+            src="/knollside-logo.png"
+            alt="Knollside"
+            className="h-8 w-auto mb-7"
+          />
 
-          <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.08] mt-3 mb-5">
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.08] mb-5">
             Your customers are ready to buy. Don&rsquo;t make them wait.
           </h1>
 
@@ -85,19 +87,7 @@ export default function LandingPage() {
       </section>
 
       {/* ---------- PRICING ---------- */}
-      <h2 className="font-display text-2xl font-semibold mb-4">Pricing</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {TIERS.map((tier) => (
-          <div key={tier.id} className="border border-line rounded-xl p-5 bg-white">
-            <div className="font-display text-lg font-semibold">{tier.name}</div>
-            <div className="text-2xl font-semibold my-1 font-mono">
-              ${tier.price}
-              <span className="text-sm font-normal text-[#8A836F]">/mo</span>
-            </div>
-            <p className="text-sm text-[#8A836F]">{tier.blurb}</p>
-          </div>
-        ))}
-      </div>
+      <PricingToggle />
 
       <Footer />
     </main>
