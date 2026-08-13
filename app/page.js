@@ -158,6 +158,68 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ---------- HOW IT WORKS ---------- */}
+      <section className="mb-24">
+        <span
+          className="text-xs font-semibold tracking-widest uppercase"
+          style={{ color: "#8F6E32" }}
+        >
+          How it works
+        </span>
+        <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-10 max-w-2xl leading-[1.15]">
+          Set your prices once. It quotes for you after that.
+        </h2>
+
+        <ol className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <li className="border-t pt-5" style={{ borderColor: "#DED6C4" }}>
+            <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
+              STEP 1
+            </div>
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Set up your pricing
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed">
+              Pick your trade and Knollside starts you with a working estimator
+              &mdash; materials, options, add-ons, labor rate. Rename, reprice,
+              add or remove anything until it matches how you actually quote.
+            </p>
+          </li>
+
+          <li className="border-t pt-5" style={{ borderColor: "#DED6C4" }}>
+            <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
+              STEP 2
+            </div>
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Put it where customers are
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed">
+              Paste one line of code on your website. No website, or can&rsquo;t
+              edit it? Share your Knollside link instead &mdash; in your
+              Instagram bio, Google profile, email signature, or a text.
+            </p>
+          </li>
+
+          <li className="border-t pt-5" style={{ borderColor: "#DED6C4" }}>
+            <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
+              STEP 3
+            </div>
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Get the lead
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed">
+              Customers get a real price in seconds, then send it to you to
+              confirm. Their name, email, phone and job details land in your
+              dashboard while they&rsquo;re still interested.
+            </p>
+          </li>
+        </ol>
+
+        <p className="text-sm text-[#8A836F] mt-8">
+          Change a price later and it updates everywhere instantly &mdash; no
+          re-embedding, no touching your website again.
+        </p>
+      </section>
+
       {/* ---------- PRICING ---------- */}
       <PricingToggle />
 
