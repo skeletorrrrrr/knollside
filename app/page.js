@@ -220,6 +220,87 @@ export default function LandingPage() {
         </p>
       </section>
 
+      {/* ---------- TWO WAYS TO GET STARTED ---------- */}
+      <section className="mb-24">
+        <span
+          className="text-xs font-semibold tracking-widest uppercase"
+          style={{ color: "#8F6E32" }}
+        >
+          Two ways to use it
+        </span>
+        <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-4 max-w-2xl leading-[1.15]">
+          You don&rsquo;t need a website to use Knollside.
+        </h2>
+        <p className="text-lg text-[#6B6558] mb-10 max-w-2xl">
+          Most people do one of these. Some do both.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Option 1 — embed */}
+          <div className="rounded-2xl p-6 sm:p-7 bg-white border border-line flex flex-col">
+            <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
+              OPTION 1
+            </div>
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Put it on your website
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed mb-5">
+              Paste one line where you want the estimator to show up. Anywhere
+              you can add HTML works &mdash; most site builders can. Change your
+              prices later and the page updates itself.
+            </p>
+
+            <div
+              className="rounded-lg p-4 font-mono text-[11px] leading-relaxed overflow-x-auto"
+              style={{ background: "#211F1B", color: "#BDB49F" }}
+            >
+              <span style={{ color: "#8A836F" }}>&lt;iframe</span>{" "}
+              src=<span style={{ color: "#C39A55" }}>
+                &quot;knollside.com/embed/your-name&quot;
+              </span>{" "}
+              style=<span style={{ color: "#C39A55" }}>
+                &quot;width:100%;height:800px;border:0&quot;
+              </span>
+              <span style={{ color: "#8A836F" }}>&gt;&lt;/iframe&gt;</span>
+            </div>
+
+            <p className="text-xs text-[#8A836F] mt-3">
+              Copy it from your dashboard &mdash; it comes filled in with your
+              own address.
+            </p>
+          </div>
+
+          {/* Option 2 — hosted link */}
+          <div className="rounded-2xl p-6 sm:p-7 bg-white border border-line flex flex-col">
+            <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
+              OPTION 2
+            </div>
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Just share your link
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed mb-5">
+              No website, or you can&rsquo;t edit the one you have? Every account
+              gets its own estimator page. Nothing to install &mdash; send the
+              link and it works.
+            </p>
+
+            <div
+              className="rounded-lg p-4 font-mono text-sm"
+              style={{ background: "#F2EDE0", color: "#211F1B" }}
+            >
+              knollside.com/embed/<span style={{ color: "#8F6E32" }}>your-name</span>
+            </div>
+
+            <ul className="mt-4 space-y-1.5 text-sm text-[#6B6558]">
+              <li>&middot; Instagram or Facebook bio</li>
+              <li>&middot; Your Google Business Profile</li>
+              <li>&middot; Email signature</li>
+              <li>&middot; Text it to anyone who asks for a price</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- PRICING ---------- */}
       <PricingToggle />
 
