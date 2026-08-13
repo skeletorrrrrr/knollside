@@ -4,80 +4,96 @@ import Footer from "@/components/Footer";
 
 export default function LandingPage() {
   return (
-    <main className="max-w-4xl mx-auto px-5 py-16">
+    <main className="max-w-6xl mx-auto px-5 py-12 sm:py-16">
       <style>{`
-        .knollside-demo-frame { width: 100%; border: 0; display: block; height: 700px; }
-        @media (max-width: 767px) {
+        .knollside-demo-frame { width: 100%; border: 0; display: block; height: 720px; }
+        @media (max-width: 1023px) {
           .knollside-demo-frame { height: 1150px; }
         }
       `}</style>
-      <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
-        Knollside
-      </span>
-      <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight mt-2 mb-4">
-        Stop losing customers to a phone call.
-      </h1>
-      <p className="text-lg text-[#6B6558] mb-8 max-w-xl">
-        Give customers an instant price the moment they land on your site.
-        Whatever you sell — countertops, repairs, cleaning, lawn care — set up
-        your pricing once and the widget does the math for every visitor.
-      </p>
-      <div className="flex flex-wrap gap-3 mb-20">
-        <Link
-          href="/signup"
-          className="px-5 py-3 rounded-md text-sm font-medium text-white shadow-sm"
-          style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
-        >
-          Start free trial
-        </Link>
-        <a
-          href="#live-demo"
-          className="px-5 py-3 rounded-md text-sm font-medium border border-line"
-        >
-          See live demo ↓
-        </a>
-        <Link
-          href="/login"
-          className="px-5 py-3 rounded-md text-sm font-medium text-[#6B6558]"
-        >
-          Log in
-        </Link>
-      </div>
 
-      <div id="live-demo" className="mb-20 scroll-mt-8">
-        <div className="flex items-center gap-2 mb-1">
-          <span
-            className="inline-block rounded-full flex-shrink-0"
-            style={{ width: 7, height: 7, background: "#4B6A52" }}
-          />
-          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#8F6E32" }}>
-            Live demo — try it yourself
+      {/* ---------- HERO ---------- */}
+      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-10 lg:gap-14 items-center mb-24">
+        {/* Left: the pitch */}
+        <div>
+          <span className="text-xs font-semibold tracking-widest uppercase text-brass-deep">
+            Knollside
           </span>
-        </div>
-        <h2 className="font-display text-2xl font-semibold mb-1">This is a real, working estimator.</h2>
-        <p className="text-sm text-[#8A836F] mb-5 max-w-xl">
-          Not a screenshot — pick a material, drag the slider, check a box. Every
-          business on Knollside gets one of these, customized to what they sell.
-        </p>
-        <div
-          className="rounded-2xl overflow-hidden border"
-          style={{ borderColor: "#EDE6D6", boxShadow: "0 12px 40px rgba(33,31,27,0.08)" }}
-        >
-          <iframe
-            src="/embed/demo"
-            className="knollside-demo-frame"
-            title="Live Knollside demo estimator"
-            loading="lazy"
-          />
-        </div>
-      </div>
 
+          <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.08] mt-3 mb-5">
+            Your customers are ready to buy. Don&rsquo;t make them wait.
+          </h1>
+
+          <p className="text-lg text-[#6B6558] mb-7 max-w-xl">
+            Knollside quotes them instantly and captures the lead &mdash; so you
+            stop losing jobs to a callback.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/signup"
+              className="px-5 py-3 rounded-md text-sm font-medium text-white shadow-sm"
+              style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+            >
+              Start free &mdash; no card required
+            </Link>
+            <Link
+              href="/login"
+              className="px-5 py-3 rounded-md text-sm font-medium text-[#6B6558]"
+            >
+              Log in
+            </Link>
+          </div>
+
+          <p className="mt-4 text-sm text-[#8A836F]">
+            Free for a month. Then from $390/year &mdash; one job pays for it.
+          </p>
+        </div>
+
+        {/* Right: the proof — live, working estimator */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span
+              className="inline-block rounded-full flex-shrink-0"
+              style={{ width: 7, height: 7, background: "#4B6A52" }}
+            />
+            <span
+              className="text-xs font-semibold tracking-widest uppercase"
+              style={{ color: "#8F6E32" }}
+            >
+              Live demo &mdash; try it yourself
+            </span>
+          </div>
+          <p className="text-sm text-[#8A836F] mb-4">
+            Not a screenshot. Pick a material, drag the slider, get a price.
+          </p>
+          <div
+            id="live-demo"
+            className="rounded-2xl overflow-hidden border scroll-mt-8"
+            style={{
+              borderColor: "#EDE6D6",
+              boxShadow: "0 12px 40px rgba(33,31,27,0.08)",
+            }}
+          >
+            <iframe
+              src="/embed/demo"
+              className="knollside-demo-frame"
+              title="Live Knollside demo estimator"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- PRICING ---------- */}
       <h2 className="font-display text-2xl font-semibold mb-4">Pricing</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {TIERS.map((tier) => (
           <div key={tier.id} className="border border-line rounded-xl p-5 bg-white">
             <div className="font-display text-lg font-semibold">{tier.name}</div>
-            <div className="text-2xl font-semibold my-1 font-mono">${tier.price}<span className="text-sm font-normal text-[#8A836F]">/mo</span></div>
+            <div className="text-2xl font-semibold my-1 font-mono">
+              ${tier.price}
+              <span className="text-sm font-normal text-[#8A836F]">/mo</span>
+            </div>
             <p className="text-sm text-[#8A836F]">{tier.blurb}</p>
           </div>
         ))}
