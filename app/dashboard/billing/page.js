@@ -84,17 +84,21 @@ export default function BillingPage() {
   const hasActiveSub = hasPlan && ["active", "trialing", "canceling"].includes(business.subscription_status);
 
   // The raw column values ("trialing", "past_due") are database words, not
-  // something a countertop shop should have to interpret.
+  // something a countertop shop should have to interpret. Colour carries the
+  // urgency: green is fine, brass is a normal in-between state, red needs action.
   const STATUS_LABELS = {
-    trialing: "You're on a free trial",
-    active: "Active",
-    canceling: "Cancels at the end of this period",
-    past_due: "Payment failed — please update your card",
-    canceled: "Canceled",
-    unpaid: "Unpaid",
+    trialing: { text: "You're on a free trial", color: "#B08A44" },
+    active: { text: "Active", color: "#4B6A52" },
+    canceling: { text: "Cancels at the end of this period", color: "#B08A44" },
+    past_due: { text: "Payment failed — please update your card", color: "#C0483B" },
+    canceled: { text: "Canceled", color: "#C0483B" },
+    unpaid: { text: "Unpaid", color: "#C0483B" },
   };
-  const statusLabel =
-    STATUS_LABELS[business.subscription_status] || business.subscription_status;
+  const status =
+    STATUS_LABELS[business.subscription_status] || {
+      text: business.subscription_status,
+      color: "#8A836F",
+    };
 
   return (
     <div>
@@ -102,7 +106,9 @@ export default function BillingPage() {
       {hasPlan ? (
         <p className="text-lg mb-2">
           Current plan: <span className="font-bold text-xl capitalize" style={{ color: "#8F6E32" }}>{business.subscription_tier}</span>{" "}
-          <span className="text-sm text-[#8A836F]">&mdash; {statusLabel}</span>
+          <span className="text-sm font-medium" style={{ color: status.color }}>
+            &mdash; {status.text}
+          </span>
         </p>
       ) : (
         <p className="text-sm text-[#8A836F] mb-2">
