@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import PricingToggle from "@/components/PricingToggle";
+import DemoSwitcher from "@/components/DemoSwitcher";
 
 export default function LandingPage() {
   return (
@@ -52,38 +53,7 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Right: the proof — live, working estimator */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span
-              className="inline-block rounded-full flex-shrink-0"
-              style={{ width: 7, height: 7, background: "#4B6A52" }}
-            />
-            <span
-              className="text-xs font-semibold tracking-widest uppercase"
-              style={{ color: "#8F6E32" }}
-            >
-              Live demo &mdash; try it yourself
-            </span>
-          </div>
-          <p className="text-sm text-[#8A836F] mb-4">
-            Not a screenshot. Pick a material, drag the slider, get a price.
-          </p>
-          <div
-            id="live-demo"
-            className="rounded-2xl overflow-hidden border scroll-mt-8"
-            style={{
-              borderColor: "#EDE6D6",
-              boxShadow: "0 12px 40px rgba(33,31,27,0.08)",
-            }}
-          >
-            <iframe
-              src="/embed/demo"
-              className="knollside-demo-frame"
-              title="Live Knollside demo estimator"
-            />
-          </div>
-        </div>
+        <DemoSwitcher />
       </section>
 
       {/* ---------- THE WINDOW (pain / stats) ---------- */}
