@@ -96,7 +96,7 @@ export default function BillingPage() {
           You're on a free trial — choose a plan to keep your estimator live after it ends.
         </p>
       )}
-      <p className="text-xs text-[#A39C8A] mb-6">Every plan starts with a 14-day free trial. Cancel anytime.</p>
+      <p className="text-xs text-[#A39C8A] mb-6">Your first month is on us. No card required until you&rsquo;re ready to commit.</p>
 
       {business.subscription_status === "canceling" && (
         <div
