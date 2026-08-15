@@ -3,18 +3,25 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { getOrCreateBusiness } from "@/lib/business";
 import { stripe } from "@/lib/stripe";
 
-// Monthly and yearly are separate Stripe prices under the same product.
-// The UI sends billingPeriod; anything other than "yearly" bills monthly.
+// These are only ever read here on the server, so they don't need — and
+// shouldn't have — the NEXT_PUBLIC_ prefix. Prefixed vars are inlined into the
+// client bundle at BUILD time, which breaks if the value is marked Sensitive
+// in Vercel or added after the build. Unprefixed vars are read at runtime.
+// The NEXT_PUBLIC_ fallbacks keep older deployments working during the switch.
+const env = (name) =>
+  process.env[`STRIPE_PRICE_${name}`] ||
+  process.env[`NEXT_PUBLIC_STRIPE_PRICE_${name}`];
+
 const PRICE_IDS = {
   monthly: {
-    starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER,
-    growth: process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH,
-    pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
+    starter: env("STARTER"),
+    growth: env("GROWTH"),
+    pro: env("PRO"),
   },
   yearly: {
-    starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER_ANNUAL,
-    growth: process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH_ANNUAL,
-    pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL,
+    starter: env("STARTER_ANNUAL"),
+    growth: env("GROWTH_ANNUAL"),
+    pro: env("PRO_ANNUAL"),
   },
 };
 

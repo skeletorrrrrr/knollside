@@ -2,22 +2,18 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabaseServer";
 
-// Each tier has a monthly and a yearly price. Both must map back to the same
-// tier or an annual subscriber would be recorded on the wrong plan.
+// Server-side only — see the note in checkout/route.js about why these are
+// not NEXT_PUBLIC_. Each tier has a monthly and a yearly price; both must map
+// back to the same tier or an annual subscriber lands on the wrong plan.
+const env = (name) =>
+  process.env[`STRIPE_PRICE_${name}`] ||
+  process.env[`NEXT_PUBLIC_STRIPE_PRICE_${name}`];
+
 function tierForPriceId(priceId) {
   const byTier = {
-    starter: [
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER,
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER_ANNUAL,
-    ],
-    growth: [
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH,
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH_ANNUAL,
-    ],
-    pro: [
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL,
-    ],
+    starter: [env("STARTER"), env("STARTER_ANNUAL")],
+    growth: [env("GROWTH"), env("GROWTH_ANNUAL")],
+    pro: [env("PRO"), env("PRO_ANNUAL")],
   };
   for (const [tier, ids] of Object.entries(byTier)) {
     if (ids.filter(Boolean).includes(priceId)) return tier;
