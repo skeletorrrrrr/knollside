@@ -4,6 +4,7 @@ import { useState } from "react";
 const DEMOS = [
   { slug: "demo", label: "Countertops", blurb: "Pick a material, drag the slider, get a price." },
   { slug: "demo-autoglass", label: "Auto glass", blurb: "Pick a service and vehicle size, get a price." },
+  { slug: "demo-roofing", label: "Roofing", blurb: "Pick a material and roof size, get a price." },
 ];
 
 export default function DemoSwitcher() {
