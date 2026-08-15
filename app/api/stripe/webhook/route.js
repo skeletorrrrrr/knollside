@@ -35,7 +35,25 @@ export async function POST(request) {
 
   const supabase = supabaseAdmin();
 
-  async function syncSubscription(subscription) {
+  // Stripe does not guarantee event ordering, and each event carries a
+  // SNAPSHOT of the subscription as it was when that event fired. A
+  // subscription.created snapshot says "incomplete"; if it arrives after the
+  // updated event, writing the snapshot would clobber "active" with stale
+  // data. So we always re-fetch the live subscription and write that instead.
+  async function syncSubscription(subscriptionOrId) {
+    const id =
+      typeof subscriptionOrId === "string" ? subscriptionOrId : subscriptionOrId.id;
+
+    let subscription;
+    try {
+      subscription = await stripe.subscriptions.retrieve(id);
+    } catch (err) {
+      console.error("Could not re-fetch subscription", id, err.message);
+      // Fall back to the snapshot rather than dropping the update entirely.
+      if (typeof subscriptionOrId === "string") return;
+      subscription = subscriptionOrId;
+    }
+
     const businessId = subscription.metadata?.business_id;
     const priceId = subscription.items.data[0]?.price?.id;
     const tier = tierForPriceId(priceId);
@@ -56,8 +74,7 @@ export async function POST(request) {
     case "checkout.session.completed": {
       const session = event.data.object;
       if (session.mode === "subscription" && session.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(session.subscription);
-        await syncSubscription(subscription);
+        await syncSubscription(session.subscription);
       }
       break;
     }
