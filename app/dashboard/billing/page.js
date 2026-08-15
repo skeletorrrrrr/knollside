@@ -83,13 +83,26 @@ export default function BillingPage() {
   const hasPlan = !!business.subscription_tier;
   const hasActiveSub = hasPlan && ["active", "trialing", "canceling"].includes(business.subscription_status);
 
+  // The raw column values ("trialing", "past_due") are database words, not
+  // something a countertop shop should have to interpret.
+  const STATUS_LABELS = {
+    trialing: "You're on a free trial",
+    active: "Active",
+    canceling: "Cancels at the end of this period",
+    past_due: "Payment failed — please update your card",
+    canceled: "Canceled",
+    unpaid: "Unpaid",
+  };
+  const statusLabel =
+    STATUS_LABELS[business.subscription_status] || business.subscription_status;
+
   return (
     <div>
       <h1 className="font-display text-xl font-semibold mb-1">Billing</h1>
       {hasPlan ? (
         <p className="text-lg mb-2">
           Current plan: <span className="font-bold text-xl capitalize" style={{ color: "#8F6E32" }}>{business.subscription_tier}</span>{" "}
-          <span className="text-sm text-[#8A836F]">({business.subscription_status})</span>
+          <span className="text-sm text-[#8A836F]">&mdash; {statusLabel}</span>
         </p>
       ) : (
         <p className="text-sm text-[#8A836F] mb-2">
