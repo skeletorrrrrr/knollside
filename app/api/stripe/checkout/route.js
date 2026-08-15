@@ -3,10 +3,19 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { getOrCreateBusiness } from "@/lib/business";
 import { stripe } from "@/lib/stripe";
 
+// Monthly and yearly are separate Stripe prices under the same product.
+// The UI sends billingPeriod; anything other than "yearly" bills monthly.
 const PRICE_IDS = {
-  starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER,
-  growth: process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH,
-  pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
+  monthly: {
+    starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER,
+    growth: process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH,
+    pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
+  },
+  yearly: {
+    starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER_ANNUAL,
+    growth: process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH_ANNUAL,
+    pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL,
+  },
 };
 
 export async function POST(request) {
@@ -15,9 +24,15 @@ export async function POST(request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const business = await getOrCreateBusiness(supabase, user);
-  const { tierId } = await request.json();
-  const priceId = PRICE_IDS[tierId];
-  if (!priceId) return NextResponse.json({ error: "Unknown plan" }, { status: 400 });
+  const { tierId, billingPeriod } = await request.json();
+  const period = billingPeriod === "yearly" ? "yearly" : "monthly";
+  const priceId = PRICE_IDS[period][tierId];
+  if (!priceId) {
+    return NextResponse.json(
+      { error: `No ${period} price configured for plan "${tierId}".` },
+      { status: 400 }
+    );
+  }
 
   let customerId = business.stripe_customer_id;
   if (!customerId) {
@@ -37,9 +52,10 @@ export async function POST(request) {
     success_url: `${siteUrl}/dashboard/billing?success=1`,
     cancel_url: `${siteUrl}/dashboard/billing?canceled=1`,
     metadata: { business_id: business.id },
+    // No trial_period_days here: the free month is handled in-app before the
+    // customer ever reaches checkout, so a Stripe trial would stack on top.
     subscription_data: {
       metadata: { business_id: business.id },
-      trial_period_days: 14,
     },
   });
 

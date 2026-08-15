@@ -13,6 +13,7 @@ export default function BillingPage() {
   const [confirmName, setConfirmName] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [msg, setMsg] = useState("");
+  const [yearly, setYearly] = useState(false);
 
   useEffect(() => {
     fetch("/api/settings").then((r) => r.json()).then((d) => setBusiness(d.business));
@@ -23,7 +24,10 @@ export default function BillingPage() {
     const res = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tierId: tier.id }),
+      body: JSON.stringify({
+        tierId: tier.id,
+        billingPeriod: yearly ? "yearly" : "monthly",
+      }),
     });
     const data = await res.json();
     setLoadingTier(null);
@@ -120,15 +124,52 @@ export default function BillingPage() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Billing period toggle — spans the grid so it sits above the cards */}
+        <div className="col-span-full flex items-center gap-2 mb-1">
+          <button
+            type="button"
+            onClick={() => setYearly(false)}
+            aria-pressed={!yearly}
+            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-colors"
+            style={{
+              background: !yearly ? "#211F1B" : "transparent",
+              color: !yearly ? "#F7F3EA" : "#6B6558",
+              borderColor: !yearly ? "#211F1B" : "#DED6C4",
+            }}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => setYearly(true)}
+            aria-pressed={yearly}
+            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-colors"
+            style={{
+              background: yearly ? "#211F1B" : "transparent",
+              color: yearly ? "#F7F3EA" : "#6B6558",
+              borderColor: yearly ? "#211F1B" : "#DED6C4",
+            }}
+          >
+            Yearly &mdash; 2 months free
+          </button>
+        </div>
+
         {TIERS.map((tier) => {
           const isCurrent = business.subscription_tier === tier.id;
           return (
             <div key={tier.id} className="border border-line rounded-xl p-5 bg-white flex flex-col">
               <div className="font-display text-lg font-semibold">{tier.name}</div>
               <div className="text-2xl font-semibold my-1 font-mono">
-                ${tier.price}
-                <span className="text-sm font-normal text-[#8A836F]">/mo</span>
+                ${yearly ? tier.annual.toLocaleString() : tier.price}
+                <span className="text-sm font-normal text-[#8A836F]">
+                  {yearly ? "/yr" : "/mo"}
+                </span>
               </div>
+              {yearly && (
+                <div className="text-xs text-[#8A836F] font-mono mb-1">
+                  ${(tier.annual / 12).toFixed(2).replace(/\.00$/, "")}/mo billed yearly
+                </div>
+              )}
               <p className="text-sm text-[#8A836F] flex-1 mb-4">{tier.blurb}</p>
               <button
                 onClick={() => subscribe(tier)}
@@ -136,7 +177,13 @@ export default function BillingPage() {
                 className="text-sm font-medium px-4 py-2 rounded-md text-white disabled:opacity-50"
                 style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
               >
-                {isCurrent ? "Current plan" : loadingTier === tier.id ? "Redirecting…" : "Start 14-day trial"}
+                {isCurrent
+                  ? "Current plan"
+                  : loadingTier === tier.id
+                  ? "Redirecting…"
+                  : yearly
+                  ? "Subscribe yearly"
+                  : "Subscribe monthly"}
               </button>
             </div>
           );

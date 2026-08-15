@@ -2,10 +2,27 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabaseServer";
 
+// Each tier has a monthly and a yearly price. Both must map back to the same
+// tier or an annual subscriber would be recorded on the wrong plan.
 function tierForPriceId(priceId) {
-  if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER) return "starter";
-  if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH) return "growth";
-  if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO) return "pro";
+  const byTier = {
+    starter: [
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER,
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER_ANNUAL,
+    ],
+    growth: [
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH,
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_GROWTH_ANNUAL,
+    ],
+    pro: [
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL,
+    ],
+  };
+  for (const [tier, ids] of Object.entries(byTier)) {
+    if (ids.filter(Boolean).includes(priceId)) return tier;
+  }
+  console.error("Unrecognised price ID on subscription:", priceId);
   return "starter";
 }
 
