@@ -15,7 +15,11 @@ export default async function DashboardLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-stone">
-      <DashboardNav businessName={business.name} slug={business.slug} />
+      <DashboardNav
+        businessName={business.name}
+        slug={business.slug}
+        logoUrl={business.logo_url}
+      />
       <div className="max-w-3xl mx-auto px-5 py-8">{children}</div>
     </div>
   );

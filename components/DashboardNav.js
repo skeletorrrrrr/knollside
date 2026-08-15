@@ -11,7 +11,7 @@ const LINKS = [
   { href: "/dashboard/billing", label: "Billing" },
 ];
 
-export default function DashboardNav({ businessName, slug }) {
+export default function DashboardNav({ businessName, slug, logoUrl }) {
   const pathname = usePathname();
   const router = useRouter();
   const [newLeads, setNewLeads] = useState(0);
@@ -62,9 +62,18 @@ export default function DashboardNav({ businessName, slug }) {
   return (
     <div className="border-b border-line bg-white">
       <div className="max-w-3xl mx-auto px-5 py-3 flex items-center justify-between">
-        <div>
-          <div className="font-display font-semibold">{businessName}</div>
-          <div className="text-xs text-[#A39C8A] font-mono">/{slug}</div>
+        <div className="flex items-center gap-3 min-w-0">
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt=""
+              className="h-9 w-auto max-w-[140px] object-contain flex-shrink-0"
+            />
+          )}
+          <div className="min-w-0">
+            <div className="font-display font-semibold truncate">{businessName}</div>
+            <div className="text-xs text-[#A39C8A] font-mono truncate">/{slug}</div>
+          </div>
         </div>
         <nav className="flex items-center gap-1">
           {LINKS.map((l) => {
