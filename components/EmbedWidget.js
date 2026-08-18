@@ -27,7 +27,21 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const isArea = qtype === "area";
 
   const [itemId, setItemId] = useState(items[0]?.id);
-  const [quantity, setQuantity] = useState(qRange?.default ?? 1);
+  const [quantity, setQuantity] = useState(() => {
+    // Hourly trades start at a length that suits the first service rather
+    // than a one-size default that may contradict it.
+    if (qtype === "hours" && items.length > 0) {
+      const sorted = [...items].sort(
+        (a, b) => (a.base_price || 0) - (b.base_price || 0)
+      );
+      const rank = sorted.findIndex((m) => m.id === items[0].id);
+      const frac = sorted.length > 1 ? rank / (sorted.length - 1) : 0;
+      const low = Math.max(qRange?.min ?? 1, 2);
+      const high = Math.min(qRange?.max ?? 8, 8);
+      return Math.round(low + frac * (high - low));
+    }
+    return qRange?.default ?? 1;
+  });
   const [optionId, setOptionId] = useState(options[0]?.id);
   const [checkedAddons, setCheckedAddons] = useState({});
   const [addonQty, setAddonQty] = useState({});
@@ -46,6 +60,29 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const item = items.find((m) => m.id === itemId) || items[0];
   const itemIndex = items.findIndex((m) => m.id === item?.id);
   const option = options.find((e) => e.id === optionId) || options[0];
+
+  // On hourly trades the service and the hours are independent, so a customer
+  // could leave the slider at "16 hours" and quote a 16-hour outlet install.
+  // Selecting a service snaps the slider to a sensible length for that job,
+  // ranked by its per-hour premium (a panel upgrade costs more per hour AND
+  // takes longer than swapping an outlet). The customer can still adjust.
+  function suggestedHours(nextItem) {
+    if (qtype !== "hours" || items.length === 0) return null;
+    const sorted = [...items].sort(
+      (a, b) => (a.base_price || 0) - (b.base_price || 0)
+    );
+    const rank = sorted.findIndex((m) => m.id === nextItem.id);
+    const frac = sorted.length > 1 ? rank / (sorted.length - 1) : 0;
+    const low = Math.max(qRange?.min ?? 1, 2);
+    const high = Math.min(qRange?.max ?? 8, 8);
+    return Math.round(low + frac * (high - low));
+  }
+
+  function selectItem(nextItem) {
+    setItemId(nextItem.id);
+    const hrs = suggestedHours(nextItem);
+    if (hrs !== null) setQuantity(hrs);
+  }
 
   const effectiveQty = showQuantity ? quantity : 1;
 
@@ -188,11 +225,11 @@ export default function EmbedWidget({ business, items, options, addons }) {
                     key={m.id}
                     role="button"
                     tabIndex={0}
-                    onClick={() => setItemId(m.id)}
+                    onClick={() => selectItem(m)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        setItemId(m.id);
+                        selectItem(m);
                       }
                     }}
                     className="rounded-xl overflow-hidden border-2 text-left transition-all duration-150 cursor-pointer"
