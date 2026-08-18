@@ -7,6 +7,7 @@ const DEMOS = [
   { slug: "demo-roofing", label: "Roofing", blurb: "Pick a material and roof size, get a price." },
   { slug: "demo-plumbing", label: "Plumbing", blurb: "Pick a job and how urgent it is, get a price." },
   { slug: "demo-hvac", label: "HVAC", blurb: "Pick a service and system, get a price." },
+  { slug: "demo-electrical", label: "Electrical", blurb: "Pick a job and how long it takes, get a price." },
 ];
 
 export default function DemoSwitcher() {
