@@ -136,11 +136,8 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const stepAddons = addons.length > 0 ? ++stepCounter : null;
 
   const isHours = industry.quantity_type === "hours";
-  const zoneLabel = isArea
-    ? sizeZone(industry.id, quantity, qRange)
-    : isHours
-    ? jobScope(industry.id, quantity, qRange)
-    : null;
+  const scope = isHours ? jobScope(industry.id, quantity, qRange) : null;
+  const zoneLabel = isArea ? sizeZone(industry.id, quantity, qRange) : null;
 
   // A homeowner whose AC just died has no idea whether that is a 1-hour or a
   // 6-hour job — asking them to estimate labour puts the hardest question on
@@ -148,7 +145,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   // instead and keep the hours as a quiet secondary detail.
   const quantityTitle = isHours ? "How big is the job?" : terms.quantity;
   const quantityRight = isHours
-    ? zoneLabel
+    ? scope.label
     : `${quantity} ${terms.quantityUnit}`;
 
   return (
@@ -285,8 +282,13 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 </div>
               )}
               {isHours && (
-                <div className="text-center text-xs mt-2" style={{ color: "#BDB49F" }}>
-                  About {quantity} {quantity === 1 ? "hour" : "hours"} of work
+                <div className="text-center mt-2">
+                  <div className="text-xs" style={{ color: "#B08A44", fontWeight: 500 }}>
+                    {scope.detail}
+                  </div>
+                  <div className="text-xs mt-0.5" style={{ color: "#BDB49F" }}>
+                    About {quantity} {quantity === 1 ? "hour" : "hours"} of work
+                  </div>
                 </div>
               )}
               <div className="flex justify-between text-xs mt-1.5" style={{ color: "#BDB49F" }}>
@@ -560,54 +562,61 @@ export default function EmbedWidget({ business, items, options, addons }) {
 // Turns labour hours into something a homeowner can actually answer. The
 // wording is per-trade because "a big job" means different things to a
 // plumber and an HVAC tech.
+// Turns labour hours into something a homeowner can actually answer. Returns
+// a short label for the header and a longer detail line for under the slider.
+// Wording is per-trade because "a big job" means different things to a
+// plumber and an HVAC tech.
 function jobScope(industryId, q, qRange) {
   const span = Math.max(1, qRange.max - qRange.min);
   const frac = (q - qRange.min) / span;
 
   const WORDING = {
     plumbing: [
-      "Simple — a single fixture or slow drain",
-      "Standard — a typical repair or swap",
-      "Involved — multiple fixtures or hard-to-reach pipe",
-      "Major — repipe, water heater, or a big leak",
+      "a single fixture or a slow drain",
+      "a typical repair or fixture swap",
+      "multiple fixtures or hard-to-reach pipe",
+      "a repipe, water heater, or major leak",
     ],
     hvac: [
-      "Simple — a tune-up or filter and coil clean",
-      "Standard — a typical diagnostic and repair",
-      "Involved — a major component or ductwork",
-      "Major — full system replacement",
+      "a tune-up, filter and coil clean",
+      "a typical diagnostic and repair",
+      "a major component or ductwork",
+      "a full system replacement",
     ],
     electrical: [
-      "Simple — an outlet, switch, or fixture",
-      "Standard — a dedicated circuit or ceiling fan",
-      "Involved — EV charger or several circuits",
-      "Major — panel upgrade or rewire",
+      "an outlet, switch, or light fixture",
+      "a dedicated circuit or ceiling fan",
+      "an EV charger or several circuits",
+      "a panel upgrade or rewire",
     ],
     mechanics: [
-      "Simple — fluids, filters, or a quick check",
-      "Standard — brakes or a common repair",
-      "Involved — suspension or electrical diagnosis",
-      "Major — engine or transmission work",
+      "fluids, filters, or a quick check",
+      "brakes or a common repair",
+      "suspension or electrical diagnosis",
+      "engine or transmission work",
     ],
     moving: [
-      "Simple — a studio or a few items",
-      "Standard — a one-bedroom",
-      "Involved — two to three bedrooms",
-      "Major — a large home or long carry",
+      "a studio or just a few items",
+      "a one-bedroom",
+      "two to three bedrooms",
+      "a large home or a long carry",
     ],
   };
 
-  const words = WORDING[industryId] || [
-    "Simple",
-    "Standard",
-    "Involved",
-    "Major",
+  const LABELS = ["Simple", "Standard", "Involved", "Major"];
+  const details = WORDING[industryId] || [
+    "a small job",
+    "a typical job",
+    "a larger job",
+    "a big job",
   ];
 
-  if (frac < 0.2) return words[0];
-  if (frac < 0.45) return words[1];
-  if (frac < 0.7) return words[2];
-  return words[3];
+  let i = 3;
+  if (frac < 0.2) i = 0;
+  else if (frac < 0.45) i = 1;
+  else if (frac < 0.7) i = 2;
+
+  return { label: LABELS[i], detail: "Something like " + details[i] };
 }
 
 function sizeZone(industryId, q, qRange) {
@@ -632,20 +641,23 @@ function SectionCard({ step, title, right, capitalizeTitle, children }) {
       className="rounded-2xl border p-5"
       style={{ borderColor: "#EDE6D6", background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}
     >
-      <div className="flex items-center justify-between mb-4 gap-3">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className="flex items-start justify-between mb-4 gap-3">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
           <span
             className="flex items-center justify-center flex-shrink-0 text-xs font-bold"
             style={{ width: 24, height: 24, borderRadius: "50%", background: "#211F1B", color: "#F7F3EA" }}
           >
             {step}
           </span>
-          <span className={`text-sm font-semibold truncate ${capitalizeTitle ? "capitalize" : ""}`} style={{ color: "#211F1B" }}>
+          <span className={`text-sm font-semibold ${capitalizeTitle ? "capitalize" : ""}`} style={{ color: "#211F1B" }}>
             {title}
           </span>
         </div>
         {right && (
-          <span className="text-sm font-mono font-semibold flex-shrink-0" style={{ color: "#B08A44" }}>
+          <span
+            className="text-sm font-mono font-semibold text-right min-w-0"
+            style={{ color: "#B08A44" }}
+          >
             {right}
           </span>
         )}
