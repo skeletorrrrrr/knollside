@@ -6,6 +6,7 @@ const DEMOS = [
   { slug: "demo-autoglass", label: "Auto glass", blurb: "Pick a service and vehicle size, get a price." },
   { slug: "demo-roofing", label: "Roofing", blurb: "Pick a material and roof size, get a price." },
   { slug: "demo-plumbing", label: "Plumbing", blurb: "Pick a job and how urgent it is, get a price." },
+  { slug: "demo-hvac", label: "HVAC", blurb: "Pick a service and system, get a price." },
 ];
 
 export default function DemoSwitcher() {
@@ -26,27 +27,31 @@ export default function DemoSwitcher() {
         Not a screenshot. {active.blurb}
       </p>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {DEMOS.map((d) => {
-          const on = d.slug === active.slug;
-          return (
-            <button
-              key={d.slug}
-              type="button"
-              onClick={() => setActive(d)}
-              aria-pressed={on}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors"
-              style={{
-                background: on ? "#211F1B" : "transparent",
-                color: on ? "#F7F3EA" : "#6B6558",
-                borderColor: on ? "#211F1B" : "#DED6C4",
-              }}
-            >
-              {d.label}
-            </button>
-          );
-        })}
-      </div>
+      <label className="flex flex-col gap-1.5 mb-4 max-w-xs">
+        <span className="text-xs font-medium text-[#6B6558]">
+          See the demo for your trade
+        </span>
+        <div className="relative">
+          <select
+            value={active.slug}
+            onChange={(e) =>
+              setActive(DEMOS.find((d) => d.slug === e.target.value) || DEMOS[0])
+            }
+            className="w-full appearance-none rounded-lg border bg-white px-3.5 py-2.5 pr-9 text-sm font-medium cursor-pointer"
+            style={{ borderColor: "#DED6C4", color: "#211F1B" }}
+          >
+            {DEMOS.map((d) => (
+              <option key={d.slug} value={d.slug}>{d.label}</option>
+            ))}
+          </select>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8A836F]"
+          >
+            &#9662;
+          </span>
+        </div>
+      </label>
 
       <div id="live-demo"
         className="rounded-2xl overflow-hidden border scroll-mt-8"
