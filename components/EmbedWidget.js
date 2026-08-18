@@ -56,6 +56,9 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const [showDims, setShowDims] = useState(false);
   const [dimL, setDimL] = useState("");
   const [dimW, setDimW] = useState("");
+  // Held separately from `quantity` so someone can clear the box and retype
+  // without the slider jumping to 0 on every keystroke.
+  const [exactInput, setExactInput] = useState(null);
 
   const item = items.find((m) => m.id === itemId) || items[0];
   const itemIndex = items.findIndex((m) => m.id === item?.id);
@@ -357,6 +360,32 @@ export default function EmbedWidget({ business, items, options, addons }) {
                   </>
                 )}
               </div>
+              {!isHours && (
+                <div className="mt-3 flex items-center gap-2 text-xs" style={{ color: "#8A836F" }}>
+                  <span>Know the exact number?</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    min={qRange.min}
+                    max={qRange.max}
+                    value={exactInput !== null ? exactInput : quantity}
+                    onChange={(e) => {
+                      setExactInput(e.target.value);
+                      const n = Number(e.target.value);
+                      if (e.target.value !== "" && !Number.isNaN(n)) {
+                        setQuantity(
+                          Math.min(Math.max(n, qRange.min), qRange.max)
+                        );
+                      }
+                    }}
+                    onBlur={() => setExactInput(null)}
+                    className="w-24 px-2 py-1.5 rounded-md border"
+                    style={{ borderColor: "#DED6C4", color: "#211F1B" }}
+                  />
+                  <span>{terms.quantityUnit}</span>
+                </div>
+              )}
+
               {isArea && (
                 <div className="mt-3">
                   <button
