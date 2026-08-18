@@ -172,8 +172,24 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const stepOptions = options.length > 0 ? ++stepCounter : null;
   const stepAddons = addons.length > 0 ? ++stepCounter : null;
 
+  // Rank of the current service among all services, cheapest to dearest.
+  // The scope wording follows the SERVICE, not the slider position: picking
+  // "panel upgrade" should read as a major job even if its hours land
+  // mid-slider, otherwise the label contradicts the thing they just chose.
+  function serviceTier() {
+    if (items.length <= 1) return 0;
+    const sorted = [...items].sort(
+      (a, b) => (a.base_price || 0) - (b.base_price || 0)
+    );
+    const rank = sorted.findIndex((m) => m.id === item?.id);
+    const frac = rank / (sorted.length - 1);
+    if (frac < 0.34) return 0;
+    if (frac < 0.67) return 1;
+    return 3;
+  }
+
   const isHours = industry.quantity_type === "hours";
-  const scope = isHours ? jobScope(industry.id, quantity, qRange) : null;
+  const scope = isHours ? jobScope(industry.id, serviceTier()) : null;
   const zoneLabel = isArea ? sizeZone(industry.id, quantity, qRange) : null;
 
   // A homeowner whose AC just died has no idea whether that is a 1-hour or a
@@ -603,10 +619,11 @@ export default function EmbedWidget({ business, items, options, addons }) {
 // a short label for the header and a longer detail line for under the slider.
 // Wording is per-trade because "a big job" means different things to a
 // plumber and an HVAC tech.
-function jobScope(industryId, q, qRange) {
-  const span = Math.max(1, qRange.max - qRange.min);
-  const frac = (q - qRange.min) / span;
-
+// Turns a service's relative size into something a homeowner can answer.
+// Takes a tier index rather than raw hours so the wording follows the service
+// the customer picked. Wording is per-trade because "a big job" means
+// different things to a plumber and an HVAC tech.
+function jobScope(industryId, tier) {
   const WORDING = {
     plumbing: [
       "a single fixture or a slow drain",
@@ -647,12 +664,7 @@ function jobScope(industryId, q, qRange) {
     "a larger job",
     "a big job",
   ];
-
-  let i = 3;
-  if (frac < 0.2) i = 0;
-  else if (frac < 0.45) i = 1;
-  else if (frac < 0.7) i = 2;
-
+  const i = Math.max(0, Math.min(3, tier));
   return { label: LABELS[i], detail: "Something like " + details[i] };
 }
 
