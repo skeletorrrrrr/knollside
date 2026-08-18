@@ -18,6 +18,12 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const qtype = business.quantity_type || industry.quantity_type;
   const showQuantity = qtype !== "none";
   const qRange = industry.quantity;
+  // Step in whole units unless the whole range is small enough that half
+  // steps are useful (e.g. a 1-4 hour job). Crucially, min and step must
+  // agree: a 0.5 min with a step of 1 makes every notch land on a half and
+  // whole numbers become unreachable, which is wrong for labor hours.
+  const qSpan = (qRange?.max ?? 1) - (qRange?.min ?? 0);
+  const qStep = qSpan <= 4 ? 0.5 : 1;
   const isArea = qtype === "area";
 
   const [itemId, setItemId] = useState(items[0]?.id);
@@ -251,9 +257,9 @@ export default function EmbedWidget({ business, items, options, addons }) {
             <SectionCard step={stepQuantity} title={terms.quantity} capitalizeTitle right={`${quantity} ${terms.quantityUnit}`}>
               <input
                 type="range"
-                min={qRange.min}
+                min={qStep === 1 ? Math.max(1, Math.ceil(qRange.min)) : qRange.min}
                 max={qRange.max}
-                step={qRange.max <= 15 ? 0.5 : 1}
+                step={qStep}
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
                 className="w-full"
@@ -265,7 +271,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 </div>
               )}
               <div className="flex justify-between text-xs mt-1.5" style={{ color: "#BDB49F" }}>
-                <span>{qRange.min} {terms.quantityUnit}</span>
+                <span>{qStep === 1 ? Math.max(1, Math.ceil(qRange.min)) : qRange.min} {terms.quantityUnit}</span>
                 <span>{qRange.max} {terms.quantityUnit}</span>
               </div>
               {isArea && (
