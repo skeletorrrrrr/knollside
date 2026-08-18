@@ -135,7 +135,21 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const stepOptions = options.length > 0 ? ++stepCounter : null;
   const stepAddons = addons.length > 0 ? ++stepCounter : null;
 
-  const zoneLabel = isArea ? sizeZone(industry.id, quantity, qRange) : null;
+  const isHours = industry.quantity_type === "hours";
+  const zoneLabel = isArea
+    ? sizeZone(industry.id, quantity, qRange)
+    : isHours
+    ? jobScope(industry.id, quantity, qRange)
+    : null;
+
+  // A homeowner whose AC just died has no idea whether that is a 1-hour or a
+  // 6-hour job — asking them to estimate labour puts the hardest question on
+  // the least-equipped person. For hourly trades we ask how big the job is
+  // instead and keep the hours as a quiet secondary detail.
+  const quantityTitle = isHours ? "How big is the job?" : terms.quantity;
+  const quantityRight = isHours
+    ? zoneLabel
+    : `${quantity} ${terms.quantityUnit}`;
 
   return (
     <>
@@ -254,7 +268,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
           </SectionCard>
 
           {showQuantity && (
-            <SectionCard step={stepQuantity} title={terms.quantity} capitalizeTitle right={`${quantity} ${terms.quantityUnit}`}>
+            <SectionCard step={stepQuantity} title={quantityTitle} capitalizeTitle right={quantityRight}>
               <input
                 type="range"
                 min={qStep === 1 ? Math.max(1, Math.ceil(qRange.min)) : qRange.min}
@@ -265,14 +279,28 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 className="w-full"
                 style={{ accentColor: "#B08A44" }}
               />
-              {zoneLabel && (
+              {zoneLabel && !isHours && (
                 <div className="text-center text-xs mt-2" style={{ color: "#B08A44", fontWeight: 500 }}>
                   {zoneLabel}
                 </div>
               )}
+              {isHours && (
+                <div className="text-center text-xs mt-2" style={{ color: "#BDB49F" }}>
+                  About {quantity} {quantity === 1 ? "hour" : "hours"} of work
+                </div>
+              )}
               <div className="flex justify-between text-xs mt-1.5" style={{ color: "#BDB49F" }}>
-                <span>{qStep === 1 ? Math.max(1, Math.ceil(qRange.min)) : qRange.min} {terms.quantityUnit}</span>
-                <span>{qRange.max} {terms.quantityUnit}</span>
+                {isHours ? (
+                  <>
+                    <span>Simple</span>
+                    <span>Major</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{qStep === 1 ? Math.max(1, Math.ceil(qRange.min)) : qRange.min} {terms.quantityUnit}</span>
+                    <span>{qRange.max} {terms.quantityUnit}</span>
+                  </>
+                )}
               </div>
               {isArea && (
                 <div className="mt-3">
@@ -527,6 +555,59 @@ export default function EmbedWidget({ business, items, options, addons }) {
     )}
     </>
   );
+}
+
+// Turns labour hours into something a homeowner can actually answer. The
+// wording is per-trade because "a big job" means different things to a
+// plumber and an HVAC tech.
+function jobScope(industryId, q, qRange) {
+  const span = Math.max(1, qRange.max - qRange.min);
+  const frac = (q - qRange.min) / span;
+
+  const WORDING = {
+    plumbing: [
+      "Simple — a single fixture or slow drain",
+      "Standard — a typical repair or swap",
+      "Involved — multiple fixtures or hard-to-reach pipe",
+      "Major — repipe, water heater, or a big leak",
+    ],
+    hvac: [
+      "Simple — a tune-up or filter and coil clean",
+      "Standard — a typical diagnostic and repair",
+      "Involved — a major component or ductwork",
+      "Major — full system replacement",
+    ],
+    electrical: [
+      "Simple — an outlet, switch, or fixture",
+      "Standard — a dedicated circuit or ceiling fan",
+      "Involved — EV charger or several circuits",
+      "Major — panel upgrade or rewire",
+    ],
+    mechanics: [
+      "Simple — fluids, filters, or a quick check",
+      "Standard — brakes or a common repair",
+      "Involved — suspension or electrical diagnosis",
+      "Major — engine or transmission work",
+    ],
+    moving: [
+      "Simple — a studio or a few items",
+      "Standard — a one-bedroom",
+      "Involved — two to three bedrooms",
+      "Major — a large home or long carry",
+    ],
+  };
+
+  const words = WORDING[industryId] || [
+    "Simple",
+    "Standard",
+    "Involved",
+    "Major",
+  ];
+
+  if (frac < 0.2) return words[0];
+  if (frac < 0.45) return words[1];
+  if (frac < 0.7) return words[2];
+  return words[3];
 }
 
 function sizeZone(industryId, q, qRange) {
