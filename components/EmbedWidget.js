@@ -579,20 +579,6 @@ export default function EmbedWidget({ business, items, options, addons }) {
                 </p>
               </form>
             )}
-
-            {!business.hide_branding && (
-              <p className="text-center pt-3" style={{ fontSize: "10.5px", letterSpacing: "0.04em", color: "#A39C8A" }}>
-                Powered by{" "}
-                <a
-                  href="https://www.knollside.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "#8F6E32", fontWeight: 500, textDecoration: "none" }}
-                >
-                  Knollside
-                </a>
-              </p>
-            )}
           </div>
         </div>
       </div>

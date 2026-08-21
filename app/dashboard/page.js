@@ -183,7 +183,11 @@ export default function SetupPage() {
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
   const embedUrl = `${siteUrl}/embed/${business.slug}`;
-  const embedSnippet = `<iframe src="${embedUrl}" style="width:100%;height:800px;border:0;" title="Get an instant estimate"></iframe>`;
+  const hideBranding = business.hide_branding ?? ["pro"].includes(business.subscription_tier);
+  const creditLine = hideBranding
+    ? ""
+    : `\n<p style="text-align:center;margin:22px 0 4px;font-size:11px;letter-spacing:0.06em;line-height:1;"><a href="https://www.knollside.com" target="_blank" rel="noopener" style="color:#211F1B;opacity:0.35;text-decoration:none;">Powered by Knollside</a></p>`;
+  const embedSnippet = `<iframe src="${embedUrl}" style="width:100%;height:800px;border:0;" title="Get an instant estimate"></iframe>${creditLine}`;
 
   const isPublished = Boolean(business.published);
   const publishedDate = business.published_at
