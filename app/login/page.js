@@ -8,13 +8,14 @@ const INPUT = "w-full text-sm px-3 py-2.5 rounded-md border border-line";
 
 // Show/hide toggle. Typing a password blind on a phone is where most failed
 // logins actually come from, and the people using this are often on a job site.
-function PasswordField({ value, onChange, placeholder, autoFocus, minLength }) {
+function PasswordField({ value, onChange, placeholder, autoFocus, minLength, autoComplete }) {
   const [shown, setShown] = useState(false);
   return (
     <div className="relative">
       <input
         type={shown ? "text" : "password"}
         required
+        autoComplete={autoComplete}
         minLength={minLength}
         autoFocus={autoFocus}
         placeholder={placeholder}
@@ -133,6 +134,7 @@ export default function LoginPage() {
             type="email"
             required
             autoFocus
+            autoComplete="username"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -157,6 +159,9 @@ export default function LoginPage() {
     );
   }
 
+  // autoComplete="one-time-code" on the code field matters more than it
+  // looks: without it Chrome sees two inputs, decides this is a login form,
+  // and fills the code box with a saved email address.
   if (mode === "reset") {
     return (
       <main className="max-w-sm mx-auto px-5 py-20">
@@ -168,7 +173,9 @@ export default function LoginPage() {
             inputMode="numeric"
             required
             autoFocus
-            placeholder="Code from your email"
+            autoComplete="one-time-code"
+            name="one-time-code"
+            placeholder="6-digit code from your email"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             className={INPUT + " tracking-widest"}
@@ -178,6 +185,7 @@ export default function LoginPage() {
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="New password (min 6 characters)"
             minLength={6}
+            autoComplete="new-password"
           />
           {error && <p className="text-sm text-clay">{error}</p>}
           <button
@@ -206,6 +214,7 @@ export default function LoginPage() {
         <input
           type="email"
           required
+          autoComplete="username"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -215,6 +224,7 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          autoComplete="current-password"
         />
         {error && <p className="text-sm text-clay">{error}</p>}
         <button
