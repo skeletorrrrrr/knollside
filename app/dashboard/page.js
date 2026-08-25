@@ -187,7 +187,23 @@ export default function SetupPage() {
   const creditLine = hideBranding
     ? ""
     : `\n<p style="text-align:center;margin:22px 0 4px;font-size:11px;letter-spacing:0.06em;line-height:1;"><a href="https://www.knollside.com" target="_blank" rel="noopener" style="color:#211F1B;opacity:0.35;text-decoration:none;">Powered by Knollside</a></p>`;
-  const embedSnippet = `<iframe src="${embedUrl}" style="width:100%;height:800px;border:0;" title="Get an instant estimate"></iframe>${creditLine}`;
+    // The iframe starts at a fixed height and the widget then posts its real
+  // content height back, so the frame grows to fit and the page scrolls
+  // normally instead of the widget scrolling inside a box. If the script is
+  // stripped or the message never arrives it stays at the starting height,
+  // which is exactly what every existing embed already does.
+  const frameId = `knollside-${business.slug}`;
+  const embedSnippet = [
+    `<iframe id="${frameId}" src="${embedUrl}" style="width:100%;height:800px;border:0;" title="Get an instant estimate"></iframe>${creditLine}`,
+    `<script>`,
+    `(function(){var f=document.getElementById(${JSON.stringify(frameId)});if(!f)return;`,
+    `window.addEventListener("message",function(e){`,
+    `if(e.origin!==${JSON.stringify(siteUrl)})return;`,
+    `var d=e.data;if(!d||d.type!=="knollside:height")return;`,
+    `var h=parseInt(d.height,10);if(!h||h<200||h>20000)return;`,
+    `f.style.height=h+"px";});})();`,
+    `</` + `script>`,
+  ].join("\n");
 
   const isPublished = Boolean(business.published);
   const publishedDate = business.published_at
