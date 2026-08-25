@@ -560,6 +560,32 @@ export default function SetupPage() {
                   ))}
                 </select>
               </Field>
+              {showQty && (
+                <>
+                  <Field label={"Smallest " + terms.quantityUnit + " you'll quote"}>
+                    <input
+                      type="number"
+                      min="0"
+                      inputMode="decimal"
+                      value={business.quantity_min ?? ""}
+                      placeholder={String(industry.quantity?.min ?? "")}
+                      onChange={(e) => patchBusiness({ quantity_min: e.target.value === "" ? null : e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm bg-white outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
+                    />
+                  </Field>
+                  <Field label={"Largest " + terms.quantityUnit + " you'll quote"}>
+                    <input
+                      type="number"
+                      min="0"
+                      inputMode="decimal"
+                      value={business.quantity_max ?? ""}
+                      placeholder={String(industry.quantity?.max ?? "")}
+                      onChange={(e) => patchBusiness({ quantity_max: e.target.value === "" ? null : e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm bg-white outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
+                    />
+                  </Field>
+                </>
+              )}
             </div>
             <div className="grid grid-cols-3 gap-3 max-w-md">
               {showQty && (

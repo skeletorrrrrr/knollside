@@ -17,7 +17,27 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const terms = industry.terms;
   const qtype = business.quantity_type || industry.quantity_type;
   const showQuantity = qtype !== "none";
-  const qRange = industry.quantity;
+  // Range comes from the industry template unless this business has set its
+  // own. A countertop shop that never quotes past 150 sq ft shouldn't hand
+  // customers a slider that runs to 500 — the useful part gets squeezed into
+  // the first third of the track.
+  //
+  // Both overrides are nullable: blank means "use the industry default", so
+  // existing businesses are unaffected and the templates still mean something.
+  const qRange = (() => {
+    const base = industry.quantity || { min: 1, max: 100, default: 1 };
+    const lo = Number(business.quantity_min);
+    const hi = Number(business.quantity_max);
+    const min = Number.isFinite(lo) && business.quantity_min !== null ? lo : base.min;
+    let max = Number.isFinite(hi) && business.quantity_max !== null ? hi : base.max;
+    // A max at or below min would give the slider a zero/negative span and
+    // make it unusable. The API rejects that, but the widget is public and
+    // renders whatever is in the row, so it has to defend itself.
+    if (!(max > min)) max = base.max > min ? base.max : min + 1;
+    // The template default can easily fall outside a narrowed range.
+    const def = Math.min(Math.max(base.default ?? min, min), max);
+    return { min, max, default: def };
+  })();
   // Step in whole units unless the whole range is small enough that half
   // steps are useful (e.g. a 1-4 hour job). Crucially, min and step must
   // agree: a 0.5 min with a step of 1 makes every notch land on a half and
