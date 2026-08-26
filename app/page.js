@@ -65,48 +65,50 @@ export default function LandingPage() {
           The window
         </span>
         <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-4 max-w-2xl leading-[1.15]">
-          Most jobs are lost before you ever call back.
+          Whoever answers first gets the job.
         </h2>
         <p className="text-lg text-[#6B6558] mb-10 max-w-2xl">
-          When someone asks what a job costs, they&rsquo;re usually asking two
-          or three other people the same day. Whoever answers first is the one
-          they talk to. Harvard Business Review audited 2,241 companies to see
-          how fast they actually respond:
+          When someone asks what a job costs, they&rsquo;re asking two or three
+          other shops the same day. The one who answers is the one they end up
+          talking to. Researchers tested exactly that &mdash; they filled in the
+          contact form at 1,000 companies and waited to see what came back.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="rounded-xl p-6 bg-white border border-line">
             <div className="font-display text-4xl font-semibold tracking-tight">
-              42<span className="text-2xl"> hrs</span>
+              635<span className="text-2xl"> of 1,000</span>
             </div>
             <p className="text-sm text-[#6B6558] mt-2">
-              Average time a business took to respond to an online inquiry.
+              Never answered at all. The message just sat there.
             </p>
           </div>
 
           <div className="rounded-xl p-6 bg-white border border-line">
             <div className="font-display text-4xl font-semibold tracking-tight">
-              23<span className="text-2xl">%</span>
+              4<span className="text-2xl"> in 5</span>
             </div>
             <p className="text-sm text-[#6B6558] mt-2">
-              Never responded at all. The lead just sat there.
+              Didn&rsquo;t get back to them inside an hour.
             </p>
           </div>
 
           <div className="rounded-xl p-6 bg-white border border-line">
             <div className="font-display text-4xl font-semibold tracking-tight">
-              7<span className="text-2xl">&times;</span>
+              29<span className="text-2xl"> hrs</span>
             </div>
             <p className="text-sm text-[#6B6558] mt-2">
-              More likely to qualify the lead when you answer within the hour
-              instead of an hour later.
+              Average wait &mdash; and that&rsquo;s counting only the ones who
+              bothered to reply.
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-[#8A836F] font-mono mb-10">
-          Source: Oldroyd, McElheran &amp; Elkington, &ldquo;The Short Life of
-          Online Sales Leads,&rdquo; Harvard Business Review, 2011.
+        <p className="text-xs text-[#8A836F] font-mono mb-10 max-w-2xl leading-relaxed">
+          Source: RevenueHero, &ldquo;We Tested Lead Response Times Of 1000 B2B
+          Sales Teams,&rdquo; March 2024. The companies tested were software
+          firms rather than trades &mdash; it&rsquo;s cited here because it&rsquo;s
+          the most recent measurement of how long people are left waiting.
         </p>
 
         <div
@@ -125,6 +127,13 @@ export default function LandingPage() {
             still interested, and you get their name, number and job details
             waiting in your dashboard.
           </p>
+          <Link
+            href="/signup"
+            className="inline-block mt-6 text-sm font-medium px-5 py-2.5 rounded-md"
+            style={{ background: "#F7F3EA", color: "#211F1B" }}
+          >
+            Set yours up free &rarr;
+          </Link>
         </div>
       </section>
 
