@@ -2,6 +2,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import PricingToggle from "@/components/PricingToggle";
 import DemoSwitcher from "@/components/DemoSwitcher";
+import RoiCalculator from "@/components/RoiCalculator";
 
 export default function LandingPage() {
   return (
@@ -278,6 +279,26 @@ export default function LandingPage() {
             </ul>
           </div>
         </div>
+      </section>
+
+      {/* ---------- ROI CALCULATOR ---------- */}
+      <section className="mb-24">
+        <span
+          className="text-xs font-semibold tracking-widest uppercase"
+          style={{ color: "#8F6E32" }}
+        >
+          Worth it?
+        </span>
+        <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-4 max-w-2xl leading-[1.15]">
+          Run your own numbers.
+        </h2>
+        <p className="text-lg text-[#6B6558] mb-8 max-w-2xl">
+          We&rsquo;re not going to tell you how many jobs this wins you &mdash; we
+          don&rsquo;t know your shop. Put in what a job is worth and what you
+          think an instant quote would pick up, and see the arithmetic for
+          yourself.
+        </p>
+        <RoiCalculator starterPrice={39} />
       </section>
 
       {/* ---------- PRICING ---------- */}
