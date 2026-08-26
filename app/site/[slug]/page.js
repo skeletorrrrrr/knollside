@@ -117,6 +117,20 @@ export default async function SitePage({ params }) {
         </a>
       </section>
 
+      {/* ---- why us ---- */}
+      {c.why.on && (
+        <section className="max-w-5xl mx-auto px-5 py-14 border-t border-line">
+          <Eyebrow>{c.why.eyebrow}</Eyebrow>
+          <h2 className="font-display text-3xl font-semibold tracking-tight max-w-2xl leading-[1.15]">
+            {c.why.headline}
+          </h2>
+          {c.why.intro && (
+            <p className="text-[#6B6558] mt-4 max-w-2xl leading-relaxed">{c.why.intro}</p>
+          )}
+          <Cards cards={c.why.cards} />
+        </section>
+      )}
+
       {/* ---- services ---- */}
       {c.services.on && (
         <section className="max-w-5xl mx-auto px-5 py-14 border-t border-line">
@@ -171,6 +185,29 @@ export default async function SitePage({ params }) {
         </section>
       )}
 
+      {/* ---- reviews ---- */}
+      {c.reviews.on && c.reviews.quotes && c.reviews.quotes.length > 0 && (
+        <section className="max-w-5xl mx-auto px-5 py-14 border-t border-line">
+          <Eyebrow>{c.reviews.eyebrow}</Eyebrow>
+          <h2 className="font-display text-3xl font-semibold tracking-tight max-w-2xl leading-[1.15] mb-8">
+            {c.reviews.headline}
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {c.reviews.quotes.map((q, i) => (
+              <figure key={i} className="rounded-xl border border-line bg-white p-6">
+                <blockquote className="text-sm text-[#3F3A32] leading-relaxed">
+                  &ldquo;{q.quote}&rdquo;
+                </blockquote>
+                <figcaption className="text-xs text-[#8A836F] mt-4">
+                  {q.name}
+                  {q.source ? ` · ${q.source}` : ""}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ---- estimator ---- */}
       {c.estimator.on && (
         <section
@@ -197,6 +234,29 @@ export default async function SitePage({ params }) {
               addons={addons}
             />
           </div>
+        </section>
+      )}
+
+      {/* ---- service areas ---- */}
+      {c.areas.on && c.areas.places && c.areas.places.length > 0 && (
+        <section className="max-w-5xl mx-auto px-5 py-14 border-t border-line">
+          <Eyebrow>{c.areas.eyebrow}</Eyebrow>
+          <h2 className="font-display text-3xl font-semibold tracking-tight max-w-2xl leading-[1.15]">
+            {c.areas.headline}
+          </h2>
+          {c.areas.intro && (
+            <p className="text-[#6B6558] mt-4 max-w-2xl leading-relaxed">{c.areas.intro}</p>
+          )}
+          <ul className="flex flex-wrap gap-2 mt-6">
+            {c.areas.places.map((place, i) => (
+              <li
+                key={i}
+                className="text-sm px-3 py-1.5 rounded-full border border-line bg-white text-[#6B6558]"
+              >
+                {place}
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 
