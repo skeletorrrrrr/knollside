@@ -71,7 +71,17 @@ export default function PricingToggle() {
               key={tier.id}
               className="border border-line rounded-xl p-5 bg-white flex flex-col"
             >
-              <div className="font-display text-lg font-semibold">{tier.name}</div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="font-display text-lg font-semibold">{tier.name}</div>
+                {tier.highlight && (
+                  <span
+                    className="text-[10px] font-semibold tracking-wide uppercase rounded px-1.5 py-0.5"
+                    style={{ background: "#EDE6D6", color: "#8F6E32" }}
+                  >
+                    {tier.highlight}
+                  </span>
+                )}
+              </div>
 
               {yearly ? (
                 <>
@@ -105,6 +115,22 @@ export default function PricingToggle() {
 
               <p className="text-sm text-[#8A836F]">{tier.blurb}</p>
 
+              {tier.features && (
+                <ul className="mt-3 space-y-1.5">
+                  {tier.features.map((f) => (
+                    <li
+                      key={f}
+                      className="text-sm text-[#6B6558] flex gap-2 leading-snug"
+                    >
+                      <span aria-hidden="true" style={{ color: "#B08A44" }}>
+                        &bull;
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               {tier.id === "starter" && yearly && (
                 <p className="text-xs text-[#6B6558] mt-2">
                   One job typically covers the whole year.
@@ -113,7 +139,7 @@ export default function PricingToggle() {
 
               <Link
                 href="/signup"
-                className="mt-4 inline-block text-center px-4 py-2 rounded-md text-sm font-medium border border-line hover:border-[#B08A44] transition-colors"
+                className="mt-auto pt-4 inline-block text-center px-4 py-2 rounded-md text-sm font-medium border border-line hover:border-[#B08A44] transition-colors"
               >
                 Start free
               </Link>
