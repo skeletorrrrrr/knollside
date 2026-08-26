@@ -32,8 +32,10 @@ function Cards({ cards }) {
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
       {cards.map((c, i) => (
         <div key={i} className="rounded-xl border border-line bg-white p-6">
-          <h3 className="font-display text-lg font-semibold mb-2">{c.title}</h3>
-          <p className="text-sm text-[#6B6558] leading-relaxed">{c.body}</p>
+          <h3 className="font-display text-lg font-semibold">{c.title}</h3>
+          {c.body && (
+            <p className="text-sm text-[#6B6558] leading-relaxed mt-2">{c.body}</p>
+          )}
         </div>
       ))}
     </div>
