@@ -30,6 +30,51 @@ const FONT_SUGGESTIONS = [
   "Work Sans", "Libre Baskerville", "DM Sans", "Bebas Neue",
 ];
 
+// A datalist filters itself down to whatever is already in the box, so once a
+// font was chosen the dropdown only ever offered that one font again and the
+// only way out was clearing the field by hand. A real select plus an escape
+// hatch keeps the full list one click away and still allows any font.
+function FontPicker({ label, hint, value, fallback, onChange }) {
+  const known = FONT_SUGGESTIONS.includes(value);
+  const [custom, setCustom] = useState(Boolean(value) && !known);
+
+  return (
+    <Field label={label} hint={hint}>
+      <select
+        value={custom ? "__custom" : value || ""}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === "__custom") {
+            setCustom(true);
+            return;
+          }
+          setCustom(false);
+          onChange(v);
+        }}
+        className={INPUT + " bg-white"}
+      >
+        <option value="">{fallback} (default)</option>
+        {FONT_SUGGESTIONS.map((f) => (
+          <option key={f} value={f}>
+            {f}
+          </option>
+        ))}
+        <option value="__custom">Something else…</option>
+      </select>
+      {custom && (
+        <input
+          type="text"
+          autoFocus
+          placeholder="Exact name from fonts.google.com"
+          value={known ? "" : value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          className={INPUT + " mt-2"}
+        />
+      )}
+    </Field>
+  );
+}
+
 function ColorRow({ label, hint, value, fallback, onChange }) {
   const val = /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : fallback;
   return (
@@ -257,35 +302,20 @@ export default function WebsitePage() {
       <Card title="Look">
         <div className="space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field
+            <FontPicker
               label="Heading font"
-              hint="Any font from Google Fonts — type the name exactly."
-            >
-              <input
-                type="text"
-                list="knollside-fonts"
-                placeholder="Fraunces"
-                value={sec("theme").fontDisplay || ""}
-                onChange={(e) => patchSec("theme", { fontDisplay: e.target.value })}
-                className={INPUT}
-              />
-            </Field>
-            <Field label="Body font">
-              <input
-                type="text"
-                list="knollside-fonts"
-                placeholder="Inter"
-                value={sec("theme").fontBody || ""}
-                onChange={(e) => patchSec("theme", { fontBody: e.target.value })}
-                className={INPUT}
-              />
-            </Field>
+              hint="Pick one, or choose Something else for any font on Google Fonts."
+              value={sec("theme").fontDisplay || ""}
+              fallback="Fraunces"
+              onChange={(v) => patchSec("theme", { fontDisplay: v })}
+            />
+            <FontPicker
+              label="Body font"
+              value={sec("theme").fontBody || ""}
+              fallback="Inter"
+              onChange={(v) => patchSec("theme", { fontBody: v })}
+            />
           </div>
-          <datalist id="knollside-fonts">
-            {FONT_SUGGESTIONS.map((f) => (
-              <option key={f} value={f} />
-            ))}
-          </datalist>
 
           <div className="space-y-3">
             <ColorRow
