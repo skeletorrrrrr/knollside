@@ -24,6 +24,38 @@ function Field({ label, hint, children }) {
   );
 }
 
+const FONT_SUGGESTIONS = [
+  "Fraunces", "Inter", "Playfair Display", "Manrope", "Archivo",
+  "Oswald", "Roboto", "Source Sans 3", "Lora", "Poppins",
+  "Work Sans", "Libre Baskerville", "DM Sans", "Bebas Neue",
+];
+
+function ColorRow({ label, hint, value, fallback, onChange }) {
+  const val = /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : fallback;
+  return (
+    <div className="flex items-center gap-3">
+      <input
+        type="color"
+        value={val}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-9 w-12 rounded border border-line bg-white p-0.5 shrink-0"
+        aria-label={label}
+      />
+      <div className="min-w-0 flex-1">
+        <span className="block text-xs font-medium text-[#8A836F]">{label}</span>
+        {hint && <span className="block text-xs text-[#A39C8A]">{hint}</span>}
+      </div>
+      <input
+        type="text"
+        value={value || ""}
+        placeholder={fallback}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-24 text-xs font-mono px-2 py-1.5 rounded border border-line shrink-0"
+      />
+    </div>
+  );
+}
+
 function Card({ title, on, onToggle, children }) {
   return (
     <div className="border border-line rounded-xl bg-white p-5 mb-4">
@@ -221,6 +253,88 @@ export default function WebsitePage() {
       </div>
 
       {error && <p className="text-sm text-clay mb-4">{error}</p>}
+
+      <Card title="Look">
+        <div className="space-y-5">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field
+              label="Heading font"
+              hint="Any font from Google Fonts — type the name exactly."
+            >
+              <input
+                type="text"
+                list="knollside-fonts"
+                placeholder="Fraunces"
+                value={sec("theme").fontDisplay || ""}
+                onChange={(e) => patchSec("theme", { fontDisplay: e.target.value })}
+                className={INPUT}
+              />
+            </Field>
+            <Field label="Body font">
+              <input
+                type="text"
+                list="knollside-fonts"
+                placeholder="Inter"
+                value={sec("theme").fontBody || ""}
+                onChange={(e) => patchSec("theme", { fontBody: e.target.value })}
+                className={INPUT}
+              />
+            </Field>
+          </div>
+          <datalist id="knollside-fonts">
+            {FONT_SUGGESTIONS.map((f) => (
+              <option key={f} value={f} />
+            ))}
+          </datalist>
+
+          <div className="space-y-3">
+            <ColorRow
+              label="Accent"
+              hint="Buttons and highlights. Usually your brand colour."
+              value={sec("theme").accent}
+              fallback="#B08A44"
+              onChange={(v) => patchSec("theme", { accent: v })}
+            />
+            <ColorRow
+              label="Background"
+              value={sec("theme").bg}
+              fallback="#F7F3EA"
+              onChange={(v) => patchSec("theme", { bg: v })}
+            />
+            <ColorRow
+              label="Cards"
+              value={sec("theme").surface}
+              fallback="#FFFFFF"
+              onChange={(v) => patchSec("theme", { surface: v })}
+            />
+            <ColorRow
+              label="Headings"
+              value={sec("theme").ink}
+              fallback="#211F1B"
+              onChange={(v) => patchSec("theme", { ink: v })}
+            />
+            <ColorRow
+              label="Body text"
+              value={sec("theme").body}
+              fallback="#6B6558"
+              onChange={(v) => patchSec("theme", { body: v })}
+            />
+            <ColorRow
+              label="Lines and borders"
+              value={sec("theme").line}
+              fallback="#DDD3BF"
+              onChange={(v) => patchSec("theme", { line: v })}
+            />
+          </div>
+
+          <p className="text-xs text-[#A39C8A] leading-relaxed">
+            Save, then open your site to see it. Worth checking your text is
+            still easy to read against the background you picked &mdash; pale
+            grey on white looks fine on your screen and disappears on a phone
+            outdoors.
+          </p>
+        </div>
+      </Card>
 
       <Card title="Front page">
         <div className="space-y-4">

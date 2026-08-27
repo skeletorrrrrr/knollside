@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSiteBySlug, PAGES } from "@/lib/siteContent";
 import { getIndustry } from "@/lib/industries";
+import { themeStyle } from "@/lib/siteTheme";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -29,9 +30,26 @@ export default async function SiteLayout({ children, params }) {
     label: p.label || itemsWord.replace(/^./, (ch) => ch.toUpperCase()),
   }));
 
+  const theme = themeStyle(c.theme);
+
   return (
-    <div className="bg-stone min-h-screen flex flex-col">
-      <header className="border-b border-line bg-stone/90 backdrop-blur sticky top-0 z-10">
+    <div
+      className="site-scope bg-[var(--site-bg)] min-h-screen flex flex-col"
+      style={theme.vars}
+    >
+      {/* The font files and the scoped font rules. Injected per site rather
+          than bundled, because the customer picks the family — there is no
+          fixed set to import at build time. */}
+      {theme.fontHref && (
+        // eslint-disable-next-line @next/next/no-page-custom-font
+        <link rel="stylesheet" href={theme.fontHref} />
+      )}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: theme.css,
+        }}
+      />
+      <header className="border-b border-[var(--site-line)] bg-[var(--site-bg)]/90 backdrop-blur sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-5 py-4 flex items-center justify-between gap-4">
           <Link href={base} className="flex items-center gap-3 min-w-0">
             {business.logo_url && (
@@ -52,7 +70,7 @@ export default async function SiteLayout({ children, params }) {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-[#6B6558] hover:text-ink transition-colors"
+                className="text-sm text-[color:var(--site-body)] hover:text-ink transition-colors"
               >
                 {l.label}
               </Link>
@@ -64,7 +82,7 @@ export default async function SiteLayout({ children, params }) {
               <a
                 href={`tel:${c.contact.phone.replace(/[^0-9+]/g, "")}`}
                 className="text-sm font-medium hidden lg:inline"
-                style={{ color: "#8F6E32" }}
+                style={{ color: "var(--site-accent-deep)" }}
               >
                 {c.contact.phone}
               </a>
@@ -73,7 +91,7 @@ export default async function SiteLayout({ children, params }) {
               <Link
                 href={`${base}/estimate`}
                 className="text-sm font-medium px-4 py-2 rounded-md text-white whitespace-nowrap"
-                style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
+                style={{ background: "linear-gradient(135deg, var(--site-accent-light), var(--site-accent-deep))" }}
               >
                 Get a price
               </Link>
@@ -83,13 +101,13 @@ export default async function SiteLayout({ children, params }) {
 
         {/* Small screens get the nav on its own row rather than a hamburger —
             five links fit, and a menu nobody opens is worse than a row. */}
-        <nav className="md:hidden border-t border-line overflow-x-auto">
+        <nav className="md:hidden border-t border-[var(--site-line)] overflow-x-auto">
           <div className="max-w-5xl mx-auto px-5 py-2 flex gap-4">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-[#6B6558] whitespace-nowrap"
+                className="text-sm text-[color:var(--site-body)] whitespace-nowrap"
               >
                 {l.label}
               </Link>
@@ -100,9 +118,9 @@ export default async function SiteLayout({ children, params }) {
 
       <div className="flex-1">{children}</div>
 
-      <footer className="border-t border-line">
+      <footer className="border-t border-[var(--site-line)]">
         <div className="max-w-5xl mx-auto px-5 py-8 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-[#8A836F]">
+          <p className="text-sm text-[color:var(--site-muted)]">
             &copy; {new Date().getFullYear()} {business.name}
           </p>
           {!business.hide_branding && (
@@ -111,7 +129,7 @@ export default async function SiteLayout({ children, params }) {
               target="_blank"
               rel="noopener"
               className="font-mono text-[11px] uppercase tracking-[0.06em]"
-              style={{ color: "#211F1B", opacity: 0.35 }}
+              style={{ color: "var(--site-ink)", opacity: 0.35 }}
             >
               Powered by Knollside
             </a>

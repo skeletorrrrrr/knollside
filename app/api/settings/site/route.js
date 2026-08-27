@@ -127,6 +127,20 @@ function clean(raw) {
       address: str(sec("contact").address, 300),
       hours: str(sec("contact").hours, 300),
     },
+    // Stored as-is; lib/siteTheme.js validates every value again at render
+    // time, because that is where a bad colour or font name would actually do
+    // damage. Keeping both means a row edited directly in the database can't
+    // put an arbitrary string into a stylesheet URL either.
+    theme: {
+      fontDisplay: str(sec("theme").fontDisplay, 40),
+      fontBody: str(sec("theme").fontBody, 40),
+      bg: str(sec("theme").bg, 7),
+      surface: str(sec("theme").surface, 7),
+      ink: str(sec("theme").ink, 7),
+      body: str(sec("theme").body, 7),
+      line: str(sec("theme").line, 7),
+      accent: str(sec("theme").accent, 7),
+    },
     materials: {},
   };
 

@@ -82,7 +82,7 @@ export default async function MaterialPage({ params }) {
       <Section first>
         <Link
           href={`${base}/materials`}
-          className="text-sm text-[#8A836F] hover:text-ink transition-colors"
+          className="text-sm text-[color:var(--site-muted)] hover:text-ink transition-colors"
         >
           &larr; All {word}
         </Link>
@@ -94,11 +94,11 @@ export default async function MaterialPage({ params }) {
               {heading}
             </h1>
             {saved.body ? (
-              <div className="text-[#6B6558] mt-5 max-w-2xl leading-relaxed whitespace-pre-line">
+              <div className="text-[color:var(--site-body)] mt-5 max-w-2xl leading-relaxed whitespace-pre-line">
                 {saved.body}
               </div>
             ) : (
-              <p className="text-[#6B6558] mt-5 max-w-2xl leading-relaxed">
+              <p className="text-[color:var(--site-body)] mt-5 max-w-2xl leading-relaxed">
                 We work with {item.name.toLowerCase()} regularly. Use the
                 estimator for a real price range on your job, or get in touch and
                 we&rsquo;ll talk it through.
@@ -106,7 +106,7 @@ export default async function MaterialPage({ params }) {
             )}
           </div>
 
-          <aside className="rounded-xl border border-line bg-white p-6">
+          <aside className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] p-6">
             {item.photo_url && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -117,12 +117,12 @@ export default async function MaterialPage({ params }) {
             )}
             {item.base_price ? (
               <>
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#A39C8A]">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--site-faint)]">
                   Starting at
                 </p>
                 <p className="font-display text-3xl font-semibold tracking-tight mt-1">
                   ${item.base_price}
-                  <span className="text-base font-normal text-[#8A836F]">
+                  <span className="text-base font-normal text-[color:var(--site-muted)]">
                     {industry.terms && industry.terms.quantityUnit
                       ? ` / ${industry.terms.quantityUnit}`
                       : ""}
@@ -151,7 +151,7 @@ export default async function MaterialPage({ params }) {
               <li key={o.id}>
                 <Link
                   href={`${base}/materials/${itemSlug(o.name)}`}
-                  className="inline-block text-sm px-3 py-1.5 rounded-full border border-line bg-white text-[#6B6558] hover:border-[#B08A44] transition-colors"
+                  className="inline-block text-sm px-3 py-1.5 rounded-full border border-[var(--site-line)] bg-[var(--site-surface)] text-[color:var(--site-body)] hover:border-[var(--site-accent)] transition-colors"
                 >
                   {o.name}
                 </Link>

@@ -41,7 +41,7 @@ export default async function MaterialsIndex({ params }) {
           <Link
             key={it.id}
             href={`${base}/materials/${itemSlug(it.name)}`}
-            className="rounded-xl border border-line bg-white overflow-hidden hover:border-[#B08A44] transition-colors"
+            className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] overflow-hidden hover:border-[var(--site-accent)] transition-colors"
           >
             {it.photo_url && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -55,7 +55,7 @@ export default async function MaterialsIndex({ params }) {
             <div className="p-5">
               <h2 className="font-display text-lg font-semibold">{it.name}</h2>
               {it.base_price ? (
-                <p className="text-sm text-[#8A836F] mt-1 font-mono">
+                <p className="text-sm text-[color:var(--site-muted)] mt-1 font-mono">
                   From ${it.base_price}
                 </p>
               ) : null}

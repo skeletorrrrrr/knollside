@@ -49,7 +49,7 @@ export default async function SiteSubPage({ params }) {
           title={c.estimator.headline}
           intro={c.estimator.intro}
         />
-        <div className="rounded-xl border border-line bg-white p-4 sm:p-6">
+        <div className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] p-4 sm:p-6">
           <EmbedWidget
             business={business}
             items={items}
@@ -75,7 +75,7 @@ export default async function SiteSubPage({ params }) {
               src={src}
               alt=""
               loading="lazy"
-              className="w-full aspect-[4/3] object-cover rounded-lg border border-line"
+              className="w-full aspect-[4/3] object-cover rounded-lg border border-[var(--site-line)]"
             />
           ))}
         </div>
@@ -112,7 +112,7 @@ export default async function SiteSubPage({ params }) {
               {c.areas.places.map((place, i) => (
                 <li
                   key={i}
-                  className="text-sm px-3 py-1.5 rounded-full border border-line bg-white text-[#6B6558]"
+                  className="text-sm px-3 py-1.5 rounded-full border border-[var(--site-line)] bg-[var(--site-surface)] text-[color:var(--site-body)]"
                 >
                   {place}
                 </li>
@@ -143,16 +143,16 @@ export default async function SiteSubPage({ params }) {
       <dl className="grid gap-6 sm:grid-cols-2 max-w-2xl">
         {rows.map(([label, value, href]) => (
           <div key={label}>
-            <dt className="text-xs uppercase tracking-wide text-[#A39C8A] mb-1">
+            <dt className="text-xs uppercase tracking-wide text-[color:var(--site-faint)] mb-1">
               {label}
             </dt>
             <dd>
               {href ? (
-                <a href={href} className="font-medium" style={{ color: "#8F6E32" }}>
+                <a href={href} className="font-medium" style={{ color: "var(--site-accent-deep)" }}>
                   {value}
                 </a>
               ) : (
-                <span className="text-sm text-[#6B6558] whitespace-pre-line">
+                <span className="text-sm text-[color:var(--site-body)] whitespace-pre-line">
                   {value}
                 </span>
               )}

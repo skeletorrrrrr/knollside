@@ -5,7 +5,7 @@ export function Eyebrow({ children }) {
   return (
     <p
       className="font-mono text-[11px] uppercase tracking-[0.14em] mb-2"
-      style={{ color: "#8F6E32" }}
+      style={{ color: "var(--site-accent-deep)" }}
     >
       {children}
     </p>
@@ -17,10 +17,10 @@ export function Cards({ cards }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-8">
       {cards.map((c, i) => (
-        <div key={i} className="rounded-xl border border-line bg-white p-6">
+        <div key={i} className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] p-6">
           <h3 className="font-display text-lg font-semibold">{c.title}</h3>
           {c.body && (
-            <p className="text-sm text-[#6B6558] leading-relaxed mt-2">{c.body}</p>
+            <p className="text-sm text-[color:var(--site-body)] leading-relaxed mt-2">{c.body}</p>
           )}
         </div>
       ))}
@@ -36,7 +36,7 @@ export function PageHeader({ eyebrow, title, intro }) {
         {title}
       </h1>
       {intro && (
-        <p className="text-[#6B6558] mt-4 max-w-2xl leading-relaxed">{intro}</p>
+        <p className="text-[color:var(--site-body)] mt-4 max-w-2xl leading-relaxed">{intro}</p>
       )}
     </div>
   );
@@ -46,7 +46,7 @@ export function Section({ children, first }) {
   return (
     <section
       className={
-        "max-w-5xl mx-auto px-5 py-14" + (first ? "" : " border-t border-line")
+        "max-w-5xl mx-auto px-5 py-14" + (first ? "" : " border-t border-[var(--site-line)]")
       }
     >
       {children}
@@ -61,8 +61,8 @@ export function CtaButton({ href, children, light }) {
       className="inline-block text-sm font-medium px-5 py-3 rounded-md"
       style={
         light
-          ? { background: "#F7F3EA", color: "#211F1B" }
-          : { background: "linear-gradient(135deg, #C39A55, #8F6E32)", color: "#fff" }
+          ? { background: "var(--site-bg)", color: "var(--site-ink)" }
+          : { background: "linear-gradient(135deg, var(--site-accent-light), var(--site-accent-deep))", color: "#fff" }
       }
     >
       {children}
@@ -72,8 +72,8 @@ export function CtaButton({ href, children, light }) {
 
 export function NotFoundBody({ message }) {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-stone px-6">
-      <p className="text-sm text-[#8A836F] text-center">
+    <main className="min-h-screen flex items-center justify-center bg-[var(--site-bg)] px-6">
+      <p className="text-sm text-[color:var(--site-muted)] text-center">
         {message || "Nothing here."}
       </p>
     </main>

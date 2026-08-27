@@ -38,7 +38,7 @@ export default async function SiteHome({ params }) {
         <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1] max-w-3xl">
           {c.hero.headline}
         </h1>
-        <p className="text-lg text-[#6B6558] mt-5 max-w-2xl leading-relaxed">
+        <p className="text-lg text-[color:var(--site-body)] mt-5 max-w-2xl leading-relaxed">
           {c.hero.sub}
         </p>
         {c.estimator.on && (
@@ -55,7 +55,7 @@ export default async function SiteHome({ params }) {
             {c.why.headline}
           </h2>
           {c.why.intro && (
-            <p className="text-[#6B6558] mt-4 max-w-2xl leading-relaxed">{c.why.intro}</p>
+            <p className="text-[color:var(--site-body)] mt-4 max-w-2xl leading-relaxed">{c.why.intro}</p>
           )}
           <Cards cards={c.why.cards} />
         </Section>
@@ -72,7 +72,7 @@ export default async function SiteHome({ params }) {
               <Link
                 key={it.id}
                 href={`${base}/materials/${itemSlug(it.name)}`}
-                className="rounded-xl border border-line bg-white overflow-hidden hover:border-[#B08A44] transition-colors"
+                className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] overflow-hidden hover:border-[var(--site-accent)] transition-colors"
               >
                 {it.photo_url && (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -86,7 +86,7 @@ export default async function SiteHome({ params }) {
                 <div className="p-5">
                   <h3 className="font-display text-lg font-semibold">{it.name}</h3>
                   {it.base_price ? (
-                    <p className="text-sm text-[#8A836F] mt-1 font-mono">
+                    <p className="text-sm text-[color:var(--site-muted)] mt-1 font-mono">
                       From ${it.base_price}
                     </p>
                   ) : null}
@@ -115,11 +115,11 @@ export default async function SiteHome({ params }) {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {c.reviews.quotes.map((q, i) => (
-              <figure key={i} className="rounded-xl border border-line bg-white p-6">
-                <blockquote className="text-sm text-[#3F3A32] leading-relaxed">
+              <figure key={i} className="rounded-xl border border-[var(--site-line)] bg-[var(--site-surface)] p-6">
+                <blockquote className="text-sm text-[color:var(--site-body)] leading-relaxed">
                   &ldquo;{q.quote}&rdquo;
                 </blockquote>
-                <figcaption className="text-xs text-[#8A836F] mt-4">
+                <figcaption className="text-xs text-[color:var(--site-muted)] mt-4">
                   {q.name}
                   {q.source ? ` \u00b7 ${q.source}` : ""}
                 </figcaption>
@@ -139,7 +139,7 @@ export default async function SiteHome({ params }) {
             {c.areas.places.map((place, i) => (
               <li
                 key={i}
-                className="text-sm px-3 py-1.5 rounded-full border border-line bg-white text-[#6B6558]"
+                className="text-sm px-3 py-1.5 rounded-full border border-[var(--site-line)] bg-[var(--site-surface)] text-[color:var(--site-body)]"
               >
                 {place}
               </li>
@@ -152,15 +152,15 @@ export default async function SiteHome({ params }) {
         <Section>
           <div
             className="rounded-xl p-7 sm:p-9"
-            style={{ background: "#211F1B" }}
+            style={{ background: "var(--site-ink)" }}
           >
             <h2
               className="font-display text-2xl sm:text-3xl font-semibold leading-snug max-w-2xl"
-              style={{ color: "#F7F3EA" }}
+              style={{ color: "var(--site-bg)" }}
             >
               {c.estimator.headline}
             </h2>
-            <p className="text-sm mt-3 max-w-xl" style={{ color: "#BDB49F" }}>
+            <p className="text-sm mt-3 max-w-xl" style={{ color: "var(--site-on-dark-muted)" }}>
               {c.estimator.intro}
             </p>
             <div className="mt-6">
