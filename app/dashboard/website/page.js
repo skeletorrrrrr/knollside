@@ -37,6 +37,7 @@ const FONT_SUGGESTIONS = [
 function FontPicker({ label, hint, value, fallback, onChange }) {
   const known = FONT_SUGGESTIONS.includes(value);
   const [custom, setCustom] = useState(Boolean(value) && !known);
+  const chosen = value || fallback;
 
   return (
     <Field label={label} hint={hint}>
@@ -55,7 +56,7 @@ function FontPicker({ label, hint, value, fallback, onChange }) {
       >
         <option value="">{fallback} (default)</option>
         {FONT_SUGGESTIONS.map((f) => (
-          <option key={f} value={f}>
+          <option key={f} value={f} style={{ fontFamily: `"${f}", sans-serif` }}>
             {f}
           </option>
         ))}
@@ -71,7 +72,58 @@ function FontPicker({ label, hint, value, fallback, onChange }) {
           className={INPUT + " mt-2"}
         />
       )}
+      {/* Browsers style <option> inconsistently, so the dropdown showing each
+          name in its own font is a bonus rather than something to rely on.
+          This line always renders in the chosen font. */}
+      <FontPreview name={chosen} />
     </Field>
+  );
+}
+
+// Loads one family on demand and shows a sample in it. Without this you are
+// picking a font by name and finding out what it looks like after saving.
+function FontPreview({ name }) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setReady(false);
+    const clean = String(name || "").trim();
+    if (!clean || !/^[A-Za-z0-9 ]+$/.test(clean)) return;
+    const id = "knollside-preview-" + clean.replace(/\s+/g, "-").toLowerCase();
+    if (!document.getElementById(id)) {
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=" +
+        encodeURIComponent(clean).replace(/%20/g, "+") +
+        ":wght@400;600&display=swap";
+      document.head.appendChild(link);
+    }
+    // document.fonts.load resolves whether or not the family exists, so a
+    // mistyped name just shows the fallback rather than hanging.
+    if (document.fonts && document.fonts.load) {
+      document.fonts
+        .load(`600 20px "${clean}"`)
+        .then(() => setReady(true))
+        .catch(() => setReady(true));
+    } else {
+      setReady(true);
+    }
+  }, [name]);
+
+  if (!name) return null;
+  return (
+    <p
+      className="mt-2 text-xl leading-snug truncate"
+      style={{
+        fontFamily: `"${name}", Georgia, serif`,
+        opacity: ready ? 1 : 0.35,
+        transition: "opacity .2s",
+      }}
+    >
+      See your price before you call
+    </p>
   );
 }
 
