@@ -8,6 +8,9 @@ const LINKS = [
   { href: "/dashboard", label: "Setup" },
   { href: "/dashboard/industry", label: "Industry" },
   { href: "/dashboard/leads", label: "Leads" },
+  // Pro only — a tab you can't use is worse than no tab, so it stays hidden
+  // rather than showing an upgrade wall to everyone else.
+  { href: "/dashboard/website", label: "Website", proOnly: true },
   { href: "/dashboard/billing", label: "Billing" },
 ];
 
@@ -15,6 +18,7 @@ export default function DashboardNav({ businessName, slug, logoUrl }) {
   const pathname = usePathname();
   const router = useRouter();
   const [newLeads, setNewLeads] = useState(0);
+  const [isPro, setIsPro] = useState(false);
   // Log out is a one-click action with a real cost — it used to sit right next
   // to the nav links in the same neutral grey, so a curious click signed you
   // straight out. Now it's visually separated and asks first.
@@ -52,6 +56,21 @@ export default function DashboardNav({ businessName, slug, logoUrl }) {
     setConfirmLogout(false);
   }, [pathname]);
 
+  // Read the tier once so the Website tab can be hidden for everyone else.
+  // The API route enforces this properly; this only decides what gets drawn.
+  useEffect(() => {
+    let active = true;
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => {
+        if (active) setIsPro(d.business?.subscription_tier === "pro");
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
   async function logout() {
     const supabase = supabaseBrowser();
     await supabase.auth.signOut();
@@ -76,7 +95,7 @@ export default function DashboardNav({ businessName, slug, logoUrl }) {
           </div>
         </div>
         <nav className="flex items-center gap-1">
-          {LINKS.map((l) => {
+          {LINKS.filter((l) => !l.proOnly || isPro).map((l) => {
             const isLeads = l.href === "/dashboard/leads";
             return (
               <Link
