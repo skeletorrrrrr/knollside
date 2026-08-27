@@ -40,14 +40,18 @@ export async function generateMetadata({ params }) {
   if (!item) return { title: "Not found" };
 
   const industry = getIndustry(site.business.industry);
-  const word = (industry.terms && industry.terms.items) || "";
+  // industry.label is the trade noun ("Countertops / Stone"); terms.items is a
+  // section-heading word ("materials"). A title reading "Quartz materials in
+  // Vista" is the wrong phrase — nobody searches it. Take the first half of the
+  // label so we get "Quartz Countertops in Vista", which people do search.
+  const trade = String(industry.label || "").split("/")[0].trim();
   const area = (site.content.areas.places || [])[0];
   const saved = (site.content.materials || {})[params.item] || {};
 
   return {
     title:
       saved.title ||
-      `${item.name} ${word}${area ? ` in ${area}` : ""} \u2014 ${site.business.name}`,
+      `${item.name}${trade ? ` ${trade}` : ""}${area ? ` in ${area}` : ""} \u2014 ${site.business.name}`,
     description:
       saved.body ||
       `${item.name} from ${site.business.name}${area ? ` in ${area}` : ""}. See pricing and get an instant estimate.`,
