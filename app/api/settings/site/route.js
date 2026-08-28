@@ -23,6 +23,18 @@ function bool(v) {
 // false would switch off why-us, process, services, the estimator and contact
 // the first time anyone pressed Save, because those default to on in the
 // renderer. Absent has to mean "leave it as it was".
+// A hostname, not a URL. Rejecting anything with a scheme, path or port keeps
+// this out of trouble — the value is compared against a Host header, so a
+// stray "https://" would simply never match and look like a broken site.
+function domain(v) {
+  if (v === null || v === "") return null;
+  if (typeof v !== "string") return undefined;
+  const d = v.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
+  if (!d) return null;
+  if (d.length > 253) return undefined;
+  return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(d) ? d : undefined;
+}
+
 function boolDefault(v, dflt) {
   if (v === undefined || v === null) return dflt;
   return v === true;
@@ -178,6 +190,16 @@ export async function PATCH(request) {
   const body = await request.json();
   const patch = {};
   if (body.site_enabled !== undefined) patch.site_enabled = bool(body.site_enabled);
+  if (body.custom_domain !== undefined) {
+    const d = domain(body.custom_domain);
+    if (d === undefined) {
+      return NextResponse.json(
+        { error: "That doesn't look like a domain. Enter it like yourshop.com — no https, no slashes." },
+        { status: 400 }
+      );
+    }
+    patch.custom_domain = d;
+  }
   if (body.site_content !== undefined) patch.site_content = clean(body.site_content);
 
   if (Object.keys(patch).length === 0) {

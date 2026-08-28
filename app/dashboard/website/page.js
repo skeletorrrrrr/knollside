@@ -234,6 +234,8 @@ export default function WebsitePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [flash, setFlash] = useState("");
+  const [domain, setDomain] = useState("");
+  const [domainSaving, setDomainSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -245,6 +247,7 @@ export default function WebsitePage() {
         setBusiness(s.business || null);
         setItems(it.items || []);
         setC((s.business && s.business.site_content) || {});
+        setDomain((s.business && s.business.custom_domain) || "");
       })
       .catch(() => setError("Couldn't load your site."))
       .finally(() => setLoading(false));
@@ -280,6 +283,22 @@ export default function WebsitePage() {
       setError(e.message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function saveDomain() {
+    setDomainSaving(true);
+    setError("");
+    try {
+      const updated = await send({ custom_domain: domain.trim() });
+      setBusiness(updated);
+      setDomain(updated.custom_domain || "");
+      setFlash("Domain saved");
+      setTimeout(() => setFlash(""), 2500);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setDomainSaving(false);
     }
   }
 
@@ -415,6 +434,54 @@ export default function WebsitePage() {
             grey on white looks fine on your screen and disappears on a phone
             outdoors.
           </p>
+        </div>
+      </Card>
+
+      <Card title="Your own web address">
+        <div className="space-y-4">
+          <Field
+            label="Domain"
+            hint="Just the address — yourshop.com. Leave blank to stay on the Knollside address."
+          >
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="yourshop.com"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                className={INPUT}
+              />
+              <button
+                type="button"
+                onClick={saveDomain}
+                disabled={domainSaving}
+                className="text-sm font-medium px-4 py-2 rounded-md border border-line shrink-0"
+              >
+                {domainSaving ? "Saving…" : "Save"}
+              </button>
+            </div>
+          </Field>
+
+          {business.custom_domain ? (
+            <div className="rounded-lg border border-line p-4 text-sm text-[#6B6558] leading-relaxed">
+              <p className="font-medium text-ink mb-2">
+                Point {business.custom_domain} at us
+              </p>
+              <p className="mb-3">
+                Log in wherever you bought the domain and set these two records.
+                It usually starts working within the hour.
+              </p>
+              <div className="font-mono text-xs bg-stone rounded p-3 space-y-1">
+                <div>A&nbsp;&nbsp;&nbsp;&nbsp;@&nbsp;&nbsp;&nbsp;&nbsp;76.76.21.21</div>
+                <div>CNAME&nbsp;&nbsp;www&nbsp;&nbsp;cname.vercel-dns.com</div>
+              </div>
+              <p className="mt-3 text-xs text-[#A39C8A]">
+                Send us a message once that&rsquo;s done and we&rsquo;ll finish the
+                setup on our side — the site won&rsquo;t answer on your address
+                until we do.
+              </p>
+            </div>
+          ) : null}
         </div>
       </Card>
 
