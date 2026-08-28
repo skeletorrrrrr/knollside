@@ -4,6 +4,64 @@ import PricingToggle from "@/components/PricingToggle";
 import DemoSwitcher from "@/components/DemoSwitcher";
 import RoiCalculator from "@/components/RoiCalculator";
 
+
+// Kept to seven. Eleven answers on a landing page is a wall nobody reads, and
+// the ones below are the objections that actually come up first.
+//
+// ACCURACY RULE, throughout: estimate, ballpark or range — never "agreed
+// price". The widget gives a number to start a conversation, not a quote the
+// shop is bound to, and saying otherwise would land a customer in a fight
+// with their own customer.
+const FAQS = [
+  {
+    q: "Why not just use a contact form?",
+    a: [
+      "A contact form takes their message and leaves them waiting. While they wait they ask two other shops, and whoever answers first is the one they talk to.",
+      "Knollside gives them a real ballpark in seconds and still captures the lead. Fewer tyre-kickers, and the calls you do get are from people who already know roughly what it costs.",
+    ],
+  },
+  {
+    q: "Am I locked into the price it shows?",
+    a: [
+      "No. It shows a range built from your own pricing, and it says plainly that it's an estimate. You still quote the job properly once you know the details.",
+      "Think of it as the number you'd say on the phone if someone asked what a kitchen usually runs.",
+    ],
+  },
+  {
+    q: "What if my pricing is complicated?",
+    a: [
+      "Most of it fits: a rate per unit, upgrade options, add-ons with flat or per-unit pricing, a minimum job, and a spread so you're quoting a range rather than a single number.",
+      "If a job is genuinely one-off, the estimator still captures the lead and you take it from there.",
+    ],
+  },
+  {
+    q: "Do I need someone technical to set it up?",
+    a: [
+      "No. You fill in your pricing, then copy one line into your website — the same way you'd add a YouTube video.",
+      "If your site was built by someone else, send them that line and it'll take them two minutes.",
+    ],
+  },
+  {
+    q: "Will my competitors see my pricing?",
+    a: [
+      "They can, the same as they can walk into your showroom or ask you for a quote. Anyone who wants your prices can already get them by asking.",
+      "The thing they can't copy is answering first.",
+    ],
+  },
+  {
+    q: "What happens to the leads?",
+    a: [
+      "They land in your dashboard with the person's name, number, and what they were pricing up — so you know what the conversation is about before you ring back.",
+    ],
+  },
+  {
+    q: "Can I cancel?",
+    a: [
+      "Any time, from the billing page. No call, no notice period.",
+    ],
+  },
+];
+
 export default function LandingPage() {
   return (
     <main className="max-w-6xl mx-auto px-5 py-10 sm:py-14">
@@ -303,6 +361,86 @@ export default function LandingPage() {
 
       {/* ---------- PRICING ---------- */}
       <PricingToggle />
+
+      {/* ---------- FAQ ---------- */}
+      <section className="mt-24">
+        <span
+          className="text-xs font-semibold tracking-widest uppercase"
+          style={{ color: "#8F6E32" }}
+        >
+          Questions
+        </span>
+        <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-3 mb-8 max-w-2xl leading-[1.15]">
+          The things people ask.
+        </h2>
+
+        <div className="space-y-3 max-w-3xl">
+          {FAQS.map((f) => (
+            <details
+              key={f.q}
+              className="group rounded-xl border border-line bg-white px-5 py-4"
+            >
+              <summary className="flex items-start justify-between gap-4 cursor-pointer list-none font-medium">
+                <span>{f.q}</span>
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 mt-0.5 transition-transform group-open:rotate-45"
+                  style={{ color: "#B08A44" }}
+                >
+                  +
+                </span>
+              </summary>
+              <div className="text-sm text-[#6B6558] leading-relaxed mt-3 space-y-3">
+                {f.a.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- FINAL CTA ---------- */}
+      <section className="mt-24">
+        <div
+          className="rounded-2xl px-6 py-12 sm:px-12 sm:py-16 text-center"
+          style={{ background: "#211F1B" }}
+        >
+          <h2
+            className="font-display text-3xl sm:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl mx-auto"
+            style={{ color: "#F7F3EA" }}
+          >
+            Put a price on your website this afternoon.
+          </h2>
+          <p
+            className="text-base mt-4 max-w-xl mx-auto leading-relaxed"
+            style={{ color: "#BDB49F" }}
+          >
+            Set up your pricing, paste one line into your site, and the next
+            person who asks what a job costs gets an answer instead of a
+            waiting game.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            <Link
+              href="/signup"
+              className="inline-block text-sm font-medium px-6 py-3 rounded-md"
+              style={{ background: "#F7F3EA", color: "#211F1B" }}
+            >
+              Start free &rarr;
+            </Link>
+            <Link
+              href="#pricing"
+              className="inline-block text-sm font-medium px-6 py-3 rounded-md border"
+              style={{ borderColor: "#4A453C", color: "#F7F3EA" }}
+            >
+              See pricing
+            </Link>
+          </div>
+          <p className="text-xs mt-6" style={{ color: "#8A8272" }}>
+            Free for a month. No card to start.
+          </p>
+        </div>
+      </section>
 
       <Footer />
     </main>
