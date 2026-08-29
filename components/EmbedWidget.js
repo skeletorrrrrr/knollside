@@ -256,7 +256,16 @@ export default function EmbedWidget({ business, items, options, addons }) {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 pb-10">
         <div className="md:col-span-3 space-y-5">
           <SectionCard step={stepMaterial} title={`Choose ${terms.item.match(/^[aeiou]/i) ? "an" : "a"} ${terms.item}`} capitalizeTitle>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* auto-fill rather than sm:grid-cols-4, because Tailwind's
+                breakpoints watch the viewport and this widget is often not
+                the width of the viewport — on a claim page or in a narrow
+                column it was forcing four 47px cards into 236px and the
+                material swatches came out tall and thin. minmax lets the grid
+                answer to the space it actually has. */}
+            <div
+              className="grid gap-3"
+              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(104px, 1fr))" }}
+            >
               {items.map((m, i) => {
                 const selected = m.id === itemId;
                 return (
