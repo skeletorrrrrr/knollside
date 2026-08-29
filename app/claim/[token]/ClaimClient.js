@@ -222,6 +222,14 @@ export default function ClaimClient({ token, config }) {
           <h2 className="font-display text-2xl font-semibold tracking-tight mb-2">
             What you&rsquo;d actually get
           </h2>
+          {/* Stated as an aim rather than a promise. Knollside can't guarantee
+              anyone customers, and a shop owner who has been sold to before
+              will hear a guarantee as a lie. */}
+          <p className="text-base text-[#3F3A32] mb-3 max-w-2xl leading-relaxed">
+            The whole point of this is to bring you customers worth your time
+            &mdash; people who already know what they want and roughly what it
+            costs, not a pile of enquiries to sort through.
+          </p>
           <p className="text-sm text-[#8A836F] mb-8 max-w-2xl leading-relaxed">
             It&rsquo;s not just the calculator. Claiming it sets up the whole thing.
           </p>
