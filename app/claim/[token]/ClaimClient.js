@@ -300,6 +300,21 @@ export default function ClaimClient({ token, config }) {
             you'd rather it didn't exist, reply to the email that sent you here and it comes
             down the same day.
           </p>
+          {/* Quiet, and below the disclaimer on purpose. Anyone who has read
+              this far and wants to check Knollside is a real business will
+              look for it; nobody needs it earlier, and putting it up top would
+              only compete with the one link that matters. */}
+          <p className="text-xs text-[#A39C8A] mt-4">
+            Knollside is a small software business in California.{" "}
+            <a
+              href="https://www.knollside.com"
+              target="_blank"
+              rel="noopener"
+              className="underline"
+            >
+              knollside.com
+            </a>
+          </p>
         </footer>
       </div>
     </main>
