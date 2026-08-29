@@ -145,23 +145,34 @@ export default function ClaimClient({ token, config }) {
             />
           </div>
 
-          <aside className="rounded-xl border border-line bg-white p-6 shadow-sm md:sticky md:top-8">
+          {/* Sat in a plain white card it read as another panel of the
+              estimator. Brass border and a tinted background make it the one
+              thing on the page that is obviously a button rather than part of
+              the demo. */}
+          <aside
+            className="rounded-xl p-6 md:sticky md:top-8"
+            style={{ background: "#EDE6D6", border: "2px solid #B08A44" }}
+          >
             {!showForm ? (
               <>
-                <h2 className="font-display text-xl font-semibold mb-2">Make this yours</h2>
-                <p className="text-sm text-[#8A836F] mb-5 leading-relaxed">
-                  Your logo, your materials, and your pricing are already set up. Create an
-                  account and it becomes yours to edit and embed.
+                <h2 className="font-display text-2xl font-semibold mb-2 leading-tight">
+                  Make this yours
+                </h2>
+                <p className="text-sm text-[#6B6558] mb-5 leading-relaxed">
+                  Your logo and your name are already on it. Claim it and you can
+                  put in your own materials, photos and pricing, then drop it
+                  onto your site.
                 </p>
                 <button
                   onClick={() => setShowForm(true)}
-                  className="w-full text-sm font-medium px-4 py-2.5 rounded-md text-white"
+                  className="w-full text-base font-semibold px-4 py-3.5 rounded-md text-white"
                   style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
                 >
                   Make this mine
                 </button>
-                <p className="text-xs text-[#A39C8A] mt-4 leading-relaxed">
-                  Free while you try it. No card needed to start.
+                <p className="text-xs text-[#8A836F] mt-4 leading-relaxed">
+                  Free for a month. No card to start, and you can take it down
+                  whenever you like.
                 </p>
               </>
             ) : (
@@ -204,6 +215,55 @@ export default function ClaimClient({ token, config }) {
             )}
           </aside>
         </div>
+
+        {/* Most people will never visit knollside.com — this page is the whole
+            pitch, so what the thing actually does has to be on it. */}
+        <section className="mt-14 pt-10 border-t border-line">
+          <h2 className="font-display text-2xl font-semibold tracking-tight mb-2">
+            What you&rsquo;d actually get
+          </h2>
+          <p className="text-sm text-[#8A836F] mb-8 max-w-2xl leading-relaxed">
+            It&rsquo;s not just the calculator. Claiming it sets up the whole thing.
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              {
+                t: "Better calls, not more calls",
+                b: "You get their name, number, and exactly what they were pricing out — material, size, edge, add-ons. You already know what the job is before you ring back.",
+              },
+              {
+                t: "It answers when you can’t",
+                b: "Nine at night, Sunday, halfway through an install. Someone asks what a job costs and gets a straight answer instead of a form and a wait.",
+              },
+              {
+                t: "All of it is yours to change",
+                b: "Your materials, your photos, your rates, your edge finishes. Change a price in the morning and the website shows it the same minute.",
+              },
+            ].map((c) => (
+              <div key={c.t} className="rounded-xl border border-line bg-white p-5">
+                <h3 className="font-display text-base font-semibold mb-2">{c.t}</h3>
+                <p className="text-sm text-[#6B6558] leading-relaxed">{c.b}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 rounded-xl border border-line bg-white p-6 max-w-2xl">
+            <h3 className="font-display text-lg font-semibold mb-3">
+              What it costs
+            </h3>
+            <p className="text-sm text-[#6B6558] leading-relaxed">
+              Plans start at <strong className="text-ink">$39 a month</strong>, and
+              it&rsquo;s free for the first month with no card. One job usually
+              covers the year.
+            </p>
+            <p className="text-sm text-[#6B6558] leading-relaxed mt-3">
+              Getting it onto your site is one line of code — the same way you
+              would add a video. If someone else built your site, send them that
+              line and it takes them two minutes.
+            </p>
+          </div>
+        </section>
 
         <footer className="mt-12 pt-6 border-t border-line max-w-2xl">
           <p className="text-xs text-[#A39C8A] leading-relaxed">
