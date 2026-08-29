@@ -121,9 +121,17 @@ export default function ClaimClient({ token, config }) {
             Here's what an instant quote would look like on your site.
           </h1>
           <p className="text-sm text-[#8A836F] leading-relaxed">
-            This is a working estimator, not a picture. Try it — pick a material, change the
-            size, watch the number move. If you want it, claiming takes about a minute and
-            everything below carries over.
+            This is a working estimator, not a picture. Try it — pick a material, change
+            the size, watch the number move.
+          </p>
+          {/* Without this the demo argues against itself: a shop owner sees a
+              price he doesn't charge and concludes we don't know his trade.
+              Naming the prices as placeholders turns a wrong number from a
+              mistake into the thing he's being invited to fix. */}
+          <p className="text-sm mt-3 leading-relaxed rounded-lg px-4 py-3 inline-block" style={{ background: "#EDE6D6", color: "#6B6558" }}>
+            <strong className="text-ink">The prices in it are made up.</strong>{" "}
+            Materials, rates, edge finishes, add-ons — all of it is yours to
+            change once you claim it, and it takes a couple of minutes.
           </p>
         </header>
 
