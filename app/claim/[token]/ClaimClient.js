@@ -256,19 +256,38 @@ export default function ClaimClient({ token, config }) {
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl border border-line bg-white p-6 max-w-2xl">
-            <h3 className="font-display text-lg font-semibold mb-3">
+          {/* Dark panel so the money question doesn't read as another
+              paragraph. It is the thing everyone scrolls to find, and the free
+              month is the part that decides whether they try it at all. */}
+          <div
+            className="mt-8 rounded-xl p-6 sm:p-8 max-w-2xl"
+            style={{ background: "#211F1B" }}
+          >
+            <h3
+              className="font-display text-xl font-semibold mb-4"
+              style={{ color: "#F7F3EA" }}
+            >
               What it costs
             </h3>
-            <p className="text-sm text-[#6B6558] leading-relaxed">
-              Plans start at <strong className="text-ink">$39 a month</strong>, and
-              it&rsquo;s free for the first month with no card. One job usually
-              covers the year.
+
+            <div className="rounded-lg px-5 py-4 mb-4" style={{ background: "#EDE6D6" }}>
+              <p className="font-display text-xl font-semibold text-ink leading-snug">
+                Free for the first month. No card.
+              </p>
+              <p className="text-sm text-[#6B6558] mt-1">
+                Nothing to cancel if you decide it isn&rsquo;t for you.
+              </p>
+            </div>
+
+            <p className="text-sm leading-relaxed" style={{ color: "#BDB49F" }}>
+              After that, plans start at{" "}
+              <strong style={{ color: "#F7F3EA" }}>$39 a month</strong> — one job
+              usually covers the year.
             </p>
-            <p className="text-sm text-[#6B6558] leading-relaxed mt-3">
-              Getting it onto your site is one line of code — the same way you
-              would add a video. If someone else built your site, send them that
-              line and it takes them two minutes.
+            <p className="text-sm leading-relaxed mt-3" style={{ color: "#BDB49F" }}>
+              Getting it onto your site is one line of code, the same way you would
+              add a video. If someone else built your site, send them that line and
+              it takes them two minutes.
             </p>
           </div>
         </section>
