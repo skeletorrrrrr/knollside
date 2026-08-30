@@ -70,7 +70,59 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="4" title="What you can and can't do">
+          <Section n="4" title="The website service (Pro plans)">
+            <p>
+              Pro plans include a website, built and hosted by us, with your
+              estimator built into it. This section covers that part of the
+              service. If you are on Starter or Growth it does not apply to you.
+            </p>
+            <p>
+              <strong>What&rsquo;s included.</strong> One website, built from our
+              template and set up with your business name, logo, colours, photos
+              and pricing. Hosting is included for as long as your Pro
+              subscription is active.
+            </p>
+            <p>
+              <strong>Keeping it current.</strong> Send us changes to your text,
+              photos, prices, hours or contact details and we will make them. This
+              covers changes to pages that already exist. We aim to make them
+              within a few working days.
+            </p>
+            <p>
+              <strong>Design refresh.</strong> Once every twelve months you can ask
+              for a design refresh &mdash; a change to the layout or the look of
+              the site. Additional pages, custom features or further design work
+              are not included and would be quoted separately.
+            </p>
+            <p>
+              <strong>Your domain.</strong> You can point a domain you already own
+              at your site, or we can register one for you. Domains costing more
+              than roughly $200 are billed separately at cost. Whoever pays for it,
+              the domain is yours: ask us at any time and we will transfer it to
+              you at no charge.
+            </p>
+            <p>
+              <strong>Your content.</strong> The words, photos and pricing on your
+              site are yours. The template, code and design are ours &mdash; see
+              section 8.
+            </p>
+            <p>
+              <strong>If you cancel.</strong> Hosting stops at the end of your
+              billing period and the site stops being available. Your domain
+              remains yours, and we will give you a copy of your content on
+              request. If you want to keep the site itself running elsewhere, you
+              can buy it outright: $750 within the first twelve months, or $500
+              after that.
+            </p>
+            <p>
+              <strong>Fair use.</strong> Unlike the software, this part is work
+              done by people. We will be reasonable about it and we ask the same of
+              you. If requests go well beyond the normal upkeep of a small business
+              website, we will talk to you about it rather than simply stopping.
+            </p>
+          </Section>
+
+          <Section n="5" title="What you can and can't do">
             <p>You agree not to:</p>
             <ul className="ml-5 list-disc space-y-1.5">
               <li>
@@ -103,7 +155,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="5" title="Quotes are estimates, not contracts">
+          <Section n="6" title="Quotes are estimates, not contracts">
             <p>
               This is the most important thing on this page. Knollside generates
               price estimates from pricing rules that{" "}
@@ -121,7 +173,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="6" title="Your content and your leads">
+          <Section n="7" title="Your content and your leads">
             <p>
               You keep ownership of everything you put into Knollside: your
               business details, pricing rules, branding, and the lead records
@@ -144,7 +196,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="7" title="Our intellectual property">
+          <Section n="8" title="Our intellectual property">
             <p>
               The Knollside software, widget code, dashboard, name, logo, and
               design are ours. Your subscription grants you a limited,
@@ -158,7 +210,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="8" title="Third-party services">
+          <Section n="9" title="Third-party services">
             <p>
               We rely on third parties to run Knollside, including Vercel
               (hosting), Supabase (database and authentication), Stripe
@@ -169,7 +221,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="9" title="Availability">
+          <Section n="10" title="Availability">
             <p>
               We aim for high uptime but we don&rsquo;t promise the service will
               be uninterrupted or error-free. We may modify, add, or remove
@@ -179,7 +231,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="10" title="Disclaimers">
+          <Section n="11" title="Disclaimers">
             <p className="font-mono text-[13px] leading-relaxed">
               THE SERVICE IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS
               AVAILABLE&rdquo; WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR
@@ -190,7 +242,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="11" title="Limitation of liability">
+          <Section n="12" title="Limitation of liability">
             <p className="font-mono text-[13px] leading-relaxed">
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, KNOLLSIDE WILL NOT BE
               LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
@@ -207,7 +259,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="12" title="Indemnification">
+          <Section n="13" title="Indemnification">
             <p>
               You agree to defend and indemnify Knollside against claims, losses,
               and reasonable legal costs arising from your use of the service,
@@ -216,7 +268,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="13" title="Governing law and disputes">
+          <Section n="14" title="Governing law and disputes">
             <p>
               These Terms are governed by the laws of the State of California,
               without regard to conflict-of-laws rules. Any dispute will be
@@ -227,7 +279,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="14" title="Changes to these Terms">
+          <Section n="15" title="Changes to these Terms">
             <p>
               We may update these Terms. If a change is material, we&rsquo;ll
               email account holders and update the effective date above.
@@ -236,7 +288,7 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section n="15" title="Contact">
+          <Section n="16" title="Contact">
             <p>
               Questions about these Terms: <Mail />
             </p>
