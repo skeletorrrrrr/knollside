@@ -22,6 +22,17 @@ export async function PATCH(request, { params }) {
   if (body.seen !== undefined) {
     update.seen = !!body.seen;
   }
+  // Free text, deliberately unstructured — "quoted, waiting on callback".
+  // Capped so a paste accident can't put a novel in the row, and null clears it.
+  if (body.notes !== undefined) {
+    if (body.notes === null) {
+      update.notes = null;
+    } else if (typeof body.notes === "string") {
+      update.notes = body.notes.slice(0, 2000);
+    } else {
+      return NextResponse.json({ error: "Invalid notes" }, { status: 400 });
+    }
+  }
 
   if (Object.keys(update).length === 0) {
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
