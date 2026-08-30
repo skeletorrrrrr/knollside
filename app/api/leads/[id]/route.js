@@ -48,3 +48,25 @@ export async function PATCH(request, { params }) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ lead: data });
 }
+
+// Removing a lead the owner doesn't want — a duplicate, or a spam submission.
+// Row Level Security is what actually stops one business deleting another's
+// leads: this runs on the user-scoped client, so a row belonging to someone
+// else simply isn't visible to the delete and nothing happens.
+export async function DELETE(_request, { params }) {
+  const supabase = supabaseServer();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data, error } = await supabase
+    .from("leads")
+    .delete()
+    .eq("id", params.id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // No row came back, so either it was already gone or it was never theirs.
+  if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json({ deleted: data.id });
+}

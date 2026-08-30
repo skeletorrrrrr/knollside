@@ -49,6 +49,9 @@ export default function LeadsPage() {
   const [openId, setOpenId] = useState(null);
   const [noteDrafts, setNoteDrafts] = useState({});
   const [savingNote, setSavingNote] = useState(null);
+  // Deleting is the one thing here that can't be undone, so it takes two taps.
+  // Armed per-lead rather than globally, and cleared when the card closes.
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -77,6 +80,7 @@ export default function LeadsPage() {
   function toggleOpen(lead) {
     const next = openId === lead.id ? null : lead.id;
     setOpenId(next);
+    setConfirmDelete(null);
     if (next && !lead.seen) {
       patchLead(lead.id, { seen: true }, { seen: true });
     }
@@ -92,6 +96,14 @@ export default function LeadsPage() {
     setSavingNote(id);
     await patchLead(id, { notes: value }, { notes: value });
     setSavingNote(null);
+  }
+
+  async function deleteLead(id) {
+    setLeads((ls) => ls.filter((l) => l.id !== id));
+    setOpenId(null);
+    setConfirmDelete(null);
+    await fetch(`/api/leads/${id}`, { method: "DELETE" });
+    router.refresh();
   }
 
   async function markAllSeen() {
@@ -350,6 +362,40 @@ export default function LeadsPage() {
                               </button>
                             ))}
                           </div>
+                        </div>
+
+                        {/* Spam and duplicates happen, and a list you can never
+                            tidy stops being worth opening. Set apart from the
+                            status buttons so a stray thumb doesn't find it. */}
+                        <div className="pt-3 border-t border-line">
+                          {confirmDelete === l.id ? (
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm text-[#6B6558]">
+                                Delete this lead for good?
+                              </span>
+                              <button
+                                onClick={() => deleteLead(l.id)}
+                                className="text-sm font-semibold px-4 py-2 rounded-md text-white"
+                                style={{ background: "#C0483B" }}
+                              >
+                                Yes, delete
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="text-sm font-medium px-4 py-2 rounded-md text-[#8A836F]"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmDelete(l.id)}
+                              className="text-sm font-medium"
+                              style={{ color: "#B5806B" }}
+                            >
+                              Delete this lead
+                            </button>
+                          )}
                         </div>
                       </div>
                     )}
