@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabaseBrowser } from "@/lib/supabaseClient";
@@ -8,6 +8,22 @@ import EmbedWidget from "@/components/EmbedWidget";
 export default function ClaimClient({ token, config }) {
   const router = useRouter();
   const { business } = config;
+
+  // Tell the server this page was actually opened by a person. Once per
+  // session, so refreshing or coming back to the tab doesn't inflate it —
+  // the useful signal is "they looked", and later "they came back", not how
+  // many times the page rendered.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const key = `knollside-viewed-${token}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // Private browsing with storage blocked — still worth recording the view.
+    }
+    fetch(`/api/claim/${token}/view`, { method: "POST" }).catch(() => {});
+  }, [token]);
 
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");

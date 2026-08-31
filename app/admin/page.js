@@ -14,6 +14,19 @@ function fmtDate(s) {
   return new Date(s).toLocaleDateString();
 }
 
+// "2 hrs ago" is the useful form here. Whether a prospect opened their demo
+// twenty minutes after the email or four days later is the whole signal.
+function ago(s) {
+  if (!s) return "";
+  const mins = Math.round((Date.now() - new Date(s).getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + " min ago";
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return hrs + " hr" + (hrs === 1 ? "" : "s") + " ago";
+  const days = Math.round(hrs / 24);
+  return days + " day" + (days === 1 ? "" : "s") + " ago";
+}
+
 export default function AdminPage() {
   const [data, setData] = useState(null);
   const [err, setErr] = useState("");
@@ -49,6 +62,9 @@ export default function AdminPage() {
       case "lastLead": return r.lastLead ? new Date(r.lastLead).getTime() : -1;
       case "created_at": return new Date(r.created_at).getTime();
       case "health": return (HEALTH[r.health]?.label || r.health || "").toLowerCase();
+      // -1 rather than 0 so real businesses sort below a demo nobody opened,
+      // instead of tying with it.
+      case "claimViews": return r.claimViews === null ? -1 : r.claimViews;
       default: return 0;
     }
   }
@@ -211,6 +227,7 @@ export default function AdminPage() {
               <SortHeader label="Leads" col="leadCount" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <SortHeader label="Last lead" col="lastLead" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <SortHeader label="Joined" col="created_at" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
+              <SortHeader label="Demo views" col="claimViews" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <SortHeader label="Health" col="health" sortCol={sortCol} sortDir={sortDir} onSort={handleSort} />
               <th className="px-3 py-2.5"></th>
             </tr>
@@ -262,6 +279,20 @@ export default function AdminPage() {
                   <td className="px-3 py-3 font-mono text-right tabular-nums">{r.leadCount}</td>
                   <td className="px-3 py-3 text-[#8A836F] whitespace-nowrap">{fmtDate(r.lastLead)}</td>
                   <td className="px-3 py-3 text-[#8A836F] whitespace-nowrap">{fmtDate(r.created_at)}</td>
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    {r.claimViews === null ? (
+                      <span className="text-xs text-[#A39C8A]">&mdash;</span>
+                    ) : r.claimViews === 0 ? (
+                      <span className="text-xs text-[#A39C8A]">Not opened</span>
+                    ) : (
+                      <span className="block">
+                        <span className="font-mono tabular-nums font-medium" style={{ color: "#4B6A52" }}>
+                          {r.claimViews}
+                        </span>
+                        <span className="block text-xs text-[#A39C8A]">{ago(r.claimLastViewed)}</span>
+                      </span>
+                    )}
+                  </td>
                   <td className="px-3 py-3 whitespace-nowrap">
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: h.color }}>
                       <span className="inline-block rounded-full flex-shrink-0" style={{ width: 6, height: 6, background: h.color }} />
@@ -330,7 +361,7 @@ export default function AdminPage() {
               );
             })}
             {rows.length === 0 && (
-              <tr><td colSpan={8} className="px-3 py-6 text-center text-[#A39C8A]">No businesses yet.</td></tr>
+              <tr><td colSpan={9} className="px-3 py-6 text-center text-[#A39C8A]">No businesses yet.</td></tr>
             )}
           </tbody>
         </table>

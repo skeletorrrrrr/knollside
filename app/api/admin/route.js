@@ -17,7 +17,7 @@ export async function GET() {
   const admin = supabaseAdmin();
 
   const [{ data: businesses }, { data: leads }, { data: items }] = await Promise.all([
-    admin.from("businesses").select("id, name, slug, industry, owner_email, subscription_tier, subscription_status, created_at").order("created_at", { ascending: false }),
+    admin.from("businesses").select("id, name, slug, industry, owner_email, subscription_tier, subscription_status, created_at, is_demo, claim_token, claim_views, claim_last_viewed_at").order("created_at", { ascending: false }),
     admin.from("leads").select("business_id, created_at, status"),
     admin.from("items").select("business_id"),
   ]);
@@ -63,6 +63,12 @@ export async function GET() {
       itemCount,
       health,
       isAdmin: (b.owner_email || "").toLowerCase() === adminEmail,
+      // Prospect demos only. For a claimed business the number is a leftover
+      // from before they signed up and would only be confusing.
+      isDemo: !!b.is_demo,
+      claimToken: b.is_demo ? b.claim_token : null,
+      claimViews: b.is_demo ? (b.claim_views || 0) : null,
+      claimLastViewed: b.is_demo ? b.claim_last_viewed_at : null,
     };
   });
 
