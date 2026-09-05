@@ -137,7 +137,7 @@ export default function ClaimClient({ token, config }) {
             Here's what an instant quote would look like on your site.
           </h1>
           <p className="text-sm text-[#8A836F] leading-relaxed">
-            This is a working estimator, not a picture. Try it — pick a material, change
+            This is a working estimator, not a picture. Try it. Pick a material, change
             the size, watch the number move.
           </p>
           {/* Without this the demo argues against itself: a shop owner sees a
@@ -146,7 +146,7 @@ export default function ClaimClient({ token, config }) {
               mistake into the thing he's being invited to fix. */}
           <p className="text-sm mt-3 leading-relaxed rounded-lg px-4 py-3 inline-block" style={{ background: "#EDE6D6", color: "#6B6558" }}>
             <strong className="text-ink">The prices in it are made up.</strong>{" "}
-            Materials, rates, edge finishes, add-ons — all of it is yours to
+            Materials, rates, edge finishes, add-ons, all of it is yours to
             change once you claim it, and it takes a couple of minutes.
           </p>
         </header>
@@ -254,7 +254,7 @@ export default function ClaimClient({ token, config }) {
             {[
               {
                 t: "Better calls, not more calls",
-                b: "You get their name, number, and exactly what they were pricing out — material, size, edge, add-ons. You already know what the job is before you ring back.",
+                b: "You get their name, number, and exactly what they were pricing out: material, size, edge, add-ons. You already know what the job is before you ring back.",
               },
               {
                 t: "It answers when you can’t",
@@ -297,7 +297,7 @@ export default function ClaimClient({ token, config }) {
 
             <p className="text-sm leading-relaxed" style={{ color: "#BDB49F" }}>
               After that, plans start at{" "}
-              <strong style={{ color: "#F7F3EA" }}>$39 a month</strong> — one job
+              <strong style={{ color: "#F7F3EA" }}>$39 a month</strong>, and one job
               usually covers the year.
             </p>
             <p className="text-sm leading-relaxed mt-3" style={{ color: "#BDB49F" }}>
