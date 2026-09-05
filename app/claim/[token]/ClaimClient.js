@@ -242,8 +242,8 @@ export default function ClaimClient({ token, config }) {
               anyone customers, and a shop owner who has been sold to before
               will hear a guarantee as a lie. */}
           <p className="text-base text-[#3F3A32] mb-3 max-w-2xl leading-relaxed">
-            The whole point of this is to bring you customers worth your time
-            as people who already know what they want and roughly what it
+            The whole point of this is to bring you customers worth your time:
+            people who already know what they want and roughly what it
             costs, not a pile of enquiries to sort through.
           </p>
           <p className="text-sm text-[#8A836F] mb-8 max-w-2xl leading-relaxed">
