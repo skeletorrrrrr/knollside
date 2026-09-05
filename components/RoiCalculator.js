@@ -172,7 +172,7 @@ export default function RoiCalculator({ starterPrice = 39 }) {
           <>
             Starter is <strong>${starterPrice} a month</strong>. At{" "}
             {money(jobValue)} a job, it pays for itself the first time it catches
-            one you&rsquo;d otherwise have missed &mdash;{" "}
+            one you&rsquo;d otherwise have missed,{" "}
             {jobsToCoverPlan < 0.05
               ? "a rounding error against a single job."
               : `about ${(jobsToCoverPlan * 100).toFixed(0)}% of one.`}{" "}
@@ -187,7 +187,7 @@ export default function RoiCalculator({ starterPrice = 39 }) {
       </p>
 
       <p className="text-xs text-[#A39C8A] mt-3 max-w-3xl">
-        Every number here is yours &mdash; we don&rsquo;t assume an instant quote
+        Every number here is yours. We don&rsquo;t assume an instant quote
         wins you more work. Move the sliders to whatever you think is realistic
         and the maths just follows.
       </p>

@@ -20,7 +20,7 @@ export default function DemoSwitcher() {
           style={{ width: 7, height: 7, background: "#4B6A52" }} />
         <span className="text-xs font-semibold tracking-widest uppercase"
           style={{ color: "#8F6E32" }}>
-          Live demo &mdash; try it yourself
+          Live demo, try it yourself
         </span>
       </div>
 

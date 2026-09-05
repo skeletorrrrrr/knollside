@@ -87,7 +87,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg text-[#6B6558] mb-7 max-w-xl">
-            Knollside quotes them instantly and captures the lead &mdash; so you
+            Knollside quotes them instantly and captures the lead, so you
             stop losing jobs to a callback.
           </p>
 
@@ -97,7 +97,7 @@ export default function LandingPage() {
               className="px-5 py-3 rounded-md text-sm font-medium text-white shadow-sm"
               style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
             >
-              Start free &mdash; no card required
+              Start free, no card required
             </Link>
             <Link
               href="/login"
@@ -108,7 +108,7 @@ export default function LandingPage() {
           </div>
 
           <p className="mt-4 text-sm text-[#8A836F]">
-            Free for a month. Then from $390/year &mdash; one job pays for it.
+            Free for a month. Then from $390/year. One job pays for it.
           </p>
         </div>
 
@@ -129,7 +129,7 @@ export default function LandingPage() {
         <p className="text-lg text-[#6B6558] mb-10 max-w-2xl">
           When someone asks what a job costs, they&rsquo;re asking two or three
           other shops the same day. The one who answers is the one they end up
-          talking to. Researchers tested exactly that &mdash; they filled in the
+          talking to. Researchers tested exactly that. They filled in the
           contact form at 1,000 companies and waited to see what came back.
         </p>
 
@@ -157,7 +157,7 @@ export default function LandingPage() {
               29<span className="text-2xl"> hrs</span>
             </div>
             <p className="text-sm text-[#6B6558] mt-2">
-              Average wait &mdash; and that&rsquo;s counting only the ones who
+              Average wait, counting only the ones who
               bothered to reply.
             </p>
           </div>
@@ -166,7 +166,7 @@ export default function LandingPage() {
         <p className="text-xs text-[#8A836F] font-mono mb-10 max-w-2xl leading-relaxed">
           Source: RevenueHero, &ldquo;We Tested Lead Response Times Of 1000 B2B
           Sales Teams,&rdquo; March 2024. The companies tested were software
-          firms rather than trades &mdash; it&rsquo;s cited here because it&rsquo;s
+          firms rather than trades. It&rsquo;s cited here because it&rsquo;s
           the most recent measurement of how long people are left waiting.
         </p>
 
@@ -178,7 +178,7 @@ export default function LandingPage() {
             className="font-display text-xl sm:text-2xl leading-snug max-w-3xl"
             style={{ color: "#F7F3EA" }}
           >
-            Knollside answers in seconds &mdash; at midnight, on a Sunday, while
+            Knollside answers in seconds. At midnight, on a Sunday, while
             you&rsquo;re under a sink.
           </p>
           <p className="text-sm mt-3 max-w-2xl" style={{ color: "#BDB49F" }}>
@@ -218,7 +218,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-[#6B6558] leading-relaxed">
               Pick your trade and Knollside starts you with a working estimator
-              &mdash; materials, options, add-ons, labor rate. Rename, reprice,
+              with materials, options, add-ons and a labor rate. Rename, reprice,
               add or remove anything until it matches how you actually quote.
             </p>
           </li>
@@ -232,7 +232,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-[#6B6558] leading-relaxed">
               Paste one line of code on your website. No website, or can&rsquo;t
-              edit it? Share your Knollside link instead &mdash; in your
+              edit it? Share your Knollside link instead: in your
               Instagram bio, Google profile, email signature, or a text.
             </p>
           </li>
@@ -253,7 +253,7 @@ export default function LandingPage() {
         </ol>
 
         <p className="text-sm text-[#8A836F] mt-8">
-          Change a price later and it updates everywhere instantly &mdash; no
+          Change a price later and it updates everywhere instantly. No
           re-embedding, no touching your website again.
         </p>
       </section>
@@ -284,7 +284,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-[#6B6558] leading-relaxed mb-5">
               Paste one line where you want the estimator to show up. Anywhere
-              you can add HTML works &mdash; most site builders can. Change your
+              you can add HTML works, and most site builders can. Change your
               prices later and the page updates itself.
             </p>
 
@@ -303,7 +303,7 @@ export default function LandingPage() {
             </div>
 
             <p className="text-xs text-[#8A836F] mt-3">
-              Copy it from your dashboard &mdash; it comes filled in with your
+              Copy it from your dashboard. It comes filled in with your
               own address.
             </p>
           </div>
@@ -318,7 +318,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-[#6B6558] leading-relaxed mb-5">
               No website, or you can&rsquo;t edit the one you have? Every account
-              gets its own estimator page. Nothing to install &mdash; send the
+              gets its own estimator page. Nothing to install. Send the
               link and it works.
             </p>
 
@@ -351,7 +351,7 @@ export default function LandingPage() {
           Run your own numbers.
         </h2>
         <p className="text-lg text-[#6B6558] mb-8 max-w-2xl">
-          We&rsquo;re not going to tell you how many jobs this wins you &mdash; we
+          We&rsquo;re not going to tell you how many jobs this wins you. We
           don&rsquo;t know your shop. Put in what a job is worth and what you
           think an instant quote would pick up, and see the arithmetic for
           yourself.

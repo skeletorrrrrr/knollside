@@ -107,7 +107,7 @@ export default function BillingPage() {
         <p className="text-lg mb-2">
           Current plan: <span className="font-bold text-xl capitalize" style={{ color: "#8F6E32" }}>{business.subscription_tier}</span>{" "}
           <span className="text-sm font-medium" style={{ color: status.color }}>
-            &mdash; {status.text}
+            &middot; {status.text}
           </span>
         </p>
       ) : (
@@ -169,7 +169,7 @@ export default function BillingPage() {
               borderColor: yearly ? "#211F1B" : "#DED6C4",
             }}
           >
-            Yearly &mdash; 2 months free
+            Yearly &middot; 2 months free
           </button>
         </div>
 

@@ -430,7 +430,7 @@ export default function WebsitePage() {
 
           <p className="text-xs text-[#A39C8A] leading-relaxed">
             Save, then open your site to see it. Worth checking your text is
-            still easy to read against the background you picked &mdash; pale
+            still easy to read against the background you picked. Pale
             grey on white looks fine on your screen and disappears on a phone
             outdoors.
           </p>

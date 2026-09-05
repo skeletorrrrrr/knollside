@@ -90,7 +90,7 @@ export default function TermsPage() {
             </p>
             <p>
               <strong>Design refresh.</strong> Once every twelve months you can ask
-              for a design refresh &mdash; a change to the layout or the look of
+              for a design refresh, meaning a change to the layout or the look of
               the site. Additional pages, custom features or further design work
               are not included and would be quoted separately.
             </p>
@@ -103,7 +103,7 @@ export default function TermsPage() {
             </p>
             <p>
               <strong>Your content.</strong> The words, photos and pricing on your
-              site are yours. The template, code and design are ours &mdash; see
+              site are yours. The template, code and design are ours. See
               section 8.
             </p>
             <p>
