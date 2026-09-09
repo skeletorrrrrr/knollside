@@ -90,7 +90,7 @@ export default function BillingPage() {
     trialing: { text: "You're on a free trial", color: "#B08A44" },
     active: { text: "Active", color: "#4B6A52" },
     canceling: { text: "Cancels at the end of this period", color: "#B08A44" },
-    past_due: { text: "Payment failed — please update your card", color: "#C0483B" },
+    past_due: { text: "Payment failed, please update your card", color: "#C0483B" },
     canceled: { text: "Canceled", color: "#C0483B" },
     unpaid: { text: "Unpaid", color: "#C0483B" },
   };
@@ -112,7 +112,7 @@ export default function BillingPage() {
         </p>
       ) : (
         <p className="text-sm text-[#8A836F] mb-2">
-          You're on a free trial — choose a plan to keep your estimator live after it ends.
+          You're on a free trial, choose a plan to keep your estimator live after it ends.
         </p>
       )}
       <p className="text-xs text-[#A39C8A] mb-6">Your first month is on us. No card required until you&rsquo;re ready to commit.</p>
@@ -143,7 +143,7 @@ export default function BillingPage() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Billing period toggle — spans the grid so it sits above the cards */}
+        {/* Billing period toggle, spans the grid so it sits above the cards */}
         <div className="col-span-full flex items-center gap-2 mb-1">
           <button
             type="button"
@@ -209,7 +209,7 @@ export default function BillingPage() {
         })}
       </div>
 
-      {/* Cancel subscription — low friction, keeps account */}
+      {/* Cancel subscription, low friction, keeps account */}
       {hasActiveSub && business.subscription_status !== "canceling" && (
         <div className="mt-10">
           <h2 className="font-display text-lg font-semibold mb-1">Cancel subscription</h2>
@@ -227,7 +227,7 @@ export default function BillingPage() {
         </div>
       )}
 
-      {/* Danger zone — delete account */}
+      {/* Danger zone, delete account */}
       <div className="mt-10 pt-6 border-t" style={{ borderColor: "#E3C9C1" }}>
         <h2 className="font-display text-lg font-semibold mb-1" style={{ color: "#C0483B" }}>Delete account</h2>
         <p className="text-sm text-[#8A836F] mb-3">

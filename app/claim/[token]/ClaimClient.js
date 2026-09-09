@@ -10,7 +10,7 @@ export default function ClaimClient({ token, config }) {
   const { business } = config;
 
   // Tell the server this page was actually opened by a person. Once per
-  // session, so refreshing or coming back to the tab doesn't inflate it —
+  // session, so refreshing or coming back to the tab doesn't inflate it ,
   // the useful signal is "they looked", and later "they came back", not how
   // many times the page rendered.
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function ClaimClient({ token, config }) {
       if (sessionStorage.getItem(key)) return;
       sessionStorage.setItem(key, "1");
     } catch {
-      // Private browsing with storage blocked — still worth recording the view.
+      // Private browsing with storage blocked, still worth recording the view.
     }
     fetch(`/api/claim/${token}/view`, { method: "POST" }).catch(() => {});
   }, [token]);
@@ -232,7 +232,7 @@ export default function ClaimClient({ token, config }) {
           </aside>
         </div>
 
-        {/* Most people will never visit knollside.com — this page is the whole
+        {/* Most people will never visit knollside.com, this page is the whole
             pitch, so what the thing actually does has to be on it. */}
         <section className="mt-14 pt-10 border-t border-line">
           <h2 className="font-display text-2xl font-semibold tracking-tight mb-2">

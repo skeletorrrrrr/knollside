@@ -20,11 +20,11 @@ export async function POST(request) {
   try {
     body = await request.json();
   } catch {
-    // no body is fine — default is publish
+    // no body is fine, default is publish
   }
   const publish = body.published !== false;
 
-  // Already in the requested state — return as-is rather than moving the
+  // Already in the requested state, return as-is rather than moving the
   // published_at timestamp on a double-click.
   if (Boolean(business.published) === publish) {
     return NextResponse.json({ business, changed: false });

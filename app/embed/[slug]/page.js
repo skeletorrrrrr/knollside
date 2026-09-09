@@ -1,7 +1,7 @@
 import { getPublicConfig } from "@/lib/publicConfig";
 import EmbedWidget from "@/components/EmbedWidget";
 import EmbedAutoHeight from "@/components/EmbedAutoHeight";
-// Always render fresh — a business's pricing changes must reach their live
+// Always render fresh, a business's pricing changes must reach their live
 // widget immediately, so this page can never be statically cached.
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,7 +15,7 @@ export default async function EmbedPage({ params }) {
   }
   // No min-h-screen here. Inside an iframe 100vh resolves to the frame's own
   // height, so the page could never measure shorter than the box it's already
-  // in — the auto-height would only ever grow. Height must come from content.
+  // in, the auto-height would only ever grow. Height must come from content.
   return (
     <div className="bg-stone">
       <EmbedAutoHeight />

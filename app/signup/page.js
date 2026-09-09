@@ -37,10 +37,10 @@ export default function SignupPage() {
       return;
     }
     if (data.session) {
-      // email confirmation is off in the Supabase project — go straight in
+      // email confirmation is off in the Supabase project, go straight in
       router.push("/dashboard");
     } else {
-      // email confirmation is on — show the code-entry step below. We use a
+      // email confirmation is on, show the code-entry step below. We use a
       // typed-in numeric code rather than a magic link: link-scanning bots
       // (Gmail and some corporate mail security gateways) auto-visit links
       // in incoming email to check them for safety, which silently burns a
@@ -170,7 +170,7 @@ export default function SignupPage() {
             ))}
           </select>
           <p className="text-xs text-[#A39C8A] mt-1">
-            Sets up your estimator with sensible starter pricing — you can edit everything later.
+            Sets up your estimator with sensible starter pricing, you can edit everything later.
           </p>
         </div>
         {industry === "other" && (
@@ -205,7 +205,7 @@ export default function SignupPage() {
             <p className="text-xs text-[#A39C8A] mt-1">
               {starterMode === "template"
                 ? "Fills in sample items, options, and add-ons you can rename and reprice."
-                : "Starts empty — you'll add your own items, options, and add-ons."}
+                : "Starts empty, you'll add your own items, options, and add-ons."}
             </p>
           </div>
         )}

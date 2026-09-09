@@ -26,7 +26,7 @@ export default async function SiteLayout({ children, params }) {
   }).map((p) => ({
     href: p.key ? `${base}/${p.key}` : base,
     // Materials/Services takes its name from the trade rather than being
-    // hardcoded — a plumber's nav shouldn't say "Materials".
+    // hardcoded, a plumber's nav shouldn't say "Materials".
     label: p.label || itemsWord.replace(/^./, (ch) => ch.toUpperCase()),
   }));
 
@@ -38,7 +38,7 @@ export default async function SiteLayout({ children, params }) {
       style={theme.vars}
     >
       {/* The font files and the scoped font rules. Injected per site rather
-          than bundled, because the customer picks the family — there is no
+          than bundled, because the customer picks the family, there is no
           fixed set to import at build time. */}
       {theme.fontHref && (
         // eslint-disable-next-line @next/next/no-page-custom-font
@@ -99,7 +99,7 @@ export default async function SiteLayout({ children, params }) {
           </div>
         </div>
 
-        {/* Small screens get the nav on its own row rather than a hamburger —
+        {/* Small screens get the nav on its own row rather than a hamburger ,
             five links fit, and a menu nobody opens is worse than a row. */}
         <nav className="md:hidden border-t border-[var(--site-line)] overflow-x-auto">
           <div className="max-w-5xl mx-auto px-5 py-2 flex gap-4">

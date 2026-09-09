@@ -19,7 +19,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const showQuantity = qtype !== "none";
   // Range comes from the industry template unless this business has set its
   // own. A countertop shop that never quotes past 150 sq ft shouldn't hand
-  // customers a slider that runs to 500 — the useful part gets squeezed into
+  // customers a slider that runs to 500, the useful part gets squeezed into
   // the first third of the track.
   //
   // Both overrides are nullable: blank means "use the industry default", so
@@ -182,7 +182,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
         <div className="text-2xl mb-2">✓</div>
         <h3 className="font-display text-xl font-semibold mb-1">Estimate sent</h3>
         <p className="text-sm text-[#7A7364]">
-          Thanks, {name.split(" ")[0] || "there"} — {business.name} has your estimate and will
+          Thanks, {name.split(" ")[0] || "there"}, {business.name} has your estimate and will
           follow up to confirm the details.
         </p>
       </div>
@@ -216,7 +216,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
   const zoneLabel = isArea ? sizeZone(industry.id, quantity, qRange) : null;
 
   // A homeowner whose AC just died has no idea whether that is a 1-hour or a
-  // 6-hour job — asking them to estimate labour puts the hardest question on
+  // 6-hour job, asking them to estimate labour puts the hardest question on
   // the least-equipped person. For hourly trades we ask how big the job is
   // instead and keep the hours as a quiet secondary detail.
   const quantityTitle = isHours ? "How big is the job?" : terms.quantity;
@@ -258,7 +258,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
           <SectionCard step={stepMaterial} title={`Choose ${terms.item.match(/^[aeiou]/i) ? "an" : "a"} ${terms.item}`} capitalizeTitle>
             {/* auto-fill rather than sm:grid-cols-4, because Tailwind's
                 breakpoints watch the viewport and this widget is often not
-                the width of the viewport — on a claim page or in a narrow
+                the width of the viewport, on a claim page or in a narrow
                 column it was forcing four 47px cards into 236px and the
                 material swatches came out tall and thin. minmax lets the grid
                 answer to the space it actually has. */}
@@ -604,7 +604,7 @@ export default function EmbedWidget({ business, items, options, addons }) {
                   {submitting ? "Sending…" : "Send my estimate"}
                 </button>
                 <p className="text-xs text-[#A39C8A] text-center pt-1">
-                  Estimate only — subject to final confirmation.
+                  Estimate only, subject to final confirmation.
                 </p>
               </form>
             )}

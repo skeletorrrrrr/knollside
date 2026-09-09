@@ -3,7 +3,7 @@ import { supabaseServer, supabaseAdmin } from "@/lib/supabaseServer";
 
 // Owner-only overview of every business. Gated to ADMIN_EMAIL. Uses the
 // service-role client to read across all tenants (bypassing per-business RLS),
-// which is exactly what an owner admin view needs — hence the strict email gate.
+// which is exactly what an owner admin view needs, hence the strict email gate.
 export async function GET() {
   const supabase = supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
@@ -42,7 +42,7 @@ export async function GET() {
     const itemCount = itemsByBiz[b.id] || 0;
     const daysSinceLead = lastLead ? Math.floor((now - new Date(lastLead).getTime()) / 86400000) : null;
 
-    // Health heuristic — a proxy, not certainty.
+    // Health heuristic, a proxy, not certainty.
     let health = "active";
     if (leadCount === 0 && itemCount === 0) health = "not_set_up";
     else if (leadCount === 0) health = "no_leads";

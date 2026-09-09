@@ -5,7 +5,7 @@ import { stripe } from "@/lib/stripe";
 
 // Cancels the business's active subscription at period end (they keep access
 // until the paid period runs out, standard SaaS behavior). Keeps the account
-// and all data — this is "stop paying," not "delete me."
+// and all data, this is "stop paying," not "delete me."
 export async function POST() {
   const supabase = supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();

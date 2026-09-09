@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 // One page per material, generated from the rows the customer already entered
 // into their estimator. Nobody hand-builds these and nobody has to remember to
-// update a price on them — the number here is the same number the estimator
+// update a price on them, the number here is the same number the estimator
 // quotes from.
 //
 // The point is search: a page titled "Quartz Countertops in Vista" can rank for
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
   const industry = getIndustry(site.business.industry);
   // industry.label is the trade noun ("Countertops / Stone"); terms.items is a
   // section-heading word ("materials"). A title reading "Quartz materials in
-  // Vista" is the wrong phrase — nobody searches it. Take the first half of the
+  // Vista" is the wrong phrase, nobody searches it. Take the first half of the
   // label so we get "Quartz Countertops in Vista", which people do search.
   const trade = String(industry.label || "").split("/")[0].trim();
   const area = (site.content.areas.places || [])[0];

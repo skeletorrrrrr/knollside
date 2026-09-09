@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 // Reports the widget's real content height to the parent page so the embed
 // snippet can resize its iframe to fit. Without this the iframe is a fixed
-// box and the widget scrolls inside it — on a phone that means nested
+// box and the widget scrolls inside it, on a phone that means nested
 // scrolling, where a swipe moves the wrong thing.
 //
 // Renders nothing. Safe to mount when not embedded: if there's no parent
@@ -27,7 +27,7 @@ export default function EmbedAutoHeight() {
         )
       );
       // Ignore sub-pixel churn. Without this the parent's resize reflows the
-      // content, which fires the observer, which resizes the parent again —
+      // content, which fires the observer, which resizes the parent again ,
       // a loop that never settles.
       if (!h || Math.abs(h - last) < 2) return;
       last = h;

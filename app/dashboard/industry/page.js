@@ -115,7 +115,7 @@ export default function IndustryPage() {
               instead. This can&rsquo;t be undone.
             </p>
             <p className="text-sm text-[#6B6558] mb-4">
-              Your leads are safe — they keep a record of what was quoted at the
+              Your leads are safe, they keep a record of what was quoted at the
               time, so nothing you&rsquo;ve already captured is lost.
             </p>
 

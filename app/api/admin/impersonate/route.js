@@ -4,7 +4,7 @@ import { supabaseServer, supabaseAdmin } from "@/lib/supabaseServer";
 // Owner-only: mint a one-time login link for a customer's account so the owner
 // can see and fix what the customer sees.
 //
-// This is the most dangerous endpoint in the app — a successful call hands over
+// This is the most dangerous endpoint in the app, a successful call hands over
 // a full session as another user. It's gated exactly like the admin GET/DELETE
 // (strict ADMIN_EMAIL match on the *server-verified* session, never on anything
 // the client sends), and every call is written to admin_impersonations before
@@ -69,7 +69,7 @@ export async function POST(request) {
   //
   // That link goes to Supabase's verify endpoint, which redirects back with the
   // session in the URL *hash* (implicit flow). A hash fragment is never sent to
-  // the server, and this app authenticates from cookies — so the tokens arrive
+  // the server, and this app authenticates from cookies, so the tokens arrive
   // where nothing can read them, middleware sees no session, and the user lands
   // on /login with a useless #access_token in the address bar.
   //

@@ -61,7 +61,7 @@ export default function LeadsPage() {
   }, []);
 
   async function patchLead(id, body, optimistic) {
-    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, ...optimistic } : l)));
+    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l...optimistic } : l)));
     await fetch(`/api/leads/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -86,8 +86,8 @@ export default function LeadsPage() {
     }
   }
 
-  // Autosave on blur rather than a Save button. This is a scratchpad — "quoted,
-  // waiting on callback" — and a form that needs submitting won't get used.
+  // Autosave on blur rather than a Save button. This is a scratchpad, "quoted,
+  // waiting on callback", and a form that needs submitting won't get used.
   async function saveNote(id) {
     const value = noteDrafts[id];
     if (value === undefined) return;
@@ -163,7 +163,7 @@ export default function LeadsPage() {
         </p>
       ) : (
         <>
-          {/* Filters scroll sideways rather than wrapping — on a phone a
+          {/* Filters scroll sideways rather than wrapping, on a phone a
               wrapped row of chips pushes the actual leads off the screen. */}
           <div className="-mx-5 px-5 overflow-x-auto mb-3">
             <div className="flex gap-2 w-max">

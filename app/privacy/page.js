@@ -51,27 +51,27 @@ export default function PrivacyPage() {
           <Section n="2" title="What we collect from businesses">
             <ul className="ml-5 list-disc space-y-1.5">
               <li>
-                <strong className="font-semibold">Account details</strong> — name,
+                <strong className="font-semibold">Account details</strong>, name,
                 business name, email address, and the one-time codes we email you
                 to sign in
               </li>
               <li>
-                <strong className="font-semibold">Configuration</strong> — your
+                <strong className="font-semibold">Configuration</strong>, your
                 trade, pricing rules, service areas, and widget branding
               </li>
               <li>
-                <strong className="font-semibold">Billing</strong> — your plan,
+                <strong className="font-semibold">Billing</strong>, your plan,
                 subscription status, and the last four digits and expiry of your
                 card. Full card numbers go directly to Stripe and never touch our
                 servers.
               </li>
               <li>
                 <strong className="font-semibold">Usage and technical data</strong>{" "}
-                — pages visited in the dashboard, widget load counts, IP address,
+              , pages visited in the dashboard, widget load counts, IP address,
                 browser type, and error logs
               </li>
               <li>
-                <strong className="font-semibold">Correspondence</strong> — emails
+                <strong className="font-semibold">Correspondence</strong>, emails
                 you send us and support conversations
               </li>
             </ul>
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
               <li>to authenticate you and secure accounts</li>
               <li>to process payments and manage subscriptions</li>
               <li>
-                to send service email — sign-in codes, lead notifications,
+                to send service email, sign-in codes, lead notifications,
                 receipts, and important account notices
               </li>
               <li>
@@ -123,19 +123,19 @@ export default function PrivacyPage() {
             </p>
             <ul className="ml-5 list-disc space-y-1.5">
               <li>
-                <strong className="font-semibold">Vercel</strong> — application
+                <strong className="font-semibold">Vercel</strong>, application
                 hosting and delivery
               </li>
               <li>
-                <strong className="font-semibold">Supabase</strong> — database and
+                <strong className="font-semibold">Supabase</strong>, database and
                 authentication
               </li>
               <li>
-                <strong className="font-semibold">Stripe</strong> — payment
+                <strong className="font-semibold">Stripe</strong>, payment
                 processing
               </li>
               <li>
-                <strong className="font-semibold">Resend</strong> — transactional
+                <strong className="font-semibold">Resend</strong>, transactional
                 email delivery
               </li>
             </ul>
@@ -209,7 +209,7 @@ export default function PrivacyPage() {
           <Section n="11" title="International transfers">
             <p>
               We operate in the United States, and our providers store and process
-              data there. If you access Knollside from outside the U.S., you
+              data there. If you access Knollside from outside the U.S. you
               understand your information will be transferred to and processed in
               the United States.
             </p>

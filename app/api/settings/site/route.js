@@ -5,7 +5,7 @@ import { getOrCreateBusiness } from "@/lib/business";
 // Every string the customer can put on their own site passes through here, so
 // this is where the shape gets enforced. The renderer trusts what it reads out
 // of site_content, which means anything not validated here ends up on a live
-// page — hence the whitelist rather than storing the body as-is.
+// page, hence the whitelist rather than storing the body as-is.
 
 const MAX_STR = 2000;
 const MAX_LIST = 40;
@@ -24,7 +24,7 @@ function bool(v) {
 // the first time anyone pressed Save, because those default to on in the
 // renderer. Absent has to mean "leave it as it was".
 // A hostname, not a URL. Rejecting anything with a scheme, path or port keeps
-// this out of trouble — the value is compared against a Host header, so a
+// this out of trouble, the value is compared against a Host header, so a
 // stray "https://" would simply never match and look like a broken site.
 function domain(v) {
   if (v === null || v === "") return null;
@@ -179,7 +179,7 @@ export async function PATCH(request) {
   const business = await getOrCreateBusiness(supabase, user);
 
   // The website is a Pro thing. Checking it here rather than only hiding the
-  // tab matters — the tab is just markup, this is the actual gate.
+  // tab matters, the tab is just markup, this is the actual gate.
   if (business.subscription_tier !== "pro") {
     return NextResponse.json(
       { error: "A website is included with Pro. Upgrade to switch it on." },
@@ -194,7 +194,7 @@ export async function PATCH(request) {
     const d = domain(body.custom_domain);
     if (d === undefined) {
       return NextResponse.json(
-        { error: "That doesn't look like a domain. Enter it like yourshop.com — no https, no slashes." },
+        { error: "That doesn't look like a domain. Enter it like yourshop.com, no https, no slashes." },
         { status: 400 }
       );
     }

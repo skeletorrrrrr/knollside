@@ -3,8 +3,8 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { getOrCreateBusiness } from "@/lib/business";
 import { stripe } from "@/lib/stripe";
 
-// These are only ever read here on the server, so they don't need — and
-// shouldn't have — the NEXT_PUBLIC_ prefix. Prefixed vars are inlined into the
+// These are only ever read here on the server, so they don't need, and
+// shouldn't have, the NEXT_PUBLIC_ prefix. Prefixed vars are inlined into the
 // client bundle at BUILD time, which breaks if the value is marked Sensitive
 // in Vercel or added after the build. Unprefixed vars are read at runtime.
 // The NEXT_PUBLIC_ fallbacks keep older deployments working during the switch.

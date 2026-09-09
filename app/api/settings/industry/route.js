@@ -11,7 +11,7 @@ import { INDUSTRIES } from "@/lib/industries";
 // tables, then re-seed them from the new industry's starter set, and move the
 // business row's industry / quantity_type / labor_rate over with it.
 //
-// This is deliberately destructive on pricing — the whole point is that
+// This is deliberately destructive on pricing, the whole point is that
 // someone who picked the wrong trade at signup can fix it without deleting
 // their account and starting over. Leads are untouched: they store a snapshot
 // of what was quoted, not foreign keys into items/options, so old leads stay
@@ -38,7 +38,7 @@ export async function POST(request) {
     return NextResponse.json({ error: "That isn't an industry we support." }, { status: 400 });
   }
 
-  // Nothing to do — don't wipe someone's pricing because they re-picked
+  // Nothing to do, don't wipe someone's pricing because they re-picked
   // the industry they were already on.
   if (nextIndustry === business.industry) {
     return NextResponse.json({ business, changed: false });
@@ -81,7 +81,7 @@ export async function POST(request) {
     })),
   };
 
-  // "Other" with a blank start has no starter rows at all — that's valid,
+  // "Other" with a blank start has no starter rows at all, that's valid,
   // the business builds their own list from an empty dashboard.
   for (const [table, payload] of Object.entries(rows)) {
     if (!payload.length) continue;
@@ -98,7 +98,7 @@ export async function POST(request) {
     industry: nextIndustry,
     quantity_type: template.quantity_type,
   };
-  // Each template carries the labor rate that matches its units — a $12/sq ft
+  // Each template carries the labor rate that matches its units, a $12/sq ft
   // countertop rate is nonsense as a $12/hour shop rate.
   if (starter.labor_rate !== undefined) update.labor_rate = starter.labor_rate;
 

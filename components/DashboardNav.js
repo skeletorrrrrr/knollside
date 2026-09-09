@@ -8,7 +8,7 @@ const LINKS = [
   { href: "/dashboard", label: "Setup" },
   { href: "/dashboard/industry", label: "Industry" },
   { href: "/dashboard/leads", label: "Leads" },
-  // Pro only — a tab you can't use is worse than no tab, so it stays hidden
+  // Pro only, a tab you can't use is worse than no tab, so it stays hidden
   // rather than showing an upgrade wall to everyone else.
   { href: "/dashboard/website", label: "Website", proOnly: true },
   { href: "/dashboard/billing", label: "Billing" },
@@ -19,13 +19,13 @@ export default function DashboardNav({ businessName, slug, logoUrl }) {
   const router = useRouter();
   const [newLeads, setNewLeads] = useState(0);
   const [isPro, setIsPro] = useState(false);
-  // Log out is a one-click action with a real cost — it used to sit right next
+  // Log out is a one-click action with a real cost, it used to sit right next
   // to the nav links in the same neutral grey, so a curious click signed you
   // straight out. Now it's visually separated and asks first.
   const [confirmLogout, setConfirmLogout] = useState(false);
 
   // Count leads still in "new" status so the badge reflects unactioned ones.
-  // Recounts on navigation, when the tab regains focus, and every 60s — so a
+  // Recounts on navigation, when the tab regains focus, and every 60s, so a
   // new lead arriving (or one being actioned) shows up without a manual reload.
   useEffect(() => {
     let active = true;

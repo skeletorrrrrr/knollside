@@ -5,7 +5,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 //
 // This is the piece that makes admin support access actually work. The Supabase
 // hosted verify endpoint hands the session back in a URL hash, which the server
-// never sees — so it can't set cookies, and this app is cookie-authenticated.
+// never sees, so it can't set cookies, and this app is cookie-authenticated.
 // Verifying the token here instead means the session lands in cookies exactly
 // like a normal login.
 //

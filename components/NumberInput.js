@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Tracks its own text state rather than being directly controlled by the
-// numeric value — otherwise clearing the field to type a new number causes
+// numeric value, otherwise clearing the field to type a new number causes
 // a flash back to "0" and new digits land in the wrong place. Calls
 // onCommit only on blur, so we're not firing a network request on every
 // keystroke.

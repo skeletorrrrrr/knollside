@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabaseServer";
 
-// Server-side only — see the note in checkout/route.js about why these are
+// Server-side only, see the note in checkout/route.js about why these are
 // not NEXT_PUBLIC_. Each tier has a monthly and a yearly price; both must map
 // back to the same tier or an annual subscriber lands on the wrong plan.
 const env = (name) =>
@@ -57,7 +57,7 @@ export async function POST(request) {
     const businessId = subscription.metadata?.business_id;
     const priceId = subscription.items.data[0]?.price?.id;
     const tier = tierForPriceId(priceId);
-    const status = subscription.status; // active, trialing, past_due, canceled, ...
+    const status = subscription.status; // active, trialing, past_due, canceled...
 
     if (!businessId) return;
     await supabase

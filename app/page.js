@@ -8,7 +8,7 @@ import RoiCalculator from "@/components/RoiCalculator";
 // Kept to seven. Eleven answers on a landing page is a wall nobody reads, and
 // the ones below are the objections that actually come up first.
 //
-// ACCURACY RULE, throughout: estimate, ballpark or range — never "agreed
+// ACCURACY RULE, throughout: estimate, ballpark or range, never "agreed
 // price". The widget gives a number to start a conversation, not a quote the
 // shop is bound to, and saying otherwise would land a customer in a fight
 // with their own customer.
@@ -37,7 +37,7 @@ const FAQS = [
   {
     q: "Do I need someone technical to set it up?",
     a: [
-      "No. You fill in your pricing, then copy one line into your website — the same way you'd add a YouTube video.",
+      "No. You fill in your pricing, then copy one line into your website, the same way you'd add a YouTube video.",
       "If your site was built by someone else, send them that line and it'll take them two minutes.",
     ],
   },
@@ -51,7 +51,7 @@ const FAQS = [
   {
     q: "What happens to the leads?",
     a: [
-      "They land in your dashboard with the person's name, number, and what they were pricing up — so you know what the conversation is about before you ring back.",
+      "They land in your dashboard with the person's name, number, and what they were pricing up, so you know what the conversation is about before you ring back.",
     ],
   },
   {
@@ -274,7 +274,7 @@ export default function LandingPage() {
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Option 1 — embed */}
+          {/* Option 1, embed */}
           <div className="rounded-2xl p-6 sm:p-7 bg-white border border-line flex flex-col">
             <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
               OPTION 1
@@ -308,7 +308,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Option 2 — hosted link */}
+          {/* Option 2, hosted link */}
           <div className="rounded-2xl p-6 sm:p-7 bg-white border border-line flex flex-col">
             <div className="font-mono text-xs mb-3" style={{ color: "#B08A44" }}>
               OPTION 2

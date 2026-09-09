@@ -14,7 +14,7 @@ function money(n) {
 
 export default function RoiCalculator({ starterPrice = 39 }) {
   // Every number here comes from the visitor. Nothing is a claim about what
-  // Knollside does to conversion — we have no data for that yet, and a made-up
+  // Knollside does to conversion, we have no data for that yet, and a made-up
   // uplift figure is the fastest way to lose a reader who quotes for a living.
   const [jobValue, setJobValue] = useState(3500);
   const [leads, setLeads] = useState(8);

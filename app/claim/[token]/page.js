@@ -5,7 +5,7 @@ import ClaimClient from "./ClaimClient";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// Demos are unlisted by design — they carry a real business's branding and
+// Demos are unlisted by design, they carry a real business's branding and
 // were built without that business asking, so they must not be indexable.
 export const metadata = {
   robots: { index: false, follow: false },

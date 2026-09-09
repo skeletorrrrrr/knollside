@@ -10,7 +10,7 @@ const HEALTH = {
 };
 
 function fmtDate(s) {
-  if (!s) return "—";
+  if (!s) return "-";
   return new Date(s).toLocaleDateString();
 }
 
@@ -85,7 +85,7 @@ export default function AdminPage() {
   useEffect(() => { load(); }, []);
 
   // Logos come from a separate endpoint so the main admin route didn't need
-  // changing. A failure here is cosmetic — the table falls back to initials.
+  // changing. A failure here is cosmetic, the table falls back to initials.
   useEffect(() => {
     fetch("/api/admin/logos")
       .then((r) => (r.ok ? r.json() : { logos: {} }))
@@ -111,7 +111,7 @@ export default function AdminPage() {
     else alert(d.error || "Could not open that account.");
   }
 
-  // Escape closes the logo viewer — expected for anything full-screen.
+  // Escape closes the logo viewer, expected for anything full-screen.
   useEffect(() => {
     if (!viewLogo) return;
     const onKey = (e) => { if (e.key === "Escape") setViewLogo(null); };
@@ -164,7 +164,7 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-5 py-8">
-      <h1 className="font-display text-2xl font-semibold mb-1">Knollside — Owner Dashboard</h1>
+      <h1 className="font-display text-2xl font-semibold mb-1">Knollside, Owner Dashboard</h1>
       <p className="text-sm text-[#8A836F] mb-6">Every business on the platform, at a glance.</p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
@@ -188,7 +188,7 @@ export default function AdminPage() {
           </p>
           <p className="text-xs font-semibold mb-3" style={{ color: "#8F6E32" }}>
             Copy it, then paste it into a private/incognito window. The link works
-            exactly once — opening it in this window burns it and signs you out of
+            exactly once, opening it in this window burns it and signs you out of
             your own account.
           </p>
           <div className="flex flex-wrap items-center gap-2">
@@ -281,7 +281,7 @@ export default function AdminPage() {
                   <td className="px-3 py-3 text-[#8A836F] whitespace-nowrap">{fmtDate(r.created_at)}</td>
                   <td className="px-3 py-3 whitespace-nowrap">
                     {r.claimViews === null ? (
-                      <span className="text-xs text-[#A39C8A]">&mdash;</span>
+                      <span className="text-xs text-[#A39C8A]">-</span>
                     ) : r.claimViews === 0 ? (
                       <span className="text-xs text-[#A39C8A]">Not opened</span>
                     ) : (
@@ -301,7 +301,7 @@ export default function AdminPage() {
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
                     {r.isAdmin ? (
-                      <span className="text-xs text-[#A39C8A]">—</span>
+                      <span className="text-xs text-[#A39C8A]">-</span>
                     ) : confirmId === r.id ? (
                       <span className="inline-flex items-center gap-1">
                         <button
@@ -443,7 +443,7 @@ function Logo({ src, name, onOpen }) {
       </button>
     );
   }
-  // No logo uploaded — initials aren't worth a lightbox, so this stays inert.
+  // No logo uploaded, initials aren't worth a lightbox, so this stays inert.
   return (
     <span
       className="flex-shrink-0 flex items-center justify-center rounded-md text-xs font-semibold"

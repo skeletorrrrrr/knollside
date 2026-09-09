@@ -4,18 +4,18 @@ A real, multi-tenant SaaS app: businesses sign up, configure their pricing, and
 get an embeddable widget that gives their customers instant quotes. Built with
 Next.js (App Router), Supabase (Postgres + Auth), and Stripe.
 
-This isn't a demo — it's the actual codebase. Follow the steps below in order
+This isn't a demo, it's the actual codebase. Follow the steps below in order
 and you'll have it live on a real URL, ready to show a real business, in
 roughly 20–30 minutes.
 
 ## 1. Create your Supabase project (~5 min)
 
 1. Go to [supabase.com](https://supabase.com) → New project (free tier is fine).
-2. Once it's created, go to **Project Settings → API**. Copy three values —
+2. Once it's created, go to **Project Settings → API**. Copy three values ,
    you'll need them in step 5:
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY` (keep this one secret — never put it in client code)
+   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY` (keep this one secret, never put it in client code)
 3. Go to the **SQL Editor**, paste in the entire contents of
    [`supabase/schema.sql`](./supabase/schema.sql), and run it. This creates
    every table, the security rules that keep one business's data separate
@@ -29,10 +29,10 @@ roughly 20–30 minutes.
 1. Go to [dashboard.stripe.com](https://dashboard.stripe.com) (test mode is fine to start).
 2. **Product catalog → Add product**, create three products with a **recurring
    monthly** price each:
-   - Starter — $39/mo
-   - Growth — $129/mo
-   - Pro — $349/mo
-3. For each, copy the **Price ID** (starts with `price_...`) — you'll need these in step 5.
+   - Starter, $39/mo
+   - Growth, $129/mo
+   - Pro, $349/mo
+3. For each, copy the **Price ID** (starts with `price_...`), you'll need these in step 5.
 4. Go to **Developers → API keys**, copy the **Secret key** → `STRIPE_SECRET_KEY`.
 5. You'll set up the webhook in step 6, after you have a live URL.
 
@@ -52,7 +52,7 @@ Create a new repo on GitHub and push it there.
 2. Before deploying, add all the environment variables from
    [`.env.local.example`](./.env.local.example) in the Vercel project settings,
    using the real values from steps 1–2. Leave `STRIPE_WEBHOOK_SECRET` blank
-   for now — you'll add it in the next step. Set `NEXT_PUBLIC_SITE_URL` to
+   for now, you'll add it in the next step. Set `NEXT_PUBLIC_SITE_URL` to
    whatever Vercel tells you your URL will be (e.g. `https://knollside.vercel.app`).
 3. Deploy.
 
@@ -72,17 +72,17 @@ This is what keeps a business's subscription status in sync after they pay.
 
 1. Visit your live URL → **Start free trial** → create an account.
 2. You'll land on the **Setup** tab with sample materials/edges/add-ons
-   already seeded — edit them to match the real pilot business.
+   already seeded, edit them to match the real pilot business.
 3. Copy the embed snippet shown at the top of Setup, or just share the
    live embed link directly (`/embed/your-slug`) as a quick way to test
    before it's on a real website.
 4. Open that link in a new tab, get an estimate, submit it with a real
-   email — then check the **Leads** tab and confirm it showed up.
+   email, then check the **Leads** tab and confirm it showed up.
 5. In **Billing**, click a plan and walk through Stripe Checkout with a
    [test card](https://docs.stripe.com/testing#cards) (`4242 4242 4242 4242`,
    any future date/CVC) to confirm the whole loop works.
 
-At this point it's genuinely live — you could hand the embed link or embed
+At this point it's genuinely live, you could hand the embed link or embed
 snippet to your brother's shop today.
 
 ## Known v1 simplifications (worth knowing, not blockers)
@@ -93,7 +93,7 @@ snippet to your brother's shop today.
   straightforward next addition.
 - **One login per business.** No multi-staff accounts yet.
 - **Webhook testing needs a real HTTPS URL.** Stripe webhooks won't reach
-  `localhost` — test billing after deploying to Vercel, not locally. (If you
+  `localhost`, test billing after deploying to Vercel, not locally. (If you
   do want to run this locally first, the [Stripe CLI](https://docs.stripe.com/stripe-cli)
   can forward webhook events to your machine.)
 - **This code has been syntax- and import-checked, but not fully build-tested.**
@@ -103,7 +103,7 @@ snippet to your brother's shop today.
   JS/JSX with no syntax errors, and every `@/...` and relative import across
   all 32 entry points resolves to a real export with no typos or broken
   paths. What that *doesn't* catch is anything that depends on the actual
-  library internals — e.g. a Supabase or Stripe method name that doesn't
+  library internals, e.g. a Supabase or Stripe method name that doesn't
   exist, or a subtly wrong option shape. Those would only surface via a real
   `npm run build`, which Vercel will run automatically the moment you deploy.
   If it throws an error there, paste it back and it's a fast fix.

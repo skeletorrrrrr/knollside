@@ -47,7 +47,7 @@ export async function PATCH(request) {
     allowed.quantity_max = v;
   }
   // Validate against the row as it will be after this patch, not just the
-  // incoming body — someone editing one field at a time can otherwise cross
+  // incoming body, someone editing one field at a time can otherwise cross
   // the two values without either request looking wrong on its own.
   {
     const nextMin = allowed.quantity_min !== undefined ? allowed.quantity_min : business.quantity_min;
@@ -65,8 +65,8 @@ export async function PATCH(request) {
     .single();
 
   if (error) {
-    // most likely a duplicate slug — surface a clean message
-    const message = error.code === "23505" ? "That URL is already taken — try another." : error.message;
+    // most likely a duplicate slug, surface a clean message
+    const message = error.code === "23505" ? "That URL is already taken, try another." : error.message;
     return NextResponse.json({ error: message }, { status: 400 });
   }
   return NextResponse.json({ business: data });

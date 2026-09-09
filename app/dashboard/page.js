@@ -231,7 +231,7 @@ export default function SetupPage() {
 
       <p className="text-sm text-[#8A836F]">
         Your estimator is set up for <span className="font-medium">{industry.label}</span>.
-        Everything below is editable — rename, reprice, add, or remove anything to match how you actually quote.
+        Everything below is editable, rename, reprice, add, or remove anything to match how you actually quote.
       </p>
 
       {/* Progress bar */}
@@ -325,7 +325,7 @@ export default function SetupPage() {
                 className="w-full px-3.5 py-2.5 rounded-lg border border-line text-sm font-mono outline-none focus:ring-2 focus:ring-[#B08A44]/30 focus:border-[#B08A44] transition-shadow"
               />
               <span className="block text-xs mt-1" style={{ color: "#A39C8A" }}>
-                {slugTouched ? "Your custom link — this is what customers see in the URL." : "Suggested from your business name — edit anytime."}
+                {slugTouched ? "Your custom link, this is what customers see in the URL." : "Suggested from your business name, edit anytime."}
               </span>
             </Field>
           </div>
@@ -489,7 +489,7 @@ export default function SetupPage() {
                 + Add add-on
               </button>
             </div>
-            <p className="text-sm text-[#8A836F] mb-4">Extras customers can check off — sink cutouts, demo, that kind of thing.</p>
+            <p className="text-sm text-[#8A836F] mb-4">Extras customers can check off, sink cutouts, demo, that kind of thing.</p>
             <div className="space-y-2.5">
               {addons.map((a) => (
                 <div
@@ -618,7 +618,7 @@ export default function SetupPage() {
               <p className="text-sm text-[#8A836F] mb-6">
                 Your pricing is saved. Publishing turns on your estimator page
                 and gives you the code to drop it on your website. You can keep
-                editing your prices afterward — changes go out immediately.
+                editing your prices afterward, changes go out immediately.
               </p>
 
               <div
@@ -710,7 +710,7 @@ export default function SetupPage() {
           <div className="mt-8 pt-8 max-w-sm" style={{ borderTop: "1px solid #F0EADC" }}>
             <h3 className="text-sm font-semibold mb-1">What customers send you</h3>
             <p className="text-xs text-[#8A836F] mb-3">
-              After seeing their price, this is the form they fill out to reach you. Fixed for now — custom fields are on the roadmap.
+              After seeing their price, this is the form they fill out to reach you. Fixed for now, custom fields are on the roadmap.
             </p>
             <div className="p-3.5 rounded-xl border space-y-2 opacity-80" style={{ borderColor: "#EDE6D6", background: "#FEFDFB" }}>
               <input disabled placeholder="Full name" className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-line bg-stone-dim" />

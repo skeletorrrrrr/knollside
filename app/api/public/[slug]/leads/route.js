@@ -54,13 +54,13 @@ export async function POST(request, { params }) {
   const { error } = await supabase.from("leads").insert(leadData);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Fire both emails. Failures here must NOT fail the request — the lead is
+  // Fire both emails. Failures here must NOT fail the request, the lead is
   // already safely saved, so email is best-effort.
   const businessMsg = businessLeadEmail({ businessName: business.name, lead: leadData, low, high });
   const customerMsg = customerConfirmationEmail({ businessName: business.name, lead: leadData, low, high });
   await Promise.allSettled([
-    sendEmail({ to: business.owner_email, ...businessMsg }),
-    sendEmail({ to: body.customer_email, ...customerMsg }),
+    sendEmail({ to: business.owner_email...businessMsg }),
+    sendEmail({ to: body.customer_email...customerMsg }),
   ]);
 
   return NextResponse.json({ ok: true, low, high });

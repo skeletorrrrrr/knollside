@@ -256,7 +256,7 @@ export default function WebsitePage() {
   const isPro = business && business.subscription_tier === "pro";
   const sec = (k) => c[k] || {};
   const patchSec = (k, patch) =>
-    setC((prev) => ({ ...prev, [k]: { ...(prev[k] || {}), ...patch } }));
+    setC((prev) => ({ ...prev, [k]: { ...(prev[k] || {})...patch } }));
 
   async function send(payload) {
     const res = await fetch("/api/settings/site", {
@@ -319,7 +319,7 @@ export default function WebsitePage() {
       <div className="max-w-2xl">
         <h1 className="font-display text-2xl font-semibold mb-2">Your website</h1>
         <p className="text-sm text-[#6B6558] mb-6 leading-relaxed">
-          A website with hosting comes with Pro — your own page for every
+          A website with hosting comes with Pro, your own page for every
           {items.length > 0 ? " material" : " service"} you offer, a gallery, and
           your estimator built into it.
         </p>
@@ -351,7 +351,7 @@ export default function WebsitePage() {
                 </Link>
               </>
             ) : (
-              "Not live yet — nobody can see it."
+              "Not live yet, nobody can see it."
             )}
           </p>
         </div>
@@ -441,7 +441,7 @@ export default function WebsitePage() {
         <div className="space-y-4">
           <Field
             label="Domain"
-            hint="Just the address — yourshop.com. Leave blank to stay on the Knollside address."
+            hint="Just the address, yourshop.com. Leave blank to stay on the Knollside address."
           >
             <div className="flex gap-2">
               <input
@@ -477,7 +477,7 @@ export default function WebsitePage() {
               </div>
               <p className="mt-3 text-xs text-[#A39C8A]">
                 Send us a message once that&rsquo;s done and we&rsquo;ll finish the
-                setup on our side — the site won&rsquo;t answer on your address
+                setup on our side, the site won&rsquo;t answer on your address
                 until we do.
               </p>
             </div>
@@ -489,7 +489,7 @@ export default function WebsitePage() {
         <div className="space-y-4">
           <Field
             label="Headline"
-            hint="Leave this blank and we use your trade and your town — which is what people actually type into Google."
+            hint="Leave this blank and we use your trade and your town, which is what people actually type into Google."
           >
             <input
               type="text"
@@ -581,7 +581,7 @@ export default function WebsitePage() {
         onToggle={(v) => patchSec("reviews", { on: v })}
       >
         <p className="text-xs text-[#A39C8A] mb-3 leading-relaxed">
-          Real ones only — reviews a customer actually gave you. Inventing
+          Real ones only, reviews a customer actually gave you. Inventing
           testimonials for a business site is against the law in the US, and it
           is the sort of thing competitors notice.
         </p>
@@ -590,7 +590,7 @@ export default function WebsitePage() {
           fields={[
             { key: "quote", placeholder: "What they said", textarea: true },
             { key: "name", placeholder: "Their name" },
-            { key: "source", placeholder: "Where from — Google, Yelp…" },
+            { key: "source", placeholder: "Where from, Google, Yelp…" },
           ]}
           onChange={(rows) => patchSec("reviews", { quotes: rows })}
           addLabel="Add a review"
@@ -604,7 +604,7 @@ export default function WebsitePage() {
       >
         <Field
           label="Towns"
-          hint="One per line. The first one goes into your page titles — that's how someone searching your trade in their town finds you."
+          hint="One per line. The first one goes into your page titles, that's how someone searching your trade in their town finds you."
         >
           <textarea
             rows={4}
@@ -660,7 +660,7 @@ export default function WebsitePage() {
         <Card title="Your material pages">
           <p className="text-xs text-[#A39C8A] mb-4 leading-relaxed">
             Each one already has its own page carrying your price. Write a
-            paragraph on the ones you want found in search — a page with real
+            paragraph on the ones you want found in search, a page with real
             words on it can rank, an empty one can&rsquo;t.
           </p>
           <div className="space-y-4">
@@ -703,7 +703,7 @@ export default function WebsitePage() {
         </Card>
       )}
 
-      {/* Sticky rather than parked at the bottom of a long form — otherwise you
+      {/* Sticky rather than parked at the bottom of a long form, otherwise you
           scroll back up, lose your place, and never know whether it saved. */}
       <div className="sticky bottom-4 flex items-center gap-3">
         <button

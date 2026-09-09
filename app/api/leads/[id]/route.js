@@ -22,7 +22,7 @@ export async function PATCH(request, { params }) {
   if (body.seen !== undefined) {
     update.seen = !!body.seen;
   }
-  // Free text, deliberately unstructured — "quoted, waiting on callback".
+  // Free text, deliberately unstructured, "quoted, waiting on callback".
   // Capped so a paste accident can't put a novel in the row, and null clears it.
   if (body.notes !== undefined) {
     if (body.notes === null) {
@@ -49,7 +49,7 @@ export async function PATCH(request, { params }) {
   return NextResponse.json({ lead: data });
 }
 
-// Removing a lead the owner doesn't want — a duplicate, or a spam submission.
+// Removing a lead the owner doesn't want, a duplicate, or a spam submission.
 // Row Level Security is what actually stops one business deleting another's
 // leads: this runs on the user-scoped client, so a row belonging to someone
 // else simply isn't visible to the delete and nothing happens.

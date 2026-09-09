@@ -29,7 +29,7 @@ export async function POST(_request, { params }) {
     .maybeSingle();
 
   // Unknown or already-claimed token. Answer the same either way rather than
-  // saying which — this endpoint takes an unauthenticated token, and a
+  // saying which, this endpoint takes an unauthenticated token, and a
   // different response for a valid one turns it into a way to check whether a
   // token exists.
   if (!demo) return NextResponse.json({ ok: true });

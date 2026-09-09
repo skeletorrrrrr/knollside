@@ -23,7 +23,7 @@ export async function middleware(request) {
   // ---- customer domains -------------------------------------------------
   // A request to countertopsvista.com serves that business's site. The host
   // is passed through as the [slug] segment and lib/siteContent.js resolves
-  // it against either slug or custom_domain — that keeps the whole lookup out
+  // it against either slug or custom_domain, that keeps the whole lookup out
   // of middleware, which would otherwise mean a database round trip on every
   // request including images.
   if (!isKnollsideHost(host)) {
@@ -64,10 +64,10 @@ export async function middleware(request) {
           return request.cookies.get(name)?.value;
         },
         set(name, value, options) {
-          response.cookies.set({ name, value, ...options });
+          response.cookies.set({ name, value...options });
         },
         remove(name, options) {
-          response.cookies.set({ name, value: "", ...options });
+          response.cookies.set({ name, value: ""...options });
         },
       },
     }

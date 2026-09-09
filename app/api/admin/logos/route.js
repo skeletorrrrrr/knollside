@@ -4,7 +4,7 @@ import { supabaseServer, supabaseAdmin } from "@/lib/supabaseServer";
 // Logos for the admin table, keyed by business id.
 //
 // Kept as its own endpoint rather than adding logo_url to the main admin GET
-// purely to avoid editing that route — the two can be merged later, it's one
+// purely to avoid editing that route, the two can be merged later, it's one
 // extra column in the existing select and one extra field in the row mapping.
 export async function GET() {
   const supabase = supabaseServer();
