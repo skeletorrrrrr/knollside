@@ -2,6 +2,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import PricingToggle from "@/components/PricingToggle";
 import DemoSwitcher from "@/components/DemoSwitcher";
+import LandingNav from "@/components/LandingNav";
 import RoiCalculator from "@/components/RoiCalculator";
 
 
@@ -72,59 +73,7 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* Sticky nav, anchor links only, no JavaScript. Someone who already
-          knows they want pricing shouldn't have to scroll the whole argument to
-          find it. Three links rather than five, because a row of six things
-          gets ignored and each one here has a job.
-
-          The negative margin bleeds the background to the window edges, since
-          the page wrapper is padded. */}
-      <nav
-        className="sticky top-0 z-30 -mx-5 px-5 mb-10 border-b border-line"
-        style={{ background: "rgba(247,243,234,0.94)", backdropFilter: "blur(8px)" }}
-      >
-        <div className="flex items-center justify-between gap-4 py-3">
-          <Link href="/" className="font-display font-semibold shrink-0">
-            Knollside
-          </Link>
-
-          {/* Scrolls sideways on a narrow screen rather than collapsing into a
-              menu. A menu nobody opens is worse than a row that runs off. */}
-          <div className="flex items-center gap-5 overflow-x-auto">
-            <a
-              href="#how"
-              className="text-sm text-[#6B6558] hover:text-ink transition-colors whitespace-nowrap"
-            >
-              How it works
-            </a>
-            <a
-              href="#pricing"
-              className="text-sm text-[#6B6558] hover:text-ink transition-colors whitespace-nowrap"
-            >
-              Pricing
-            </a>
-            <a
-              href="#faq"
-              className="text-sm text-[#6B6558] hover:text-ink transition-colors whitespace-nowrap"
-            >
-              FAQ
-            </a>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/login" className="text-sm text-[#8A836F] hidden sm:inline">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="text-sm font-medium px-4 py-2 rounded-md text-white whitespace-nowrap"
-              style={{ background: "linear-gradient(135deg, #C39A55, #8F6E32)" }}
-            >
-              Start free
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <LandingNav />
 
       {/* ---------- HERO ---------- */}
       <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-10 lg:gap-14 items-start mb-24">
