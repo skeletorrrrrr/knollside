@@ -8,7 +8,7 @@ export default function PricingToggle() {
   const [yearly, setYearly] = useState(false);
 
   return (
-    <section id="pricing" className="scroll-mt-8">
+    <section id="pricing" className="scroll-mt-20">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div>
           <h2 className="font-display text-2xl font-semibold">Pricing</h2>
