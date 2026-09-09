@@ -61,7 +61,7 @@ export default function LeadsPage() {
   }, []);
 
   async function patchLead(id, body, optimistic) {
-    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l...optimistic } : l)));
+    setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, ...optimistic } : l)));
     await fetch(`/api/leads/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

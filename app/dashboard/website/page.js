@@ -256,7 +256,7 @@ export default function WebsitePage() {
   const isPro = business && business.subscription_tier === "pro";
   const sec = (k) => c[k] || {};
   const patchSec = (k, patch) =>
-    setC((prev) => ({ ...prev, [k]: { ...(prev[k] || {})...patch } }));
+    setC((prev) => ({ ...prev, [k]: { ...(prev[k] || {}), ...patch } }));
 
   async function send(payload) {
     const res = await fetch("/api/settings/site", {

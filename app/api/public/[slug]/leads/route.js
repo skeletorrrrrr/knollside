@@ -59,8 +59,8 @@ export async function POST(request, { params }) {
   const businessMsg = businessLeadEmail({ businessName: business.name, lead: leadData, low, high });
   const customerMsg = customerConfirmationEmail({ businessName: business.name, lead: leadData, low, high });
   await Promise.allSettled([
-    sendEmail({ to: business.owner_email...businessMsg }),
-    sendEmail({ to: body.customer_email...customerMsg }),
+    sendEmail({ to: business.owner_email, ...businessMsg }),
+    sendEmail({ to: body.customer_email, ...customerMsg }),
   ]);
 
   return NextResponse.json({ ok: true, low, high });
