@@ -14,7 +14,11 @@ export default function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 140);
+    // Two thresholds instead of one. With a single value, a scroll that rests
+    // near it flickers the logo on and off as the number wobbles by a pixel.
+    // It now needs 160 to appear and has to drop below 100 to leave.
+    const onScroll = () =>
+      setScrolled((was) => (was ? window.scrollY > 100 : window.scrollY > 160));
     onScroll();
     // passive: this listener never calls preventDefault, and saying so lets the
     // browser keep scrolling smooth instead of waiting on it.
@@ -36,13 +40,18 @@ export default function LandingNav() {
             href="/"
             aria-label="Knollside"
             className="block"
+            // aria-hidden and inert rather than visibility:hidden. Toggling
+            // visibility cannot be transitioned, so scrolling back up used to
+            // snap the logo away instead of sliding it. These keep it out of
+            // the tab order and off screen readers while it animates out.
+            aria-hidden={!scrolled}
+            tabIndex={scrolled ? 0 : -1}
             style={{
               transform: scrolled ? "translateY(0)" : "translateY(120%)",
               opacity: scrolled ? 1 : 0,
-              transition: "transform .28s ease-out, opacity .2s ease-out",
-              // Not focusable while it's out of view, otherwise tabbing lands
-              // on something nobody can see.
-              visibility: scrolled ? "visible" : "hidden",
+              // Same easing and duration both ways, so up feels like down.
+              transition: "transform .3s cubic-bezier(.4,0,.2,1), opacity .3s cubic-bezier(.4,0,.2,1)",
+              pointerEvents: scrolled ? "auto" : "none",
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
