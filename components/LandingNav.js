@@ -59,20 +59,31 @@ export default function LandingNav() {
           </Link>
         </div>
 
-        {/* Padding and a hover fill so these read as things you press. Plain
-            underlined text in a bar gets scanned past. */}
-        <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
+        {/* A hover fill on its own was not enough: hover only appears once you
+            are already pointing at the thing, and on a phone it never appears
+            at all. These now have a border and a fill at rest, so they look
+            like buttons before anyone touches them. */}
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto">
           {LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-sm font-medium px-3 sm:px-4 py-2 rounded-md whitespace-nowrap transition-colors"
-              style={{ color: "#4A443A" }}
+              className="text-sm font-medium px-4 py-2 rounded-lg whitespace-nowrap border transition-all"
+              style={{
+                color: "#4A443A",
+                background: "#FFFFFF",
+                borderColor: "#DDD3BF",
+                boxShadow: "0 1px 2px rgba(33,31,27,0.05)",
+              }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "#EDE6D6";
+                e.currentTarget.style.borderColor = "#B08A44";
+                e.currentTarget.style.color = "#211F1B";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.background = "#FFFFFF";
+                e.currentTarget.style.borderColor = "#DDD3BF";
+                e.currentTarget.style.color = "#4A443A";
               }}
             >
               {l.label}
