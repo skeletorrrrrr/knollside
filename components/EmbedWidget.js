@@ -152,9 +152,11 @@ export default function EmbedWidget({ business, items, options, addons }) {
           customer_email: email,
           customer_phone: phone,
           comments: comments,
+          item_id: item?.id,
           item_name: item?.name,
           item_price_snapshot: item?.base_price,
           quantity: effectiveQty,
+          option_id: option?.id,
           option_name: option?.name,
           option_upcharge_snapshot: option?.upcharge,
           addons_selected: selectedAddons.map((a) => ({
